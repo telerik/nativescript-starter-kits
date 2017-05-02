@@ -61,5 +61,14 @@ typings/
 
 # ignore ide dir
 .idea
+.tscache
+
+#igonre references.d.ts file
+references.d.ts
+
+#ignore all transpiled ts files
+*.js
+*.map.js
+*.js.map
 
 
