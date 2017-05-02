@@ -20,19 +20,25 @@ export class TemplateService implements ITemplateService{
     }
 
     public downloadTemplate(templateName: string) {
-        let command = "git clone git@github.com:NativeScript/" + templateName + ".git";
+        let command = "git clone git@github.com:NativeScript/" + templateName + ".git",
+        templatesDir = "../templates";
 
-        childProcess.exec(command, function (error, stdout, stderr) {
-            if (error) {
-                console.error(new Error(error.message));
-            }
-            else if (stderr) {
-                console.error(new Error(error.message));
-            }
-            else {
-                console.log(stdout);
-            }
-        });
+        if (fs.statSync(templatesDir)) {
+            childProcess.exec(command, {cwd: templatesDir}, function (error, stdout, stderr) {
+                if (error) {
+                    console.error(new Error(error.message));
+                }
+                else if (stderr) {
+                    console.error(new Error(error.message));
+                }
+                else {
+                    console.log(stdout);
+                }
+            });
+        }
+        else {
+            console.error("Missing templates directory");
+        }
     }
 }
 

@@ -1,4 +1,5 @@
 interface ITemplateService {
+
     /**
      * @description The method returns details about a template in JSON Format
      */
