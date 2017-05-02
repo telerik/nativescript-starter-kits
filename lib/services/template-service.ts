@@ -8,7 +8,7 @@ export class TemplateService implements ITemplateService{
 
     }
 
-    public getTemplateDetails() {
+    public getAppTemplateDetails() {
         fs.readFile(path.join(__dirname, 'template-details.json'), 'utf8', function (err, data) {
             if (err) {
                 console.error(new Error(err.message));
@@ -19,7 +19,7 @@ export class TemplateService implements ITemplateService{
         });
     }
 
-    public downloadTemplate(templateName: string) {
+    public downloadAppTemplate(templateName: string) {
         let command = "git clone git@github.com:NativeScript/" + templateName + ".git",
         templatesDir = "../templates";
 
@@ -39,6 +39,14 @@ export class TemplateService implements ITemplateService{
         else {
             console.error("Missing templates directory");
         }
+    }
+
+    public getPageTemplateDetails() {
+        throw new Error("Not implemented yet");
+    }
+
+    public downloadPageTemplate(templateName: string) {
+        throw new Error("Not implemented yet");
     }
 }
 

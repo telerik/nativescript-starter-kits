@@ -1,13 +1,26 @@
 interface ITemplateService {
 
     /**
-     * @description The method returns details about a template in JSON Format
+     * @description The method returns details about an app template in JSON Format
      */
-    getTemplateDetails(): any;
+    getAppTemplateDetails(): any;
 
     /**
-     * @description Download a template in your local project folder
+     * @description Download an app template in your local project folder
      * @param templateName <String>
      */
-    downloadTemplate(templateName: string): void;
+    downloadAppTemplate(templateName: string): void;
+
+    /**
+     * @description The method returns details about a page template in JSON Format
+     */
+    getPageTemplateDetails(): any;
+
+    /**
+     * @description Download a page template in your local project folder
+     * @param templateName <String>
+     */
+    downloadPageTemplate(templateName: string): void;
+
+
 }
