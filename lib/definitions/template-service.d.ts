@@ -1,6 +1,12 @@
 interface ITemplateService {
 
     /**
+     * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
+     * @param templateName
+     * @private
+     */
+    _checkTemplateFlavor(templateName: string): any;
+    /**
      * @description The method returns details about an app template in JSON Format
      */
     getAppTemplateDetails(): any;
