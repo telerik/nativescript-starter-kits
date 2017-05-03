@@ -71,4 +71,8 @@ references.d.ts
 *.map.js
 *.js.map
 
+#ignore templates folder
+
+lib/templates/
+
 
