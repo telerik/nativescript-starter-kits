@@ -68,14 +68,29 @@ export class TemplateService implements ITemplateService {
 
     }
 
-    public getAppTemplateDetails() {
-        fs.readFile(path.join(__dirname, 'template-details.json'), 'utf8', function (err, data) {
-            if (err) {
-                console.error(new Error(err.message));
+    public getAppTemplateDetails(templateName: string) {
+        let that = this,
+            version: string,
+            flavor: string,
+            templateDetails: any;
+
+        return new Promise(function (resolve, reject) {
+            try {
+                version = that.getTemplateVersion(templateName);
+                flavor = that.checkTemplateFlavor(templateName);
             }
-            else {
-                console.log(data);
+            catch (err) {
+                reject(err);
             }
+
+            templateDetails = {
+                name: templateName,
+                version: version,
+                templateFlavor: flavor
+            };
+
+            resolve(templateDetails);
+
         });
     }
 
@@ -118,12 +133,6 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-let test = new TemplateService();
-
-let flavor = test.getTemplateVersion("template-hello-world-ng");
-
-console.log(typeof flavor);
-
-//$injector.register("templateService", TemplateService);
+$injector.register("templateService", TemplateService);
 
 

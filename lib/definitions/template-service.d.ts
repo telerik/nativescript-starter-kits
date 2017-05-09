@@ -15,7 +15,7 @@ interface ITemplateService {
     /**
      * @description The method returns details about an app template in JSON Format
      */
-    getAppTemplateDetails(): any;
+    getAppTemplateDetails(templateName: string): any;
 
     /**
      * @description Download an app template in your local project folder
