@@ -21,16 +21,32 @@ export class TemplateService implements ITemplateService {
         }
     }
 
+    public getTemplateVersion(templateName: string) {
+        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+            packageJsonContent: any,
+            version: any;
+
+        try {
+            packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
+        }
+        catch (err) {
+            return (err);
+        }
+
+        version = packageJsonContent.version;
+
+        return version;
+    }
+
     public checkTemplateFlavor(templateName: string) {
-        let that = this,
-            tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
             packageJsonContent: any,
             dependencies: any,
             devDependencies: any;
 
 
         try {
-            packageJsonContent = that._readTemplatePackageJson(tempPath);
+            packageJsonContent = this._readTemplatePackageJson(tempPath);
             packageJsonContent = JSON.parse(packageJsonContent);
         }
         catch (err) {
@@ -104,9 +120,9 @@ export class TemplateService implements ITemplateService {
 
 let test = new TemplateService();
 
-let flavor = test.checkTemplateFlavor("template-hello-world-ng");
+let flavor = test.getTemplateVersion("template-hello-world-ng");
 
-console.log(flavor);
+console.log(typeof flavor);
 
 //$injector.register("templateService", TemplateService);
 

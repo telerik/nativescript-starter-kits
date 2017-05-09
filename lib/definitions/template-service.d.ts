@@ -3,9 +3,15 @@ interface ITemplateService {
     /**
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
      * @param templateName
-     * @private
      */
-    checkTemplateFlavor(templateName: string): any;
+    checkTemplateFlavor(templateName: string): string;
+
+    /**
+     * @description Get template current version
+     * @param templateName
+     */
+    getTemplateVersion(templateName: string): string;
+
     /**
      * @description The method returns details about an app template in JSON Format
      */
