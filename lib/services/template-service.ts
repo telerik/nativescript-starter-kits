@@ -8,50 +8,51 @@ export class TemplateService implements ITemplateService {
 
     }
 
-    public _checkTemplateFlavor(templateName: string) {
-        let tempPath = path.join(__dirname.replace("services", "templates"), templateName);
+    private _readTemplatePackageJson(tempPath: string) {
+        let isDir = fs.statSync(tempPath).isDirectory(),
+            tempContent;
 
-        return new Promise(function (resolve, reject) {
-            fs.readdir(tempPath, function (err, files) {
-                if (err) {
-                    reject(err)
-                }
-                else {
-                    if (files.indexOf("package.json") > -1) {
-                        fs.readFile(path.join(tempPath, "package.json"), "utf8", function (err, data) {
-                            if (err) {
-                                reject(err);
-                            }
-                            else {
-                                let content = JSON.parse(data),
-                                    dependencies = Object.keys(content.dependencies),
-                                    devDependencies = Object.keys(content.devDependencies);
+        if (isDir) {
+            tempContent = fs.readdirSync(tempPath);
 
-                                //console.log('dev ', devDependencies);
+            if (tempContent.indexOf("package.json") > -1) {
+                return fs.readFileSync(path.join(tempPath, "package.json"), "utf8");
+            }
+        }
+    }
 
-                                if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
-                                    resolve("Angular 2 & TypeScript");
-                                }
-                                else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-                                    resolve("Vanilla TypeScript");
-                                }
-                                else {
-                                    resolve("Vanilla JavaScript");
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        });
+    public checkTemplateFlavor(templateName: string) {
+        let that = this,
+            tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+            packageJsonContent: any,
+            dependencies: any,
+            devDependencies: any;
+
+
+        try {
+            packageJsonContent = that._readTemplatePackageJson(tempPath);
+            packageJsonContent = JSON.parse(packageJsonContent);
+        }
+        catch (err) {
+            return (err);
+        }
+
+        dependencies = Object.keys(packageJsonContent.dependencies);
+        devDependencies = Object.keys(packageJsonContent.devDependencies);
+
+        if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+            return ("Angular 2 & TypeScript");
+        }
+        else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+            return ("Vanilla TypeScript");
+        }
+        else {
+            return ("Vanilla JavaScript");
+        }
+
     }
 
     public getAppTemplateDetails() {
-        this._checkTemplateFlavor("template-hello-world-ng").then(function (flavor) {
-            console.log("flavor ", flavor);
-        }, function (err) {
-            console.error(err)
-        });
         fs.readFile(path.join(__dirname, 'template-details.json'), 'utf8', function (err, data) {
             if (err) {
                 console.error(new Error(err.message));
@@ -101,6 +102,12 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register("templateService", TemplateService);
+let test = new TemplateService();
+
+let flavor = test.checkTemplateFlavor("template-hello-world-ng");
+
+console.log(flavor);
+
+//$injector.register("templateService", TemplateService);
 
 

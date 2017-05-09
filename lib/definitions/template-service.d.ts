@@ -5,7 +5,7 @@ interface ITemplateService {
      * @param templateName
      * @private
      */
-    _checkTemplateFlavor(templateName: string): any;
+    checkTemplateFlavor(templateName: string): any;
     /**
      * @description The method returns details about an app template in JSON Format
      */
