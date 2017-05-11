@@ -181,16 +181,6 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-let test = new TemplateService();
-
-//test.downloadAppTemplate("git@github.com:Icenium/Telerik.Mobile.NS.TS.NG2.Empty.git");
-
-test.getAvailableTemplates().then(function (temp) {
-    console.log(temp);
-}).catch(function (err) {
-    console.error(err)
-});
-
-//$injector.register("templateService", TemplateService);
+$injector.register("templateService", TemplateService);
 
 
