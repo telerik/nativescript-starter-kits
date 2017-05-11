@@ -94,8 +94,36 @@ export class TemplateService implements ITemplateService {
         });
     }
 
-    public downloadAppTemplate(templateName: string) {
-        let command = "git clone git@github.com:NativeScript/" + templateName + ".git",
+    public getAvailableTemplates() {
+        let that = this,
+            tempPath = path.join(__dirname.replace("services", "templates")),
+            tempDetails: any = [];
+
+        return new Promise(function (resolve, reject) {
+            fs.readdir(tempPath, function (err, content) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    for (let i = 0; i < content.length; i++) {
+                        let isDir = fs.statSync(path.join(tempPath, content[i])).isDirectory();
+
+                        if (isDir) {
+                            that.getAppTemplateDetails(content[i]).then(function (data) {
+                                tempDetails.push(data);
+                            }).catch(function (err) {
+                                reject(err);
+                            });
+                        }
+                    }
+                    resolve(tempDetails);
+                }
+            });
+        });
+    }
+
+    public downloadAppTemplate(url: string) {
+        let command = "git clone " + url,
             templatesDir = __dirname.replace("services", "templates"), // Temp hack
             exists;
 
@@ -133,6 +161,16 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register("templateService", TemplateService);
+let test = new TemplateService();
+
+//test.downloadAppTemplate("git@github.com:Icenium/Telerik.Mobile.NS.TS.NG2.Empty.git");
+
+test.getAvailableTemplates().then(function (temp) {
+    console.log(temp);
+}).catch(function (err) {
+    console.error(err)
+});
+
+//$injector.register("templateService", TemplateService);
 
 
