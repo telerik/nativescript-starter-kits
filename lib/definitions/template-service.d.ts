@@ -18,6 +18,12 @@ interface ITemplateService {
     getAppTemplateDetails(templateName: string): any;
 
     /**
+     * @description Search for all downloaded templates
+     * @return Promise
+     */
+    getAvailableTemplates(): any;
+
+    /**
      * @description Download an app template in your local project folder
      * @param templateName <String>
      */
