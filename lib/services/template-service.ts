@@ -38,6 +38,23 @@ export class TemplateService implements ITemplateService {
         return version;
     }
 
+    public getTemplateDescription(templateName: string) {
+        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+            packageJsonContent: any,
+            description: any;
+
+        try {
+            packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
+        }
+        catch (err) {
+            return (err);
+        }
+
+        description = packageJsonContent.description;
+
+        return description;
+    }
+
     public checkTemplateFlavor(templateName: string) {
         let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
             packageJsonContent: any,
@@ -72,12 +89,14 @@ export class TemplateService implements ITemplateService {
         let that = this,
             version: string,
             flavor: string,
+            description: string,
             templateDetails: any;
 
         return new Promise(function (resolve, reject) {
             try {
                 version = that.getTemplateVersion(templateName);
                 flavor = that.checkTemplateFlavor(templateName);
+                description = that.getTemplateDescription(templateName);
             }
             catch (err) {
                 reject(err);
@@ -85,6 +104,7 @@ export class TemplateService implements ITemplateService {
 
             templateDetails = {
                 name: templateName,
+                description: description,
                 version: version,
                 templateFlavor: flavor
             };
@@ -161,16 +181,6 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-let test = new TemplateService();
-
-//test.downloadAppTemplate("git@github.com:Icenium/Telerik.Mobile.NS.TS.NG2.Empty.git");
-
-test.getAvailableTemplates().then(function (temp) {
-    console.log(temp);
-}).catch(function (err) {
-    console.error(err)
-});
-
-//$injector.register("templateService", TemplateService);
+$injector.register("templateService", TemplateService);
 
 

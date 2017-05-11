@@ -13,6 +13,12 @@ interface ITemplateService {
     getTemplateVersion(templateName: string): string;
 
     /**
+     * @description Get template description
+     * @param templateName
+     */
+    getTemplateDescription(templateName: string): string;
+
+    /**
      * @description The method returns details about an app template in JSON Format
      */
     getAppTemplateDetails(templateName: string): any;
