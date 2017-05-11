@@ -1,9 +1,0 @@
-{
-  "_id": 0,
-  "_url": "git@github.com:NativeScript/template-hello-world-ng.git"
-  "template_name": "Test",
-  "description": "The coolest template ever",
-  "version": "1.0.0",
-  "template_flavor": "@angular+ts",
-  "thumbnails": []
-}
