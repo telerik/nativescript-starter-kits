@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as childProcess from "child_process";
 
 
+
 export class TemplateService implements ITemplateService {
     constructor() {
 
@@ -177,6 +178,26 @@ export class TemplateService implements ITemplateService {
     }
 
     public downloadPageTemplate(templateName: string) {
+        throw new Error("Not implemented yet");
+    }
+
+    public createApp(appName: string, location:string) {
+        let appPath: string = path.join(location, appName);
+
+        //TODO: Check if path is a valid system path!!!
+        return new Promise(function (resolve, reject) {
+            fs.mkdir(appPath, '0744', function (err) {
+                if (err && err.code === 'EEXIST') {
+                    reject({message: appName + " App already exists", error: err});
+                }
+                else {
+                    resolve({message: "Successfully created " + appName + " App", appPath: appPath})
+                }
+            })
+        });
+    }
+
+    public addPage(name: string, location: string) {
         throw new Error("Not implemented yet");
     }
 }

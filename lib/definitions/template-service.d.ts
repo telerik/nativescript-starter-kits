@@ -46,5 +46,18 @@ interface ITemplateService {
      */
     downloadPageTemplate(templateName: string): void;
 
+    /**
+     * @description Create App method
+     * @param name
+     * @param location
+     */
+    createApp(name: string, location: string): any;
+
+    /**
+     * @description Add page
+     * @param name
+     */
+    addPage(name: string, location: string): any;
+
 
 }
