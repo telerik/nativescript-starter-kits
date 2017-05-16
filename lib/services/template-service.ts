@@ -172,8 +172,33 @@ export class TemplateService implements ITemplateService {
         }
     }
 
-    public getPageTemplateDetails() {
-        throw new Error("Not implemented yet");
+    public getPageTemplateDetails(templateName: string) {
+        let that = this,
+            version: string,
+            flavor: string,
+            description: string,
+            templateDetails: any;
+
+        return new Promise(function (resolve, reject) {
+            try {
+                version = that.getTemplateVersion(templateName);
+                flavor = that.checkTemplateFlavor(templateName);
+                description = that.getTemplateDescription(templateName);
+            }
+            catch (err) {
+                reject(err);
+            }
+
+            templateDetails = {
+                name: templateName,
+                description: description,
+                version: version,
+                templateFlavor: flavor
+            };
+
+            resolve(templateDetails);
+
+        });
     }
 
     public createApp(appName: string, location: string) {
