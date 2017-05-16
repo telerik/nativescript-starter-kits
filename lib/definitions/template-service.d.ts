@@ -37,14 +37,23 @@ interface ITemplateService {
 
     /**
      * @description The method returns details about a page template in JSON Format
-     */
-    getPageTemplateDetails(): any;
-
-    /**
-     * @description Download a page template in your local project folder
      * @param templateName <String>
      */
-    downloadPageTemplate(templateName: string): void;
+    getPageTemplateDetails(templateName: string): any;
+
+
+    /**
+     * @description Create App method
+     * @param appName
+     * @param location
+     */
+    createApp(appName: string, location: string): any;
+
+    /**
+     * @description Add page
+     * @param pageName
+     */
+    addPage(pageName: string, location: string): any;
 
 
 }

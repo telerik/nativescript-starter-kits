@@ -172,12 +172,80 @@ export class TemplateService implements ITemplateService {
         }
     }
 
-    public getPageTemplateDetails() {
-        throw new Error("Not implemented yet");
+    public getPageTemplateDetails(templateName: string) {
+        let that = this,
+            version: string,
+            flavor: string,
+            description: string,
+            templateDetails: any;
+
+        return new Promise(function (resolve, reject) {
+            try {
+                version = that.getTemplateVersion(templateName);
+                flavor = that.checkTemplateFlavor(templateName);
+                description = that.getTemplateDescription(templateName);
+            }
+            catch (err) {
+                reject(err);
+            }
+
+            templateDetails = {
+                name: templateName,
+                description: description,
+                version: version,
+                templateFlavor: flavor
+            };
+
+            resolve(templateDetails);
+
+        });
     }
 
-    public downloadPageTemplate(templateName: string) {
-        throw new Error("Not implemented yet");
+    public createApp(appName: string, location: string) {
+        let appPath: string = path.join(location, appName);
+
+        //TODO: Check if path is a valid system path!!!
+        return new Promise(function (resolve, reject) {
+            fs.mkdir(appPath, '0744', function (err) {
+                if (err && err.code === 'EEXIST') {
+                    reject({
+                        message: appName + " App already exists",
+                        error: err
+                    });
+                }
+                else {
+                    resolve({
+                        message: "Successfully created " + appName + " App",
+                        appPath: appPath
+                    })
+                }
+            })
+        });
+    }
+
+    public addPage(pageName: string, location: string) {
+        let pagePath: string = path.join(location, pageName),
+            exists: any;
+
+        return new Promise(function (resolve, reject) {
+            try {
+                exists = fs.statSync(location);
+            }
+            catch (err) {
+                reject(err);
+            }
+
+            if (!exists.isDirectory()) {
+                reject({message: "Invalid Path"})
+            }
+            else {
+                // TODO: add Page logic here
+                resolve({
+                    message: "Page" + pageName + " added successfully!",
+                    pagePath: pagePath
+                });
+            }
+        });
     }
 }
 
