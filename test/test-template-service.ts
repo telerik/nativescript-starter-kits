@@ -54,5 +54,28 @@ describe("TemplateService Api", () => {
             description.should.not.be.a("number");
         });
     });
+
+    describe("Check template flavor", function () {
+        it("Returns a template flavor", function () {
+            let templateService = new TemplateService(),
+                flavor = templateService.checkTemplateFlavor("template-hello-world-ng");
+
+            flavor.should.be.a("string");
+            flavor.should.not.be.an("object");
+            flavor.should.not.be.a("number");
+            flavor.should.not.be.instanceOf(Error);
+        });
+
+        it("handles errors gracefully ", function () {
+            let templateService = new TemplateService(),
+                flavor = templateService.checkTemplateFlavor("templssate-hello-world-ng")
+
+            flavor.should.be.instanceOf(Error);
+            flavor.should.not.be.a("string");
+            flavor.should.not.be.an("object");
+            flavor.should.not.be.a("number");
+        });
+
+    });
 });
 
