@@ -1,7 +1,10 @@
 import {TemplateService} from "../lib/services/template-service"
 import {Yok} from "mobile-cli-lib/yok";
 
-const should = require('chai').should();
+const chai = require("chai");
+const should = require("chai").should();
+
+chai.use(require("chai-things"));
 
 let testInjector: any;
 
@@ -14,7 +17,7 @@ describe("TemplateService Api", () => {
     describe("Get template Version", function () {
         let templateService = new TemplateService();
         it("returns a template's version from package.json", function () {
-           let version = templateService.getTemplateVersion("template-hello-world-ng");
+            let version = templateService.getTemplateVersion("template-hello-world-ng");
 
             version.should.be.a("string");
             version.should.not.be.an("object");
@@ -35,7 +38,7 @@ describe("TemplateService Api", () => {
     describe("Get template description", function () {
         let templateService = new TemplateService();
         it("returns a template description from package.json", function () {
-           let description = templateService.getTemplateDescription("template-hello-world-ng")
+            let description = templateService.getTemplateDescription("template-hello-world-ng")
 
             description.should.be.a("string");
             description.should.not.be.an("object");
@@ -77,7 +80,7 @@ describe("TemplateService Api", () => {
 
     describe("Get App template Details", function () {
         let templateService = new TemplateService();
-        it("Returns a Tempalte Details object via a Promise", function () {
+        it("Returns a Template Details object via a Promise", function () {
             templateService.getAppTemplateDetails("template-hello-world-ng").then(function (details) {
                 should.exist(details);
                 details.should.be.an("object");
@@ -92,7 +95,7 @@ describe("TemplateService Api", () => {
             });
         });
 
-        it("It nahdles error trough Promise Reject", function () {
+        it("It handles error trough Promise Reject", function () {
             templateService.getAppTemplateDetails("template-hello-world-ng").then(function (details) {
                 should.not.exist(details)
             }).catch(function (err) {
@@ -100,6 +103,24 @@ describe("TemplateService Api", () => {
                 err.should.be.instanceOf(Error);
             });
         });
-    })
+    });
+
+    describe("Get Available templates", function () {
+        let templateService = new TemplateService();
+        it("Returns a Template Details array for all available templates", function () {
+            templateService.getAvailableTemplates().then(function (templates) {
+                should.exist(templates);
+                templates.should.be.an("array");
+
+                templates.should.contain.a.thing.with.property("name");
+                templates.should.contain.a.thing.with.property("version");
+                templates.should.contain.a.thing.with.property("description");
+                templates.should.contain.a.thing.with.property("templateFlavor");
+
+            }).catch(function (err) {
+                should.not.exist(err);
+            });
+        });
+    });
 });
 
