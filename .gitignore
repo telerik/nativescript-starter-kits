@@ -76,5 +76,5 @@ lib/templates/
 
 #ignore xunit.xml
 xunit.xml
-
+test-reports.xml
 

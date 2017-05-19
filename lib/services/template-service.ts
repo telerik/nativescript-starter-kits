@@ -2,10 +2,8 @@ import * as path from "path";
 import * as fs from "fs";
 import * as childProcess from "child_process";
 
-
 export class TemplateService implements ITemplateService {
     constructor() {
-
     }
 
     private _readTemplatePackageJson(tempPath: string) {
@@ -28,8 +26,7 @@ export class TemplateService implements ITemplateService {
 
         try {
             packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
-        }
-        catch (err) {
+        } catch (err) {
             return (err);
         }
 
@@ -45,8 +42,7 @@ export class TemplateService implements ITemplateService {
 
         try {
             packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
-        }
-        catch (err) {
+        } catch (err) {
             return (err);
         }
 
@@ -61,12 +57,10 @@ export class TemplateService implements ITemplateService {
             dependencies: any,
             devDependencies: any;
 
-
         try {
             packageJsonContent = this._readTemplatePackageJson(tempPath);
             packageJsonContent = JSON.parse(packageJsonContent);
-        }
-        catch (err) {
+        } catch (err) {
             return (err);
         }
 
@@ -75,11 +69,9 @@ export class TemplateService implements ITemplateService {
 
         if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
             return ("Angular 2 & TypeScript");
-        }
-        else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+        } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
             return ("Vanilla TypeScript");
-        }
-        else {
+        } else {
             return ("Vanilla JavaScript");
         }
 
@@ -97,8 +89,7 @@ export class TemplateService implements ITemplateService {
                 version = that.getTemplateVersion(templateName);
                 flavor = that.checkTemplateFlavor(templateName);
                 description = that.getTemplateDescription(templateName);
-            }
-            catch (err) {
+            } catch (err) {
                 reject(err);
             }
 
@@ -123,16 +114,15 @@ export class TemplateService implements ITemplateService {
             fs.readdir(tempPath, function (err, content) {
                 if (err) {
                     reject(err);
-                }
-                else {
+                } else {
                     for (let i = 0; i < content.length; i++) {
                         let isDir = fs.statSync(path.join(tempPath, content[i])).isDirectory();
 
                         if (isDir) {
                             that.getAppTemplateDetails(content[i]).then(function (data) {
                                 tempDetails.push(data);
-                            }).catch(function (err) {
-                                reject(err);
+                            }).catch(function (error: any) {
+                                reject(error);
                             });
                         }
                     }
@@ -148,9 +138,8 @@ export class TemplateService implements ITemplateService {
             exists;
 
         try {
-            exists = fs.statSync(templatesDir)
-        }
-        catch (err) {
+            exists = fs.statSync(templatesDir);
+        } catch (err) {
             console.error(err);
         }
 
@@ -158,16 +147,13 @@ export class TemplateService implements ITemplateService {
             childProcess.exec(command, {cwd: templatesDir}, function (error, stdout, stderr) {
                 if (error) {
                     console.error(error);
-                }
-                else if (stderr) {
+                } else if (stderr) {
                     console.error(error);
-                }
-                else {
+                } else {
                     console.log(stdout);
                 }
             });
-        }
-        else {
+        } else {
             console.error("Missing templates directory");
         }
     }
@@ -184,8 +170,7 @@ export class TemplateService implements ITemplateService {
                 version = that.getTemplateVersion(templateName);
                 flavor = that.checkTemplateFlavor(templateName);
                 description = that.getTemplateDescription(templateName);
-            }
-            catch (err) {
+            } catch (err) {
                 reject(err);
             }
 
@@ -212,14 +197,13 @@ export class TemplateService implements ITemplateService {
                         message: appName + " App already exists",
                         error: err
                     });
-                }
-                else {
+                } else {
                     resolve({
                         message: "Successfully created " + appName + " App",
                         appPath: appPath
-                    })
+                    });
                 }
-            })
+            });
         });
     }
 
@@ -230,15 +214,13 @@ export class TemplateService implements ITemplateService {
         return new Promise(function (resolve, reject) {
             try {
                 exists = fs.statSync(location);
-            }
-            catch (err) {
+            } catch (err) {
                 reject(err);
             }
 
             if (!exists.isDirectory()) {
-                reject({message: "Invalid Path"})
-            }
-            else {
+                reject({message: "Invalid Path"});
+            } else {
                 // TODO: add Page logic here
                 resolve({
                     message: "Page" + pageName + " added successfully!",
@@ -250,5 +232,3 @@ export class TemplateService implements ITemplateService {
 }
 
 $injector.register("templateService", TemplateService);
-
-

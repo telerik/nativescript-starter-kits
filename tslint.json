@@ -5,7 +5,7 @@
     "eofline": true,
     "indent": [
       true,
-      "tabs"
+      "spaces"
     ],
     "interface-name": true,
     "jsdoc-format": true,
@@ -18,7 +18,7 @@
     "no-debugger": true,
     "no-duplicate-variable": true,
     "no-shadowed-variable": true,
-    "no-empty": true,
+    "no-empty": false,
     "no-eval": true,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,

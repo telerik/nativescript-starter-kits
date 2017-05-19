@@ -41,7 +41,6 @@ interface ITemplateService {
      */
     getPageTemplateDetails(templateName: string): any;
 
-
     /**
      * @description Create App method
      * @param appName
@@ -54,6 +53,5 @@ interface ITemplateService {
      * @param pageName
      */
     addPage(pageName: string, location: string): any;
-
 
 }
