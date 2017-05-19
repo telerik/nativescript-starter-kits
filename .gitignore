@@ -72,7 +72,9 @@ references.d.ts
 *.js.map
 
 #ignore templates folder
-
 lib/templates/
+
+#ignore xunit.xml
+xunit.xml
 
 
