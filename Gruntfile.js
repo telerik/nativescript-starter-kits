@@ -34,11 +34,11 @@ module.exports = function (grunt) {
             options: grunt.file.readJSON("tsconfig.json").compilerOptions,
 
             devlib: {
-                src: ["lib/**/*.ts", "test/**/*.ts", "references.d.ts", "!node_modules/**/*"]
+                src: ["lib/**/*.ts", "test/**/*.ts", "references.d.ts", "!node_modules/**/*", "!lib/templates/**/*.ts"]
             },
 
             release_build: {
-                src: ["lib/**/*.ts", "test/**/*.ts", "references.d.ts", "!node_modules/**/*"],
+                src: ["lib/**/*.ts", "test/**/*.ts", "references.d.ts", "!node_modules/**/*", "!lib/templates/**/*.ts"],
                 options: {
                     sourceMap: false,
                     removeComments: true
@@ -197,7 +197,7 @@ module.exports = function (grunt) {
         });
     });
 
-    grunt.registerTask("test", ["transpile_additional_project", "generate_references", "ts:devlib", "shell:ci_unit_tests"]);
+    grunt.registerTask("test", ["transpile_additional_project", "generate_references", "ts:devlib"]);
 
     grunt.registerTask("generate_references", () => {
         const referencesPath = path.join(__dirname, "references.d.ts");
@@ -215,7 +215,7 @@ module.exports = function (grunt) {
 
     const fromWindowsRelativePathToUnix = (windowsRelativePath) => {
         return windowsRelativePath.replace(/\\/g, "/");
-    }
+    };
 
     // returns paths that have to be added to reference.d.ts.
     const getReferencesFromDir = (dir) => {
@@ -239,7 +239,6 @@ module.exports = function (grunt) {
         "generate_references",
         "ts:release_build",
         "transpile_additional_project",
-        "shell:ci_unit_tests",
         "tslint:build",
 
         "set_package_version",
