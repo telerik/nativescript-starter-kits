@@ -6,7 +6,7 @@ export class TemplateService implements ITemplateService {
     constructor() {
     }
 
-    private _readTemplatePackageJson(tempPath: string) {
+    /*private _readTemplatePackageJson(tempPath: string) {
         let isDir = fs.statSync(tempPath).isDirectory(),
             tempContent;
 
@@ -15,44 +15,50 @@ export class TemplateService implements ITemplateService {
 
             if (tempContent.indexOf("package.json") > -1) {
                 return fs.readFileSync(path.join(tempPath, "package.json"), "utf8");
+            } else {
+                return new Error("Missing package.json file!");
             }
         }
-    }
+    }*/
 
     public getTemplateVersion(templateName: string) {
-        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+        /*let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
             packageJsonContent: any,
             version: any;
 
         try {
-            packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
+            packageJsonContent = this._readTemplatePackageJson(tempPath);
+            packageJsonContent = JSON.parse(packageJsonContent);
+            version = packageJsonContent.version;
         } catch (err) {
-            return (err);
+            version = packageJsonContent;
         }
 
-        version = packageJsonContent.version;
+        return version;*/
 
-        return version;
+        return "2.0.1";
     }
 
     public getTemplateDescription(templateName: string) {
-        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+        /*let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
             packageJsonContent: any,
             description: any;
 
         try {
-            packageJsonContent = JSON.parse(this._readTemplatePackageJson(tempPath));
+            packageJsonContent = this._readTemplatePackageJson(tempPath);
+            packageJsonContent = JSON.parse(packageJsonContent);
+            description = packageJsonContent.description;
         } catch (err) {
-            return (err);
+            description = packageJsonContent;
         }
 
-        description = packageJsonContent.description;
+        return description;*/
 
-        return description;
+        return "The coolest template ever";
     }
 
     public checkTemplateFlavor(templateName: string) {
-        let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+        /*let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
             packageJsonContent: any,
             dependencies: any,
             devDependencies: any;
@@ -61,7 +67,7 @@ export class TemplateService implements ITemplateService {
             packageJsonContent = this._readTemplatePackageJson(tempPath);
             packageJsonContent = JSON.parse(packageJsonContent);
         } catch (err) {
-            return (err);
+            return packageJsonContent;
         }
 
         dependencies = Object.keys(packageJsonContent.dependencies);
@@ -73,7 +79,9 @@ export class TemplateService implements ITemplateService {
             return ("Vanilla TypeScript");
         } else {
             return ("Vanilla JavaScript");
-        }
+        }*/
+
+        return "@angular + TypeScript";
 
     }
 
@@ -97,7 +105,8 @@ export class TemplateService implements ITemplateService {
                 name: templateName,
                 description: description,
                 version: version,
-                templateFlavor: flavor
+                templateFlavor: flavor,
+                type: "App template"
             };
 
             resolve(templateDetails);
@@ -106,7 +115,7 @@ export class TemplateService implements ITemplateService {
     }
 
     public getAvailableTemplates() {
-        let that = this,
+        /*let that = this,
             tempPath = path.join(__dirname.replace("services", "templates")),
             tempDetails: any = [];
 
@@ -129,6 +138,39 @@ export class TemplateService implements ITemplateService {
                     resolve(tempDetails);
                 }
             });
+        });*/
+
+        return new Promise(function (resolve, reject) {
+            let tempDetails: any = [
+                {   name: 'Telerik.Mobile.NS.TS.NG2.Empty',
+                    description: 'Nativescript empty-ng2-ts project template',
+                    version: '2.0.1',
+                    templateFlavor: 'Angular 2 & TypeScript',
+                    type: "App template"
+                },
+                {   name: 'template-hello-world-ng',
+                    description: 'NativeScript Angular Hello World template',
+                    version: '1.3.5',
+                    templateFlavor: 'Angular 2 & TypeScript',
+                    type: "App template"
+                },
+                {
+                    name: 'page-master-detail-template',
+                    description: 'NativeScript Angular Master Details',
+                    version: '1.0.0',
+                    templateFlavor: 'Vanilla TypeScript',
+                    type: "Page template"
+                },
+                {
+                    name: 'page-login-template',
+                    description: 'NativeScript Angular Master Details',
+                    version: '1.2.0',
+                    templateFlavor: 'Vanilla JavaScript',
+                    type: "Page template"
+                }
+            ];
+
+            resolve(tempDetails);
         });
     }
 
@@ -178,7 +220,8 @@ export class TemplateService implements ITemplateService {
                 name: templateName,
                 description: description,
                 version: version,
-                templateFlavor: flavor
+                templateFlavor: flavor,
+                type: "Page template"
             };
 
             resolve(templateDetails);
