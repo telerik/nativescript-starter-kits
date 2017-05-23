@@ -110,6 +110,45 @@ tns.templateService.addPage("pageName", process.cwd()).then((success) => {
     
 ```
 
+##### Check Template Flavor
+
+```typescript
+/**
+     * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
+     * @param templateName
+     * @returns String
+     */
+    checkTemplateFlavor(templateName: string): string;
+    
+let flavor = tns.templateService.checkTemplateFlavor("templateName");
+```
+
+##### Get Template Version
+
+```typescript
+ /**
+     * @description Get template current version
+     * @param templateName
+     * @returns String
+     */
+    getTemplateVersion(templateName: string): string;
+    
+let version = tns.templateService.getTemplateVersion("templateName");
+```
+
+##### Get Template Description
+
+```typescript
+/**
+     * @description Get template description
+     * @param templateName
+     * @returns String
+     */
+    getTemplateDescription(templateName: string): string;
+    
+let description = tns.templateService.getTemplateDescription("templateName");
+```
+
 
 
 

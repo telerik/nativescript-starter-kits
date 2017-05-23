@@ -3,18 +3,21 @@ interface ITemplateService {
     /**
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
      * @param templateName
+     * @returns String
      */
     checkTemplateFlavor(templateName: string): string;
 
     /**
      * @description Get template current version
      * @param templateName
+     * @returns String
      */
     getTemplateVersion(templateName: string): string;
 
     /**
      * @description Get template description
      * @param templateName
+     * @returns String
      */
     getTemplateDescription(templateName: string): string;
 
