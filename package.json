@@ -1,5 +1,5 @@
 {
-  "name": "ui-kits-cli-extension",
+  "name": "nativescript-ui-kits",
   "version": "0.0.1",
   "description": "CLI extension for the NatvieScript CLI",
   "main": "lib/bootstrap.js",

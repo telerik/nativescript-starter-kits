@@ -1,4 +1,4 @@
-# UiKitsCliExtension
+# nativescript-ui-kits
 A NativeScript CLI extension for managing templates
 
 ## Installation and Development
@@ -6,7 +6,7 @@ A NativeScript CLI extension for managing templates
 Download the GIT repository in you favorite projects directory
 
 ```bash
-$ git clone git@github.com:borisKarastanev/UiKitsCliExtension.git
+$ git clone git@github.com:NativeScript/nativescript-ui-kits.git
 
 ```
 
@@ -23,7 +23,7 @@ $ grunt pack
 Install the npm package 
 
 ```bash
-$ tns extension install <path to ui-kits-cli-extension>.tgz
+$ tns extension install <path to nativescript-ui-kits>.tgz
 ```
 ## Public API
 ```JavaScript
