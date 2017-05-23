@@ -19,6 +19,12 @@ $ npm i -g grunt-cli (only in case you do not have it installed globally)
 $ grunt
 $ grunt pack
 ```
+
+Install the npm package 
+
+```bash
+$ tns extension install <path to ui-kits-cli-extension>.tgz
+```
 ## Public API
 ```JavaScript
 const tns = require("nativescript");
