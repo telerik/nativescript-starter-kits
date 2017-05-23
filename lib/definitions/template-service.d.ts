@@ -19,7 +19,9 @@ interface ITemplateService {
     getTemplateDescription(templateName: string): string;
 
     /**
-     * @description The method returns details about an app template in JSON Format
+     * @description The method returns details about an app template.
+     * @param templateName <String>
+     * @returns Promise
      */
     getAppTemplateDetails(templateName: string): any;
 
@@ -38,6 +40,7 @@ interface ITemplateService {
     /**
      * @description The method returns details about a page template in JSON Format
      * @param templateName <String>
+     * @returns Promise
      */
     getPageTemplateDetails(templateName: string): any;
 
@@ -45,12 +48,14 @@ interface ITemplateService {
      * @description Create App method
      * @param appName
      * @param location
+     * @returns Promise
      */
     createApp(appName: string, location: string): any;
 
     /**
      * @description Add page
      * @param pageName
+     * @returns Promise
      */
     addPage(pageName: string, location: string): any;
 
