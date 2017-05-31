@@ -1,4 +1,4 @@
-# nativescript-ui-kits
+# nativescript-starter-kits
 A NativeScript CLI extension for managing templates
 
 ## Installation and Development
@@ -6,7 +6,7 @@ A NativeScript CLI extension for managing templates
 Download the GIT repository in you favorite projects directory
 
 ```bash
-$ git clone git@github.com:NativeScript/nativescript-ui-kits.git
+$ git clone git@github.com:NativeScript/nativescript-starter-kits.git
 
 ```
 

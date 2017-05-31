@@ -1,12 +1,15 @@
 {
-  "name": "nativescript-ui-kits",
+  "name": "nativescript-starter-kits",
   "version": "0.0.1",
   "description": "CLI extension for the NatvieScript CLI",
   "main": "lib/bootstrap.js",
   "scripts": {
     "test": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- --recursive --reporter spec-xunit-file --require test/test-bootstrap.js --timeout 1000 test/"
   },
-  "repository": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NativeScript/nativescript-starter-kits.git"
+  },
   "author": "Progress <support@telerik.com>",
   "license": "Apache-2.0",
   "bugs": {},
