@@ -106,7 +106,9 @@ export class TemplateService implements ITemplateService {
                 description: description,
                 version: version,
                 templateFlavor: flavor,
-                type: "App template"
+                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                type: "App template",
+                resources: []
             };
 
             resolve(templateDetails);
@@ -142,31 +144,102 @@ export class TemplateService implements ITemplateService {
 
         return new Promise(function (resolve, reject) {
             let tempDetails: any = [
-                {   name: 'Telerik.Mobile.NS.TS.NG2.Empty',
-                    description: 'Nativescript empty-ng2-ts project template',
-                    version: '2.0.1',
+                {   name: 'nativescript-ng-ui-kit-drawer',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ng.git',
                     templateFlavor: 'Angular 2 & TypeScript',
-                    type: "App template"
+                    type: "App template",
+                    resources: []
                 },
-                {   name: 'template-hello-world-ng',
-                    description: 'NativeScript Angular Hello World template',
-                    version: '1.3.5',
-                    templateFlavor: 'Angular 2 & TypeScript',
-                    type: "App template"
+                {   name: 'nativescript-ts-ui-kit-drawer',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                    templateFlavor: 'TypeScript',
+                    type: "App template",
+                    resources: []
                 },
                 {
-                    name: 'page-master-detail-template',
-                    description: 'NativeScript Angular Master Details',
-                    version: '1.0.0',
-                    templateFlavor: 'Vanilla TypeScript',
-                    type: "Page template"
+                    name: 'nativescript-js-ui-kit-drawer',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation.git',
+                    templateFlavor: 'Vanilla JS',
+                    type: "App template",
+                    resources: []
                 },
                 {
-                    name: 'page-login-template',
-                    description: 'NativeScript Angular Master Details',
-                    version: '1.2.0',
-                    templateFlavor: 'Vanilla JavaScript',
-                    type: "Page template"
+                    name: 'nativescript-js-ui-kit-tab',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation.git',
+                    templateFlavor: 'Vanilla JS',
+                    type: "App template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-ts-ui-kit-tab',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ts.git',
+                    templateFlavor: 'TypeScript',
+                    type: "App template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-ng-ui-kit-tab',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ng.git',
+                    templateFlavor: 'Angular 2 & TypeScript',
+                    type: "App template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-js-ui-kit-master-detail',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-master-detail.git',
+                    templateFlavor: 'Vanilla JS',
+                    type: "App template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-ts-ui-kit-master-detail',
+                    description: 'NativeScript Application',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/template-master-detail-ts.git',
+                    templateFlavor: 'TypeScript',
+                    type: "App template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-js-login-page',
+                    description: 'NativeScript Login Page Template',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/nativescript-page-templates.git',
+                    templateFlavor: 'Vanilla JS',
+                    type: "Page template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-ts-login-page',
+                    description: 'NativeScript Login Page Template',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/nativescript-page-templates-ts.git',
+                    templateFlavor: 'TypeScript',
+                    type: "Page template",
+                    resources: []
+                },
+                {
+                    name: 'nativescript-ng-login-page',
+                    description: 'NativeScript Login Page Template',
+                    version: '0.1.0',
+                    gitUrl: 'https://github.com/NativeScript/nativescript-page-templates-ng.git',
+                    templateFlavor: 'Angular 2 & TypeScript',
+                    type: "Page template",
+                    resources: []
                 }
             ];
 
@@ -221,7 +294,9 @@ export class TemplateService implements ITemplateService {
                 description: description,
                 version: version,
                 templateFlavor: flavor,
-                type: "Page template"
+                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                type: "Page template",
+                resources: []
             };
 
             resolve(templateDetails);
