@@ -4,6 +4,7 @@
   "description": "CLI extension for the NatvieScript CLI",
   "main": "lib/bootstrap.js",
   "scripts": {
+    "postinstall": "./postInstall.sh",
     "test": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- --recursive --reporter spec-xunit-file --require test/test-bootstrap.js --timeout 1000 test/"
   },
   "repository": {
