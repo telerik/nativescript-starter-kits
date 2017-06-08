@@ -40,10 +40,11 @@ tns.extensibilityService.loadExtensions();
 
 ```TypeScript
 /**
+     * @name getTemplates
      * @description List all downloaded templates
-     * @return Promise - On Success: Details about each installed template; On Error Promise is rejected
+     * @return {Promise<Array<any>>} - On Success: Array of Objects with Details about each template
 */
-tns.templateService.getAvailableTemplates().then((templates) => {
+tns.templateService.getTemplates().then((templates) => {
     console.log(templates);
 }).catch((error) => {
     console.error(error);
@@ -54,9 +55,10 @@ tns.templateService.getAvailableTemplates().then((templates) => {
 
 ```typescript
 /**
+     * @name getAppTemplateDetails
      * @description The method returns details about an app template.
-     * @param templateName <String>
-     * @returns Promise 
+     * @param {string} templateName - The name of the template
+     * @returns {Promise<any>} - Object with details about the app template
      */
     getAppTemplateDetails(templateName: string): any;
     
@@ -70,8 +72,10 @@ tns.templateService.getAppTemplateDetails("templateName").then((details) => {
 ##### Get details for a single Page template
 ```typescript
 /**
+     * @name getPageTemplateDetails
      * @description The method returns details about a page template in JSON Format
-     * @param templateName <String>
+     * @param {string} templateName The name of the template
+     * @returns {Promise<any>} - Object with details about the page template
      */
     getPageTemplateDetails(templateName: string): any;
     
@@ -82,29 +86,14 @@ tns.templateService.getPageTemplateDetails("templateName").then((details) => {
 });
 ```
 
-##### Create App
-```typescript
-/**
-     * @description Create App method
-     * @param appName
-     * @param location
-     * @returns Promise
-     */
-    createApp(appName: string, location: string): any;
-
-tns.templateService.createApp("appName", process.cwd()).then((success) => {
-    console.log(success);
-}).catch((error) => {
-    console.error(error);
-});
-```
-
 ##### Add Page
 ```typescript
  /**
+     * @name addPage
      * @description Add page
-     * @param pageName
-     * @returns Promise
+     * @param {String} pageName - Name of the page you want to add
+     * @param {String} location - The template location
+     * @returns {Promise<any>} - Object with operation details
      */
     addPage(pageName: string, location: string): any;
     
@@ -120,9 +109,10 @@ tns.templateService.addPage("pageName", process.cwd()).then((success) => {
 
 ```typescript
 /**
+     * @name checkTemplateFlavor
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
-     * @param templateName
-     * @returns String
+     * @param {string} templateName - The name of the template 
+     * @returns {string} - Template flavor 
      */
     checkTemplateFlavor(templateName: string): string;
     
@@ -133,9 +123,10 @@ let flavor = tns.templateService.checkTemplateFlavor("templateName");
 
 ```typescript
  /**
-     * @description Get template current version
-     * @param templateName
-     * @returns String
+     * @name getTemplateVersion
+     * @description Get the template current version
+     * @param {string} templateName - The name of the template 
+     * @returns {string} - Template version 
      */
     getTemplateVersion(templateName: string): string;
     
@@ -146,9 +137,10 @@ let version = tns.templateService.getTemplateVersion("templateName");
 
 ```typescript
 /**
+     * @name getTemplateDescription
      * @description Get template description
-     * @param templateName
-     * @returns String
+     * @param {string} templateName The name of the template 
+     * @returns {String} - Description about the template 
      */
     getTemplateDescription(templateName: string): string;
     
