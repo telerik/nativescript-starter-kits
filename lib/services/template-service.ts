@@ -122,7 +122,7 @@ export class TemplateService implements ITemplateService {
         });
     }
 
-    public getAvailableTemplates() {
+    public getTemplates() {
         /*let that = this,
             tempPath = path.join(__dirname.replace("services", "templates")),
             tempDetails: any = [];

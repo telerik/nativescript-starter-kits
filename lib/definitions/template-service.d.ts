@@ -32,7 +32,7 @@ interface ITemplateService {
      * @description Search for all downloaded templates
      * @return Promise
      */
-    getAvailableTemplates(): any;
+    getTemplates(): any;
 
     /**
      * @description Download an app template in your local project folder
