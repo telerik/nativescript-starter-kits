@@ -71,6 +71,9 @@ references.d.ts
 *.map.js
 *.js.map
 
+# but don't ignore the config.js file
+!config.js
+
 #ignore templates folder
 lib/templates/
 

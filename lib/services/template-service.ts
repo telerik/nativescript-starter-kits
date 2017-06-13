@@ -31,7 +31,7 @@ export class TemplateService implements ITemplateService {
 
     // TODO make private
     public sourceTemplateData() {
-        console.log('Config', Config.templates);
+        console.log('Config', Config.appTemplates);
         let that = this,
             options: any = {
             host: 'api.github.com',
