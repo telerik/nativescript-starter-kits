@@ -1,6 +1,9 @@
-import * as path from "path";
-import * as fs from "fs";
-import * as childProcess from "child_process";
+import * as path from 'path';
+import * as fs from 'fs';
+import * as childProcess from 'child_process';
+import * as https from 'https';
+
+const Config = require('../../config.js');
 
 export class TemplateService implements ITemplateService {
     constructor() {
@@ -20,6 +23,34 @@ export class TemplateService implements ITemplateService {
             }
         }
     }*/
+
+    public base64Decode(encoded: string) {
+        let buf = Buffer.from(encoded, 'base64');
+        return buf.toString('utf8');
+    }
+
+    // TODO make private
+    public sourceTemplateData() {
+        console.log('Config', Config.templates);
+        let that = this,
+            options: any = {
+            host: 'api.github.com',
+            path: '/repos/NativeScript/template-drawer-navigation-ts/contents/package.json?ref=master',
+            headers: {
+                'user-agent': 'nativescript-starter-kits'
+            }
+        };
+
+        https.request(options, function (res) {
+            let str = '';
+            res.on('data', function (chunk) {
+                str += chunk;
+            });
+            res.on('end', function () {
+                console.log('Finished=== ', that.base64Decode(JSON.parse(str).content));
+            })
+        }).end();
+    }
 
     public imageEncode(filePath: string) {
         let bitmap = fs.readFileSync(filePath);
@@ -42,7 +73,7 @@ export class TemplateService implements ITemplateService {
 
         return version;*/
 
-        return "2.0.1";
+        return '2.0.1';
     }
 
     public getTemplateDescription(templateName: string) {
@@ -60,7 +91,7 @@ export class TemplateService implements ITemplateService {
 
         return description;*/
 
-        return "The coolest template ever";
+        return 'The coolest template ever';
     }
 
     public checkTemplateFlavor(templateName: string) {
@@ -87,7 +118,7 @@ export class TemplateService implements ITemplateService {
             return ("Vanilla JavaScript");
         }*/
 
-        return "Angular 2 & TypeScript";
+        return 'Angular 2 & TypeScript';
 
     }
 
@@ -113,7 +144,7 @@ export class TemplateService implements ITemplateService {
                 version: version,
                 templateFlavor: flavor,
                 gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
-                type: "App template",
+                type: 'App template',
                 resources: []
             };
 
@@ -320,8 +351,8 @@ export class TemplateService implements ITemplateService {
     }
 
     public downloadAppTemplate(url: string) {
-        let command = "git clone " + url,
-            templatesDir = __dirname.replace("services", "templates"), // Temp hack
+        let command = 'git clone ' + url,
+            templatesDir = __dirname.replace('services', 'templates'), // Temp hack
             exists;
 
         try {
@@ -341,7 +372,7 @@ export class TemplateService implements ITemplateService {
                 }
             });
         } else {
-            console.error("Missing templates directory");
+            console.error('Missing templates directory');
         }
     }
 
@@ -367,7 +398,7 @@ export class TemplateService implements ITemplateService {
                 version: version,
                 templateFlavor: flavor,
                 gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
-                type: "Page template",
+                type: 'Page template',
                 resources: []
             };
 
@@ -384,12 +415,12 @@ export class TemplateService implements ITemplateService {
             fs.mkdir(appPath, '0744', function (err) {
                 if (err && err.code === 'EEXIST') {
                     reject({
-                        message: appName + " App already exists",
+                        message: appName + ' App already exists',
                         error: err
                     });
                 } else {
                     resolve({
-                        message: "Successfully created " + appName + " App",
+                        message: 'Successfully created ' + appName + ' App',
                         appPath: appPath
                     });
                 }
@@ -409,11 +440,11 @@ export class TemplateService implements ITemplateService {
             }
 
             if (!exists.isDirectory()) {
-                reject({message: "Invalid Path"});
+                reject({message: 'Invalid Path'});
             } else {
                 // TODO: add Page logic here
                 resolve({
-                    message: "Page" + pageName + " added successfully!",
+                    message: 'Page' + pageName + ' added successfully!',
                     pagePath: pagePath
                 });
             }
@@ -421,4 +452,8 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register("templateService", TemplateService);
+//$injector.register('templateService', TemplateService);
+
+let test = new TemplateService();
+
+test.sourceTemplateData();
