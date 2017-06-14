@@ -105,33 +105,11 @@ export class TemplateService implements ITemplateService {
     }
 
     public checkTemplateFlavor(templateName: string) {
-        /*let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
-            packageJsonContent: any,
-            dependencies: any,
-            devDependencies: any;
-
-        try {
-            packageJsonContent = this._readTemplatePackageJson(tempPath);
-            packageJsonContent = JSON.parse(packageJsonContent);
-        } catch (err) {
-            return packageJsonContent;
-        }
-
-        dependencies = Object.keys(packageJsonContent.dependencies);
-        devDependencies = Object.keys(packageJsonContent.devDependencies);
-
-        if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
-            return ("Angular 2 & TypeScript");
-        } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-            return ("Vanilla TypeScript");
-        } else {
-            return ("Vanilla JavaScript");
-        }*/
-
         let that = this,
             packageJsonContent: any,
             dependencies: any,
             devDependencies: any;
+
         return new Promise(function (resolve, reject) {
             that.tmpPackageJsonFromSrc(templateName)
                 .then(function (pj) {
@@ -142,9 +120,9 @@ export class TemplateService implements ITemplateService {
                     if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
                         resolve("Angular 2 & TypeScript");
                     } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-                        resolve("Vanilla TypeScript");
+                        resolve("TypeScript");
                     } else {
-                        resolve ("Vanilla JavaScript");
+                        resolve ("JavaScript");
                     }
                 })
                 .catch(function (err) {
@@ -155,32 +133,28 @@ export class TemplateService implements ITemplateService {
     }
 
     public getAppTemplateDetails(templateName: string) {
-        let version: string,
-            flavor: string,
-            description: string,
-            templateDetails: any;
+        let that = this,
+            templateDetails: any = {};
+
+        templateDetails.name = templateName;
 
         return new Promise(function (resolve, reject) {
-            try {
-               // version = that.getTemplateVersion(templateName);
-               // flavor = that.checkTemplateFlavor(templateName);
-                //description = that.getTemplateDescription(templateName);
-            } catch (err) {
-                reject(err);
-            }
-
-            templateDetails = {
-                name: templateName,
-                description: description,
-                version: version,
-                templateFlavor: flavor,
-                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
-                type: 'App template',
-                resources: []
-            };
-
-            resolve(templateDetails);
-
+            that.getTemplateDescription(templateName)
+                .then(function (desc) {
+                    templateDetails.description = desc;
+                    return that.getTemplateVersion(templateName);
+                })
+                .then(function (version) {
+                    templateDetails.version = version;
+                    return that.checkTemplateFlavor(templateName);
+                })
+                .then(function (flav) {
+                    templateDetails.flavor = flav;
+                    resolve(templateDetails);
+                })
+                .catch(function (err) {
+                    reject(err)
+                });
         });
     }
 
@@ -486,7 +460,7 @@ export class TemplateService implements ITemplateService {
 
 let test = new TemplateService();
 
-test.checkTemplateFlavor('template-drawer-navigation-ng')
+test.getAppTemplateDetails('template-drawer-navigation-ng')
     .then(function (data) {
     console.log(data);
 })
