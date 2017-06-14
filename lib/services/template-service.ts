@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as childProcess from 'child_process';
 import * as https from 'https';
 
-const Config = require('../../config.js');
+//const Config = require('../../config.js');
 
 export class TemplateService implements ITemplateService {
     constructor() {
@@ -24,32 +24,42 @@ export class TemplateService implements ITemplateService {
         }
     }*/
 
+    // TODO make private
     public base64Decode(encoded: string) {
         let buf = Buffer.from(encoded, 'base64');
         return buf.toString('utf8');
     }
 
     // TODO make private
-    public sourceTemplateData() {
-        console.log('Config', Config.appTemplates);
+    public tmpPackageJsonFromSrc(templateName: string) {
         let that = this,
+            content: any,
             options: any = {
             host: 'api.github.com',
-            path: '/repos/NativeScript/template-drawer-navigation-ts/contents/package.json?ref=master',
+            path: '/repos/NativeScript/' + templateName + '/contents/package.json?ref=master',
             headers: {
                 'user-agent': 'nativescript-starter-kits'
             }
         };
 
-        https.request(options, function (res) {
-            let str = '';
-            res.on('data', function (chunk) {
-                str += chunk;
-            });
-            res.on('end', function () {
-                console.log('Finished=== ', that.base64Decode(JSON.parse(str).content));
-            })
-        }).end();
+        return new Promise(function (resolve, reject) {
+            https.request(options, function (res) {
+                let str = '';
+
+                res.on('error', function (err) {
+                    reject(err);
+                });
+
+                res.on('data', function (chunk) {
+                    str += chunk;
+                });
+
+                res.on('end', function () {
+                    content = that.base64Decode(JSON.parse(str).content);
+                    resolve(content);
+                });
+            }).end();
+        });
     }
 
     public imageEncode(filePath: string) {
@@ -456,4 +466,10 @@ export class TemplateService implements ITemplateService {
 
 let test = new TemplateService();
 
-test.sourceTemplateData();
+test.tmpPackageJsonFromSrc('template-drawer-navigation-ng')
+    .then(function (data) {
+    console.log(data);
+})
+    .catch(function (err) {
+        console.error(err);
+    });
