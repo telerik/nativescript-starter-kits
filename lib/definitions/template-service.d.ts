@@ -3,9 +3,9 @@ interface ITemplateService {
     /**
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
      * @param templateName
-     * @returns String
+     * @returns {Promise<string>}
      */
-    checkTemplateFlavor(templateName: string): string;
+    checkTemplateFlavor(templateName: string): any;
 
     /**
      * @description Get template current version

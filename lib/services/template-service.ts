@@ -128,13 +128,34 @@ export class TemplateService implements ITemplateService {
             return ("Vanilla JavaScript");
         }*/
 
-        return 'Angular 2 & TypeScript';
+        let that = this,
+            packageJsonContent: any,
+            dependencies: any,
+            devDependencies: any;
+        return new Promise(function (resolve, reject) {
+            that.tmpPackageJsonFromSrc(templateName)
+                .then(function (pj) {
+                    packageJsonContent = pj;
+                    dependencies = Object.keys(packageJsonContent.dependencies);
+                    devDependencies = Object.keys(packageJsonContent.devDependencies);
+
+                    if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+                        resolve("Angular 2 & TypeScript");
+                    } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+                        resolve("Vanilla TypeScript");
+                    } else {
+                        resolve ("Vanilla JavaScript");
+                    }
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
+        });
 
     }
 
     public getAppTemplateDetails(templateName: string) {
-        let that = this,
-            version: string,
+        let version: string,
             flavor: string,
             description: string,
             templateDetails: any;
@@ -142,7 +163,7 @@ export class TemplateService implements ITemplateService {
         return new Promise(function (resolve, reject) {
             try {
                // version = that.getTemplateVersion(templateName);
-                flavor = that.checkTemplateFlavor(templateName);
+               // flavor = that.checkTemplateFlavor(templateName);
                 //description = that.getTemplateDescription(templateName);
             } catch (err) {
                 reject(err);
@@ -387,8 +408,7 @@ export class TemplateService implements ITemplateService {
     }
 
     public getPageTemplateDetails(templateName: string) {
-        let that = this,
-            version: string,
+        let version: string,
             flavor: string,
             description: string,
             templateDetails: any;
@@ -396,7 +416,7 @@ export class TemplateService implements ITemplateService {
         return new Promise(function (resolve, reject) {
             try {
                 //version = that.getTemplateVersion(templateName);
-                flavor = that.checkTemplateFlavor(templateName);
+                //flavor = that.checkTemplateFlavor(templateName);
                 //description = that.getTemplateDescription(templateName);
             } catch (err) {
                 reject(err);
@@ -466,7 +486,7 @@ export class TemplateService implements ITemplateService {
 
 let test = new TemplateService();
 
-test.getTemplateDescription('template-drawer-navigation-ng')
+test.checkTemplateFlavor('template-drawer-navigation-ng')
     .then(function (data) {
     console.log(data);
 })
