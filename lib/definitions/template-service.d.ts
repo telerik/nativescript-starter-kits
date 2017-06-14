@@ -17,9 +17,9 @@ interface ITemplateService {
     /**
      * @description Get template description
      * @param templateName
-     * @returns String
+     * @returns {Promise<string>}
      */
-    getTemplateDescription(templateName: string): string;
+    getTemplateDescription(templateName: string): any;
 
     /**
      * @description The method returns details about an app template.
