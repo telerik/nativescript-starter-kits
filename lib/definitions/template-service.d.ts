@@ -10,9 +10,9 @@ interface ITemplateService {
     /**
      * @description Get template current version
      * @param templateName
-     * @returns String
+     * @returns {Promise<string>}
      */
-    getTemplateVersion(templateName: string): string;
+    getTemplateVersion(templateName: string): any;
 
     /**
      * @description Get template description

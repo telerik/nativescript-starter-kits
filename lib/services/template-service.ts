@@ -56,6 +56,7 @@ export class TemplateService implements ITemplateService {
 
                 res.on('end', function () {
                     content = that.base64Decode(JSON.parse(str).content);
+                    content = JSON.parse(content);
                     resolve(content);
                 });
             }).end();
@@ -69,21 +70,20 @@ export class TemplateService implements ITemplateService {
     }
 
     public getTemplateVersion(templateName: string) {
-        /*let tempPath = path.join(__dirname.replace("services", "templates"), templateName),
+        let that = this,
             packageJsonContent: any,
             version: any;
-
-        try {
-            packageJsonContent = this._readTemplatePackageJson(tempPath);
-            packageJsonContent = JSON.parse(packageJsonContent);
-            version = packageJsonContent.version;
-        } catch (err) {
-            version = packageJsonContent;
-        }
-
-        return version;*/
-
-        return '2.0.1';
+        return new Promise(function (resolve, reject) {
+            that.tmpPackageJsonFromSrc(templateName)
+                .then(function (pj) {
+                    packageJsonContent = pj;
+                    version = packageJsonContent.version;
+                    resolve(version);
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
+        });
     }
 
     public getTemplateDescription(templateName: string) {
@@ -141,7 +141,7 @@ export class TemplateService implements ITemplateService {
 
         return new Promise(function (resolve, reject) {
             try {
-                version = that.getTemplateVersion(templateName);
+               // version = that.getTemplateVersion(templateName);
                 flavor = that.checkTemplateFlavor(templateName);
                 description = that.getTemplateDescription(templateName);
             } catch (err) {
@@ -395,7 +395,7 @@ export class TemplateService implements ITemplateService {
 
         return new Promise(function (resolve, reject) {
             try {
-                version = that.getTemplateVersion(templateName);
+                //version = that.getTemplateVersion(templateName);
                 flavor = that.checkTemplateFlavor(templateName);
                 description = that.getTemplateDescription(templateName);
             } catch (err) {
@@ -466,7 +466,7 @@ export class TemplateService implements ITemplateService {
 
 let test = new TemplateService();
 
-test.tmpPackageJsonFromSrc('template-drawer-navigation-ng')
+test.getTemplateVersion('template-drawer-navigation-ng')
     .then(function (data) {
     console.log(data);
 })
