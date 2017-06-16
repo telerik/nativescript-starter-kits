@@ -135,7 +135,6 @@ export class TemplateService implements ITemplateService {
                     reject(err);
                 });
         });
-
     }
 
     public getAppTemplateDetails(templateName: string) {
@@ -159,7 +158,7 @@ export class TemplateService implements ITemplateService {
                     resolve(templateDetails);
                 })
                 .catch(function (err) {
-                    reject(err)
+                    reject(err);
                 });
         });
     }
@@ -180,7 +179,6 @@ export class TemplateService implements ITemplateService {
                             reject(err);
                         })
                 );
-
             }
             Promise.all(promises)
                 .then(function () {
