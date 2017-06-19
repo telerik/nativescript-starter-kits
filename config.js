@@ -2,6 +2,10 @@
 
 const Config = {};
 
+Config.options = {
+    cacheTime: 600 // Value in sec
+};
+
 Config.appTemplates = [
     'template-drawer-navigation-ng',
     'template-drawer-navigation-ts',
