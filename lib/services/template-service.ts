@@ -3,26 +3,22 @@ import * as fs from 'fs';
 import * as childProcess from 'child_process';
 import * as https from 'https';
 
-const CONFIG = require('../../config.js');
+const Config = require('../../config.js');
+const NodeCache = require("node-cache");
+const tmpCache = new NodeCache();
 
 export class TemplateService implements ITemplateService {
     constructor() {
-    }
-
-    /*private _readTemplatePackageJson(tempPath: string) {
-        let isDir = fs.statSync(tempPath).isDirectory(),
-            tempContent;
-
-        if (isDir) {
-            tempContent = fs.readdirSync(tempPath);
-
-            if (tempContent.indexOf("package.json") > -1) {
-                return fs.readFileSync(path.join(tempPath, "package.json"), "utf8");
-            } else {
-                return new Error("Missing package.json file!");
-            }
+        for (let i = 0; i < Config.appTemplates.length; i++) {
+            this.tmpPackageJsonFromSrc(Config.appTemplates[i])
+                .then(function () {
+                    console.log('Cached Template Data');
+                })
+                .catch(function (err) {
+                    console.error({msg: 'Error when trying to cache templates', error: err});
+                });
         }
-    }*/
+    }
 
     // TODO make private
     public base64Decode(encoded: string) {
@@ -35,12 +31,12 @@ export class TemplateService implements ITemplateService {
         let that = this,
             content: any,
             options: any = {
-            host: 'api.github.com',
-            path: '/repos/NativeScript/' + templateName + '/contents/package.json?ref=master',
-            headers: {
-                'user-agent': 'nativescript-starter-kits'
-            }
-        };
+                host: 'api.github.com',
+                path: '/repos/NativeScript/' + templateName + '/contents/package.json?ref=master',
+                headers: {
+                    'user-agent': 'nativescript-starter-kits'
+                }
+            };
 
         return new Promise(function (resolve, reject) {
             https.request(options, function (res) {
@@ -58,6 +54,7 @@ export class TemplateService implements ITemplateService {
                     try {
                         content = that.base64Decode(JSON.parse(str).content);
                         content = JSON.parse(content);
+                        tmpCache.set(templateName + 'Cache', content, Config.options.cacheTime);
                         resolve(content);
                     } catch (err) {
                         // Handle API rate error
@@ -80,15 +77,29 @@ export class TemplateService implements ITemplateService {
             packageJsonContent: any,
             version: any;
         return new Promise(function (resolve, reject) {
-            that.tmpPackageJsonFromSrc(templateName)
-                .then(function (pj) {
-                    packageJsonContent = pj;
-                    version = packageJsonContent.version;
-                    resolve(version);
-                })
-                .catch(function (err) {
-                    reject(err);
-                });
+            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
+                if (!err) {
+                    if (value === undefined) {
+                        // key not found
+                        console.log('===== not found ===');
+                        that.tmpPackageJsonFromSrc(templateName)
+                            .then(function (pj) {
+                                packageJsonContent = pj;
+                                version = packageJsonContent.version;
+                                resolve(version);
+                            })
+                            .catch(function (error) {
+                                reject(error);
+                            });
+                    } else {
+                        console.log('=====Loading from Cached ===');
+                        version = value.version;
+                        resolve(version);
+                    }
+                } else {
+                    reject({message: "Error retrieving cache for " + templateName, error: err});
+                }
+            });
         });
     }
 
@@ -98,15 +109,29 @@ export class TemplateService implements ITemplateService {
             description: any;
 
         return new Promise(function (resolve, reject) {
-            that.tmpPackageJsonFromSrc(templateName)
-                .then(function (pj) {
-                    packageJsonContent = pj;
-                    description = packageJsonContent.description;
-                    resolve(description);
-                })
-                .catch(function (err) {
-                    reject(err);
-                });
+            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
+                if (!err) {
+                    if (value === undefined) {
+                        // key not found
+                        console.log('===== not found ===');
+                        that.tmpPackageJsonFromSrc(templateName)
+                            .then(function (pj) {
+                                packageJsonContent = pj;
+                                description = packageJsonContent.description;
+                                resolve(description);
+                            })
+                            .catch(function (error) {
+                                reject(error);
+                            });
+                    } else {
+                        console.log('=====Loading from Cached ===');
+                        description = value.description;
+                        resolve(description);
+                    }
+                } else {
+                    reject({message: "Error retrieving cache for " + templateName, error: err});
+                }
+            });
         });
     }
 
@@ -117,23 +142,45 @@ export class TemplateService implements ITemplateService {
             devDependencies: any;
 
         return new Promise(function (resolve, reject) {
-            that.tmpPackageJsonFromSrc(templateName)
-                .then(function (pj) {
-                    packageJsonContent = pj;
-                    dependencies = Object.keys(packageJsonContent.dependencies);
-                    devDependencies = Object.keys(packageJsonContent.devDependencies);
+            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
+                if (!err) {
+                    if (value === undefined) {
+                        // key not found
+                        console.log('===== not found ===');
+                        that.tmpPackageJsonFromSrc(templateName)
+                            .then(function (pj) {
+                                packageJsonContent = pj;
+                                dependencies = Object.keys(packageJsonContent.dependencies);
+                                devDependencies = Object.keys(packageJsonContent.devDependencies);
 
-                    if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
-                        resolve("Angular & TypeScript");
-                    } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-                        resolve("TypeScript");
+                                if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+                                    resolve("Angular & TypeScript");
+                                } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+                                    resolve("TypeScript");
+                                } else {
+                                    resolve("JavaScript");
+                                }
+                            })
+                            .catch(function (error) {
+                                reject(error);
+                            });
                     } else {
-                        resolve ("JavaScript");
+                        console.log('=====Loading from Cached ===');
+                        dependencies = Object.keys(value.dependencies);
+                        devDependencies = Object.keys(value.devDependencies);
+
+                        if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+                            resolve("Angular & TypeScript");
+                        } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+                            resolve("TypeScript");
+                        } else {
+                            resolve("JavaScript");
+                        }
                     }
-                })
-                .catch(function (err) {
-                    reject(err);
-                });
+                } else {
+                    reject({message: "Error retrieving cache for " + templateName, error: err});
+                }
+            });
         });
     }
 
@@ -169,9 +216,9 @@ export class TemplateService implements ITemplateService {
             promises: any = [];
 
         return new Promise(function (resolve, reject) {
-            for (let i = 0; i < CONFIG.appTemplates.length; i++) {
+            for (let i = 0; i < Config.appTemplates.length; i++) {
                 promises.push(
-                    that.getAppTemplateDetails(CONFIG.appTemplates[i])
+                    that.getAppTemplateDetails(Config.appTemplates[i])
                         .then(function (details) {
                             tempDetails.push(details);
                         })
@@ -182,7 +229,7 @@ export class TemplateService implements ITemplateService {
             }
             Promise.all(promises)
                 .then(function () {
-                   resolve(tempDetails);
+                    resolve(tempDetails);
                 });
         });
     }
@@ -288,14 +335,4 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-//$injector.register('templateService', TemplateService);
-
-let test = new TemplateService();
-
-test.getTemplates()
-    .then(function (data) {
-    console.log(data);
-})
-    .catch(function (err) {
-        console.error(err);
-    });
+$injector.register('templateService', TemplateService);
