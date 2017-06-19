@@ -1,6 +1,6 @@
 {
   "name": "nativescript-starter-kits",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI extension for the NatvieScript CLI",
   "main": "lib/bootstrap.js",
   "scripts": {
@@ -42,5 +42,7 @@
     "tslint": "4.3.1",
     "typescript": "2.1.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-cache": "^4.1.1"
+  }
 }
