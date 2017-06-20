@@ -16,6 +16,9 @@ Config.appTemplates = [
     'template-master-detail',
     'template-master-detail-ng',
     'template-master-detail-ts',
+    'template-blank-ts',
+    'template-blank',
+    'template-blank-ng'
 ];
 
 module.exports = Config;

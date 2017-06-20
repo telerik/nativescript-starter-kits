@@ -59,7 +59,11 @@ export class TemplateService implements ITemplateService {
                     } catch (err) {
                         // Handle API rate error
                         let errMsg = JSON.parse(str).message;
-                        reject({message: errMsg, error: err});
+                        reject({
+                            template: templateName,
+                            message: errMsg,
+                            error: err
+                        });
                     }
                 });
             }).end();
