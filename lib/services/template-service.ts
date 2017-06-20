@@ -103,6 +103,39 @@ export class TemplateService implements ITemplateService {
         });
     }
 
+    public getTemplateGitUrl(templateName: string) {
+        let that = this,
+            packageJsonContent: any,
+            gitUrl: any;
+
+        return new Promise(function (resolve, reject) {
+            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
+                if (!err) {
+                    if (value === undefined) {
+                        // key not found
+                        console.log('===== not found ===');
+                        that.tmpPackageJsonFromSrc(templateName)
+                            .then(function (pj) {
+                                packageJsonContent = pj;
+                                gitUrl = packageJsonContent.repository.url;
+                                resolve(gitUrl);
+                            })
+                            .catch(function (error) {
+                                reject({message: 'Error retrieving data from source', error: error});
+                            });
+
+                    } else {
+                        gitUrl = value.repository.url;
+                        resolve(gitUrl);
+                    }
+                } else {
+                    reject({message: "Error retrieving cache for " + templateName, error: err});
+                }
+
+            });
+        });
+    }
+
     public getTemplateDescription(templateName: string) {
         let that = this,
             packageJsonContent: any,
@@ -198,6 +231,10 @@ export class TemplateService implements ITemplateService {
                 })
                 .then(function (version) {
                     templateDetails.version = version;
+                    return that.getTemplateGitUrl(templateName);
+                })
+                .then(function (gitUrl) {
+                    templateDetails.gitUrl = gitUrl;
                     return that.checkTemplateFlavor(templateName);
                 })
                 .then(function (flav) {

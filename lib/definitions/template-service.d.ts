@@ -29,6 +29,13 @@ interface ITemplateService {
     getAppTemplateDetails(templateName: string): any;
 
     /**
+     * @description Get template github url
+     * @param templateName
+     * @returns {Promise<String>}
+     */
+    getTemplateGitUrl(templateName: string): any;
+
+    /**
      * @description Search for all downloaded templates
      * @return Promise
      */
