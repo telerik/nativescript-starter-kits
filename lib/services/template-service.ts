@@ -9,7 +9,7 @@ const tmpCache = new NodeCache();
 
 export class TemplateService implements ITemplateService {
     constructor() {
-        for (let i = 0; i < Config.appTemplates.length; i++) {
+        /*for (let i = 0; i < Config.appTemplates.length; i++) {
             this.tmpPackageJsonFromSrc(Config.appTemplates[i])
                 .then(function () {
                     console.log('Cached Template Data');
@@ -17,7 +17,48 @@ export class TemplateService implements ITemplateService {
                 .catch(function (err) {
                     console.error({msg: 'Error when trying to cache templates', error: err});
                 });
-        }
+        }*/
+    }
+
+    public _getNsGitRepos() {
+        let content: Array<any> = [],
+            gitResponse: any,
+            options: any = {
+            host: 'api.github.com',
+            path: '/orgs/NativeScript/repos?per_page=100&page=2',
+            headers: {
+                'user-agent': 'nativescript-starter-kits'
+            }
+        };
+        return new Promise(function (resolve, reject) {
+            https.request(options, function (res) {
+                let str = '';
+
+                console.log(res.headers);
+
+                res.on('error', function (err) {
+                    reject(err);
+                });
+
+                res.on('data', function (chunk) {
+                    str += chunk;
+                });
+
+                res.on('end', function () {
+                    try {
+                        gitResponse = JSON.parse(str);
+                        for (let i = 0; i < gitResponse.length; i++) {
+                            if (gitResponse[i].name.indexOf('template-') > -1) {
+                                content.push(gitResponse[i].name);
+                            }
+                        }
+                        console.log(content);
+                    } catch (err) {
+                        reject({message: 'Error in Parsing response', error: err});
+                    }
+                });
+            }).end();
+        });
     }
 
     // TODO make private
@@ -376,4 +417,13 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register('templateService', TemplateService);
+//$injector.register('templateService', TemplateService);
+
+let test = new TemplateService();
+
+test._getNsGitRepos()
+.then(function () {
+})
+.catch(function (err) {
+    console.error('Errror=== ', err)
+});
