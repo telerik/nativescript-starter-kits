@@ -417,13 +417,4 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-//$injector.register('templateService', TemplateService);
-
-let test = new TemplateService();
-
-test._getNsGitRepos()
-.then(function () {
-})
-.catch(function (err) {
-    console.error('Errror=== ', err)
-});
+$injector.register('templateService', TemplateService);
