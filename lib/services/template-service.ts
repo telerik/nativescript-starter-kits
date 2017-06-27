@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as childProcess from 'child_process';
 import * as https from 'https';
 
+const request = require('request-promise');
 const Config = require('../../config.js');
 const NodeCache = require("node-cache");
 const tmpCache = new NodeCache();
@@ -10,55 +11,55 @@ const tmpCache = new NodeCache();
 export class TemplateService implements ITemplateService {
     constructor() {
         /*for (let i = 0; i < Config.appTemplates.length; i++) {
-            this.tmpPackageJsonFromSrc(Config.appTemplates[i])
-                .then(function () {
-                    console.log('Cached Template Data');
-                })
-                .catch(function (err) {
-                    console.error({msg: 'Error when trying to cache templates', error: err});
-                });
-        }*/
+         this.tmpPackageJsonFromSrc(Config.appTemplates[i])
+         .then(function () {
+         console.log('Cached Template Data');
+         })
+         .catch(function (err) {
+         console.error({msg: 'Error when trying to cache templates', error: err});
+         });
+         }*/
     }
 
-    public _getNsGitRepos() {
-        let content: Array<any> = [],
-            gitResponse: any,
-            options: any = {
-            host: 'api.github.com',
-            path: '/orgs/NativeScript/repos?per_page=100&page=2',
+    public _filterRepoResults(repos: any) {
+        let names: Array<any> = [];
+        return new Promise(function (resolve) {
+           for ( let i = 0; i < repos.length; i++) {
+               if (repos[i].name.indexOf('template-') > -1) {
+                   names.push(repos[i].name);
+               }
+           }
+            resolve(names);
+        });
+    }
+
+    public _getNsGitRepos(uri: string, repos: Array<any>) {
+        let that = this;
+        return request({
+            method: "GET",
+            uri: uri,
+            json: true,
+            resolveWithFullResponse: true,
             headers: {
                 'user-agent': 'nativescript-starter-kits'
             }
-        };
-        return new Promise(function (resolve, reject) {
-            https.request(options, function (res) {
-                let str = '';
+        })
+            .then(function (response: any) {
+                if (!repos) {
+                    repos = [];
+                }
 
-                console.log(res.headers);
+                repos = repos.concat(response.body);
 
-                res.on('error', function (err) {
-                    reject(err);
-                });
-
-                res.on('data', function (chunk) {
-                    str += chunk;
-                });
-
-                res.on('end', function () {
-                    try {
-                        gitResponse = JSON.parse(str);
-                        for (let i = 0; i < gitResponse.length; i++) {
-                            if (gitResponse[i].name.indexOf('template-') > -1) {
-                                content.push(gitResponse[i].name);
-                            }
-                        }
-                        console.log(content);
-                    } catch (err) {
-                        reject({message: 'Error in Parsing response', error: err});
-                    }
-                });
-            }).end();
-        });
+                if (response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/) }).length > 0) {
+                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/) })[0])[1];
+                    return that._getNsGitRepos(next, repos);
+                }
+                return repos;
+            })
+            .catch(function (err: any) {
+                console.error('Erorrrr=== ', err);
+            });
     }
 
     // TODO make private
@@ -417,4 +418,18 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register('templateService', TemplateService);
+//$injector.register('templateService', TemplateService);
+
+let test = new TemplateService();
+
+test._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100', [])
+    .then(function (repos: any) {
+        console.log('==========', repos.length);
+        return test._filterRepoResults(repos);
+    })
+    .then(function (names: any) {
+        console.log(names);
+    })
+    .catch(function (err: any) {
+        console.error(err);
+    });
