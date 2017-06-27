@@ -303,7 +303,7 @@ export class TemplateService implements ITemplateService {
                 {
                     name: 'nativescript-ng-ui-kit-master-detail',
                     displayName: 'Master-Detail',
-                    description: 'Simple Master-Detail template for NativeScript apps with Firebase data and support for editing using Angular',
+                    description: 'Simple Master-Detail template for NativeScript apps with Firebase data using Angular',
                     version: '0.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-master-detail-ng.git',
                     templateFlavor: 'Angular & TypeScript',
