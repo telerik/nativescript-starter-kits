@@ -17,7 +17,7 @@ describe("TemplateService Api", () => {
     describe("Get template Version", function () {
         let templateService = new TemplateService();
         it("returns a template's version from package.json", function () {
-            let version = templateService.getTemplateVersion("template-hello-world-ng");
+            let version = templateService.getTemplateVersion("template-hello-world-ng", {});
 
             version.should.be.a("string");
             version.should.not.be.an("object");
@@ -26,7 +26,7 @@ describe("TemplateService Api", () => {
         });
 
         it("should handle errors gracefully", function () {
-            let version = templateService.getTemplateVersion("templateее-hello-world-ng");
+            let version = templateService.getTemplateVersion("templateее-hello-world-ng", {});
 
             version.should.be.instanceOf(Error);
             version.should.not.be.a("string");
@@ -38,7 +38,7 @@ describe("TemplateService Api", () => {
     describe("Get template description", function () {
         let templateService = new TemplateService();
         it("returns a template description from package.json", function () {
-            let description = templateService.getTemplateDescription("template-hello-world-ng");
+            let description = templateService.getTemplateDescription("template-hello-world-ng", {});
 
             description.should.be.a("string");
             description.should.not.be.an("object");
@@ -47,7 +47,7 @@ describe("TemplateService Api", () => {
         });
 
         it("handles errors gracefully ", function () {
-            let description = templateService.getTemplateDescription("templssate-hello-world-ng");
+            let description = templateService.getTemplateDescription("templssate-hello-world-ng", {});
 
             description.should.be.instanceOf(Error);
             description.should.not.be.a("string");
@@ -59,7 +59,7 @@ describe("TemplateService Api", () => {
     describe("Check template flavor", function () {
         let templateService = new TemplateService();
         it("Returns a template flavor", function () {
-            let flavor = templateService.checkTemplateFlavor("template-hello-world-ng");
+            let flavor = templateService.checkTemplateFlavor("template-hello-world-ng", {});
 
             flavor.should.be.a("string");
             flavor.should.not.be.an("object");
@@ -68,7 +68,7 @@ describe("TemplateService Api", () => {
         });
 
         it("handles errors gracefully ", function () {
-            let flavor = templateService.checkTemplateFlavor("templssate-hello-world-ng");
+            let flavor = templateService.checkTemplateFlavor("templssate-hello-world-ng", {});
 
             flavor.should.be.instanceOf(Error);
             flavor.should.not.be.a("string");

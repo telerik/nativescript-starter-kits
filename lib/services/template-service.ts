@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
-import * as https from 'https';
 
 const request = require('request-promise');
 const Config = require('../../config.js');
@@ -10,25 +9,34 @@ const tmpCache = new NodeCache();
 
 export class TemplateService implements ITemplateService {
     constructor() {
-        /*for (let i = 0; i < Config.appTemplates.length; i++) {
-         this.tmpPackageJsonFromSrc(Config.appTemplates[i])
-         .then(function () {
-         console.log('Cached Template Data');
-         })
-         .catch(function (err) {
-         console.error({msg: 'Error when trying to cache templates', error: err});
-         });
-         }*/
+        let that = this;
+        that._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100', [])
+            .then(function (repos: any) {
+                return that._filterRepoResults(repos);
+            })
+            .then(function (names: any) {
+                for (let i = 0; i < names.length; i++) {
+                    that.tmpPackageJsonFromSrc(names[i])
+                        .then(function () {
+                        })
+                        .catch(function (err: any) {
+                            console.error({msg: 'Error when trying to cache templates', error: err});
+                        });
+                }
+            })
+            .catch(function (err: any) {
+                console.error(err);
+            });
     }
 
     public _filterRepoResults(repos: any) {
         let names: Array<any> = [];
         return new Promise(function (resolve) {
-           for ( let i = 0; i < repos.length; i++) {
-               if (repos[i].name.indexOf('template-') > -1) {
-                   names.push(repos[i].name);
-               }
-           }
+            for (let i = 0; i < repos.length; i++) {
+                if (repos[i].name.indexOf('template-') > -1) {
+                    names.push(repos[i].name);
+                }
+            }
             resolve(names);
         });
     }
@@ -51,14 +59,18 @@ export class TemplateService implements ITemplateService {
 
                 repos = repos.concat(response.body);
 
-                if (response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/); }).length > 0) {
-                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/); })[0])[1];
+                if (response.headers.link.split(",").filter(function (link: any) {
+                        return link.match(/rel="next"/);
+                    }).length > 0) {
+                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function (link: any) {
+                        return link.match(/rel="next"/);
+                    })[0])[1];
                     return that._getNsGitRepos(next, repos);
                 }
                 return repos;
             })
             .catch(function (err: any) {
-                console.error('Erorrrr=== ', err);
+                return {message: 'Error retrieving github repositories', err: err};
             });
     }
 
@@ -70,46 +82,30 @@ export class TemplateService implements ITemplateService {
 
     // TODO make private
     public tmpPackageJsonFromSrc(templateName: string) {
-        let that = this,
-            content: any,
-            options: any = {
-                host: 'api.github.com',
-                path: '/repos/NativeScript/' + templateName + '/contents/package.json?ref=master',
-                headers: {
-                    'user-agent': 'nativescript-starter-kits'
+        let content: any;
+
+        return request({
+            method: "GET",
+            uri: 'https://raw.githubusercontent.com/NativeScript/' + templateName + '/master/package.json',
+            json: true,
+            resolveWithFullResponse: true,
+            headers: {
+                'user-agent': 'nativescript-starter-kits'
+            }
+        })
+            .then(function (res: any) {
+                content = res.body;
+                if (content.hasOwnProperty('templateType')) {
+                    tmpCache.set(templateName + 'Cache', content, Config.options.cacheTime);
+                    return content;
                 }
-            };
-
-        return new Promise(function (resolve, reject) {
-            https.request(options, function (res) {
-                let str = '';
-
-                res.on('error', function (err) {
-                    reject(err);
-                });
-
-                res.on('data', function (chunk) {
-                    str += chunk;
-                });
-
-                res.on('end', function () {
-                    try {
-                        content = that.base64Decode(JSON.parse(str).content);
-                        content = JSON.parse(content);
-                        tmpCache.set(templateName + 'Cache', content, Config.options.cacheTime);
-                        resolve(content);
-                    } catch (err) {
-                        // Handle API rate error
-                        let errMsg = JSON.parse(str).message;
-                        reject({
-                            template: templateName,
-                            message: errMsg,
-                            error: err
-                        });
-                    }
-                });
-            }).end();
-        });
+            })
+            .catch(function (err: any) {
+                return {
+                    message: 'Error retrieving ' + templateName + ' package.json from src',
+                    err: err
+                };
+            });
     }
 
     public imageEncode(filePath: string) {
@@ -118,148 +114,49 @@ export class TemplateService implements ITemplateService {
         return new Buffer(bitmap).toString('base64');
     }
 
-    public getTemplateVersion(templateName: string) {
-        let that = this,
-            packageJsonContent: any,
-            version: any;
+    public getTemplateVersion(templateName: string, packageJson: any) {
+        let version: string;
         return new Promise(function (resolve, reject) {
-            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
-                if (!err) {
-                    if (value === undefined) {
-                        // key not found
-                        console.log('===== not found ===');
-                        that.tmpPackageJsonFromSrc(templateName)
-                            .then(function (pj) {
-                                packageJsonContent = pj;
-                                version = packageJsonContent.version;
-                                resolve(version);
-                            })
-                            .catch(function (error) {
-                                reject(error);
-                            });
-                    } else {
-                        console.log('=====Loading from Cached ===');
-                        version = value.version;
-                        resolve(version);
-                    }
-                } else {
-                    reject({message: "Error retrieving cache for " + templateName, error: err});
-                }
-            });
+                version = packageJson.version;
+                resolve(version);
+
         });
     }
 
-    public getTemplateGitUrl(templateName: string) {
-        let that = this,
-            packageJsonContent: any,
-            gitUrl: any;
+    public getTemplateGitUrl(templateName: string, packageJson: any) {
+        let gitUrl: string;
 
         return new Promise(function (resolve, reject) {
-            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
-                if (!err) {
-                    if (value === undefined) {
-                        // key not found
-                        console.log('===== not found ===');
-                        that.tmpPackageJsonFromSrc(templateName)
-                            .then(function (pj) {
-                                packageJsonContent = pj;
-                                gitUrl = packageJsonContent.repository.url;
-                                resolve(gitUrl);
-                            })
-                            .catch(function (error) {
-                                reject({message: 'Error retrieving data from source', error: error});
-                            });
-
-                    } else {
-                        gitUrl = value.repository.url;
-                        resolve(gitUrl);
-                    }
-                } else {
-                    reject({message: "Error retrieving cache for " + templateName, error: err});
-                }
-
-            });
+                gitUrl = packageJson.repository.url;
+                resolve(gitUrl);
         });
     }
 
-    public getTemplateDescription(templateName: string) {
-        let that = this,
-            packageJsonContent: any,
-            description: any;
+    public getTemplateDescription(templateName: string, packageJson: any) {
+        let description: string;
 
         return new Promise(function (resolve, reject) {
-            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
-                if (!err) {
-                    if (value === undefined) {
-                        // key not found
-                        console.log('===== not found ===');
-                        that.tmpPackageJsonFromSrc(templateName)
-                            .then(function (pj) {
-                                packageJsonContent = pj;
-                                description = packageJsonContent.description;
-                                resolve(description);
-                            })
-                            .catch(function (error) {
-                                reject(error);
-                            });
-                    } else {
-                        console.log('=====Loading from Cached ===');
-                        description = value.description;
-                        resolve(description);
-                    }
-                } else {
-                    reject({message: "Error retrieving cache for " + templateName, error: err});
-                }
-            });
+                description = packageJson.description;
+                resolve(description);
         });
     }
 
-    public checkTemplateFlavor(templateName: string) {
-        let that = this,
-            packageJsonContent: any,
-            dependencies: any,
+    public checkTemplateFlavor(templateName: string, packageJson: any) {
+        let dependencies: any,
             devDependencies: any;
 
         return new Promise(function (resolve, reject) {
-            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
-                if (!err) {
-                    if (value === undefined) {
-                        // key not found
-                        console.log('===== not found ===');
-                        that.tmpPackageJsonFromSrc(templateName)
-                            .then(function (pj) {
-                                packageJsonContent = pj;
-                                dependencies = Object.keys(packageJsonContent.dependencies);
-                                devDependencies = Object.keys(packageJsonContent.devDependencies);
 
-                                if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
-                                    resolve("Angular & TypeScript");
-                                } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-                                    resolve("TypeScript");
-                                } else {
-                                    resolve("JavaScript");
-                                }
-                            })
-                            .catch(function (error) {
-                                reject(error);
-                            });
-                    } else {
-                        console.log('=====Loading from Cached ===');
-                        dependencies = Object.keys(value.dependencies);
-                        devDependencies = Object.keys(value.devDependencies);
+                dependencies = Object.keys(packageJson.dependencies);
+                devDependencies = Object.keys(packageJson.devDependencies);
 
-                        if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
-                            resolve("Angular & TypeScript");
-                        } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
-                            resolve("TypeScript");
-                        } else {
-                            resolve("JavaScript");
-                        }
-                    }
-                } else {
-                    reject({message: "Error retrieving cache for " + templateName, error: err});
-                }
-            });
+            if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+                resolve("Angular & TypeScript");
+            } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+                resolve("TypeScript");
+            } else {
+                resolve("JavaScript");
+            }
         });
     }
 
@@ -270,26 +167,65 @@ export class TemplateService implements ITemplateService {
         templateDetails.name = templateName;
 
         return new Promise(function (resolve, reject) {
-            that.getTemplateDescription(templateName)
-                .then(function (desc) {
-                    templateDetails.description = desc;
-                    return that.getTemplateVersion(templateName);
-                })
-                .then(function (version) {
-                    templateDetails.version = version;
-                    return that.getTemplateGitUrl(templateName);
-                })
-                .then(function (gitUrl) {
-                    templateDetails.gitUrl = gitUrl;
-                    return that.checkTemplateFlavor(templateName);
-                })
-                .then(function (flav) {
-                    templateDetails.flavor = flav;
-                    resolve(templateDetails);
-                })
-                .catch(function (err) {
-                    reject(err);
-                });
+            tmpCache.get(templateName + 'Cache', function (err: any, value: any) {
+                if (!err) {
+                    if (value === undefined) {
+                        // key not found
+                        that.tmpPackageJsonFromSrc(templateName)
+                            .then(function (pj: any) {
+                                let packageJson = pj;
+                                console.log('packageJson====  ', typeof packageJson);
+                                that.getTemplateDescription(templateName, packageJson)
+                                    .then(function (desc: string) {
+                                        templateDetails.description = desc;
+                                        return that.getTemplateVersion(templateName, packageJson);
+                                    })
+                                    .then(function (version: string) {
+                                        templateDetails.version = version;
+                                        return that.getTemplateGitUrl(templateName, packageJson);
+                                    })
+                                    .then(function (gitUrl: string) {
+                                        templateDetails.gitUrl = gitUrl;
+                                        return that.checkTemplateFlavor(templateName, packageJson);
+                                    })
+                                    .then(function (flav: string) {
+                                        templateDetails.flavor = flav;
+                                        resolve(templateDetails);
+                                    })
+                                    .catch(function (error: any) {
+                                        reject(error);
+                                    });
+                            })
+                            .catch(function (error: any) {
+                                reject(error);
+                            });
+                    } else {
+                        console.log('Cacheeee====  ', typeof value);
+                        that.getTemplateDescription(templateName, value)
+                            .then(function (desc: string) {
+                                templateDetails.description = desc;
+                                return that.getTemplateVersion(templateName, value);
+                            })
+                            .then(function (version: string) {
+                                templateDetails.version = version;
+                                return that.getTemplateGitUrl(templateName, value);
+                            })
+                            .then(function (gitUrl: string) {
+                                templateDetails.gitUrl = gitUrl;
+                                return that.checkTemplateFlavor(templateName, value);
+                            })
+                            .then(function (flav: string) {
+                                templateDetails.flavor = flav;
+                                resolve(templateDetails);
+                            })
+                            .catch(function (error) {
+                                reject(error);
+                            });
+                    }
+                } else {
+                    reject({message: "Error retrieving cache for " + templateName, error: err});
+                }
+            });
         });
     }
 
@@ -299,21 +235,30 @@ export class TemplateService implements ITemplateService {
             promises: any = [];
 
         return new Promise(function (resolve, reject) {
-            for (let i = 0; i < Config.appTemplates.length; i++) {
-                promises.push(
-                    that.getAppTemplateDetails(Config.appTemplates[i])
-                        .then(function (details) {
-                            tempDetails.push(details);
-                        })
-                        .catch(function (err) {
-                            reject(err);
-                        })
-                );
-            }
-            Promise.all(promises)
-                .then(function () {
-                    resolve(tempDetails);
+            that._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100', [])
+                .then(function (repos: any) {
+                    return that._filterRepoResults(repos);
+                })
+                .then(function (names: any) {
+                    for (let i = 0; i < names.length; i++) {
+                        promises.push(
+                            that.getAppTemplateDetails(names[i])
+                                .then(function (details) {
+                                    tempDetails.push(details);
+                                })
+                                .catch(function (err) {
+                                    reject(err);
+                                })
+                        );
+                    }
+                    Promise.all(promises)
+                        .then(function () {
+                            resolve(tempDetails);
 
+                        });
+                })
+                .catch(function (err: any) {
+                    console.error(err);
                 });
         });
     }
@@ -420,17 +365,3 @@ export class TemplateService implements ITemplateService {
 }
 
 $injector.register('templateService', TemplateService);
-
-/*let test = new TemplateService();
-
-test._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100', [])
-    .then(function (repos: any) {
-        console.log('==========', repos.length);
-        return test._filterRepoResults(repos);
-    })
-    .then(function (names: any) {
-        console.log(names);
-    })
-    .catch(function (err: any) {
-        console.error(err);
-    });*/

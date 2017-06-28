@@ -5,21 +5,21 @@ interface ITemplateService {
      * @param templateName
      * @returns {Promise<string>}
      */
-    checkTemplateFlavor(templateName: string): any;
+    checkTemplateFlavor(templateName: string, packageJson: any): any;
 
     /**
      * @description Get template current version
      * @param templateName
      * @returns {Promise<string>}
      */
-    getTemplateVersion(templateName: string): any;
+    getTemplateVersion(templateName: string, packageJson: any): any;
 
     /**
      * @description Get template description
      * @param templateName
      * @returns {Promise<string>}
      */
-    getTemplateDescription(templateName: string): any;
+    getTemplateDescription(templateName: string, packageJson: any): any;
 
     /**
      * @description The method returns details about an app template.
@@ -33,7 +33,7 @@ interface ITemplateService {
      * @param templateName
      * @returns {Promise<String>}
      */
-    getTemplateGitUrl(templateName: string): any;
+    getTemplateGitUrl(templateName: string, packageJson: any): any;
 
     /**
      * @description Search for all downloaded templates
