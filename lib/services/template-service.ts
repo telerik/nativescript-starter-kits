@@ -51,8 +51,8 @@ export class TemplateService implements ITemplateService {
 
                 repos = repos.concat(response.body);
 
-                if (response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/) }).length > 0) {
-                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/) })[0])[1];
+                if (response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/); }).length > 0) {
+                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link: any){ return link.match(/rel="next"/); })[0])[1];
                     return that._getNsGitRepos(next, repos);
                 }
                 return repos;
@@ -313,6 +313,7 @@ export class TemplateService implements ITemplateService {
             Promise.all(promises)
                 .then(function () {
                     resolve(tempDetails);
+
                 });
         });
     }
@@ -418,9 +419,9 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-//$injector.register('templateService', TemplateService);
+$injector.register('templateService', TemplateService);
 
-let test = new TemplateService();
+/*let test = new TemplateService();
 
 test._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100', [])
     .then(function (repos: any) {
@@ -432,4 +433,4 @@ test._getNsGitRepos('https://api.github.com/orgs/NativeScript/repos?per_page=100
     })
     .catch(function (err: any) {
         console.error(err);
-    });
+    });*/
