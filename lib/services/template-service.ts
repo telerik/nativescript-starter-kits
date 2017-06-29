@@ -96,38 +96,11 @@ export class TemplateService implements ITemplateService {
         return new Buffer(bitmap).toString('base64');
     }
 
-    public getTemplateVersion(templateName: string, packageJson: any) {
-        let version: string;
-        return new Promise(function (resolve, reject) {
-            version = packageJson.version;
-            resolve(version);
-
-        });
-    }
-
-    public getTemplateGitUrl(templateName: string, packageJson: any) {
-        let gitUrl: string;
-
-        return new Promise(function (resolve, reject) {
-            gitUrl = packageJson.repository.url;
-            resolve(gitUrl);
-        });
-    }
-
-    public getTemplateDescription(templateName: string, packageJson: any) {
-        let description: string;
-
-        return new Promise(function (resolve, reject) {
-            description = packageJson.description;
-            resolve(description);
-        });
-    }
-
-    public checkTemplateFlavor(templateName: string, packageJson: any) {
+    public checkTemplateFlavor(packageJson: any) {
         let dependencies: any,
             devDependencies: any;
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
 
             dependencies = Object.keys(packageJson.dependencies);
             devDependencies = Object.keys(packageJson.devDependencies);
@@ -142,35 +115,45 @@ export class TemplateService implements ITemplateService {
         });
     }
 
+    public getTemplateMetaData(packageJson: any) {
+        let meta: any = {};
+
+        return new Promise(function (resolve, reject) {
+           if (typeof packageJson === 'undefined') {
+               reject({message: 'Missing package.json'});
+           } else {
+               meta.displayName = packageJson.displayName;
+               meta.version = packageJson.version;
+               meta.description = packageJson.description;
+               meta.gitUrl = packageJson.repository.url;
+
+               resolve(meta);
+           }
+        });
+    }
+
     public getAppTemplateDetails(templateName: string) {
         let that = this,
             templateDetails: any = {};
-
-        templateDetails.name = templateName;
 
         return new Promise(function (resolve, reject) {
             that.tmpPackageJsonFromSrc(templateName)
                 .then(function (pj: any) {
                     let packageJson = pj;
-                    //console.log('packageJson====  ', typeof packageJson);
-                    that.getTemplateDescription(templateName, packageJson)
-                        .then(function (desc: string) {
-                            templateDetails.description = desc;
-                            return that.getTemplateVersion(templateName, packageJson);
+                    that.getTemplateMetaData(packageJson)
+                        .then(function (data: any) {
+                            templateDetails.displayName = data.displayName;
+                            templateDetails.description = data.description;
+                            templateDetails.version = data.version;
+                            templateDetails.gitUrl = data.gitUrl;
+
+                            return that.checkTemplateFlavor(packageJson);
                         })
-                        .then(function (version: string) {
-                            templateDetails.version = version;
-                            return that.getTemplateGitUrl(templateName, packageJson);
-                        })
-                        .then(function (gitUrl: string) {
-                            templateDetails.gitUrl = gitUrl;
-                            return that.checkTemplateFlavor(templateName, packageJson);
-                        })
-                        .then(function (flav: string) {
+                        .then(function (flav) {
                             templateDetails.flavor = flav;
                             resolve(templateDetails);
                         })
-                        .catch(function (error: any) {
+                        .catch(function (error) {
                             reject({
                                 message: 'Error retrieving data for ' + templateName,
                                 error: error

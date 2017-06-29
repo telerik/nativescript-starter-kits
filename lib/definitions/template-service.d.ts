@@ -1,25 +1,18 @@
 interface ITemplateService {
 
     /**
+     * @description The method returns various meta data from template package.json
+     * @param packageJson - Valid package.json
+     * @returns {Promise<any>} - Template description, version, displayName, gitUrl
+     */
+    getTemplateMetaData(packageJson: any): any;
+
+    /**
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
      * @param templateName
      * @returns {Promise<string>}
      */
-    checkTemplateFlavor(templateName: string, packageJson: any): any;
-
-    /**
-     * @description Get template current version
-     * @param templateName
-     * @returns {Promise<string>}
-     */
-    getTemplateVersion(templateName: string, packageJson: any): any;
-
-    /**
-     * @description Get template description
-     * @param templateName
-     * @returns {Promise<string>}
-     */
-    getTemplateDescription(templateName: string, packageJson: any): any;
+    checkTemplateFlavor(packageJson: any): any;
 
     /**
      * @description The method returns details about an app template.
@@ -27,13 +20,6 @@ interface ITemplateService {
      * @returns Promise
      */
     getAppTemplateDetails(templateName: string): any;
-
-    /**
-     * @description Get template github url
-     * @param templateName
-     * @returns {Promise<String>}
-     */
-    getTemplateGitUrl(templateName: string, packageJson: any): any;
 
     /**
      * @description Search for all downloaded templates
