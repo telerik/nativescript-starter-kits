@@ -6,6 +6,8 @@ const request = require('request-promise');
 const Config = require('../../config.js');
 const NodeCache = require("node-cache");
 const tmpCache = new NodeCache();
+const _indexof = require('lodash.indexof');
+const _sortby = require('lodash.sortby');
 
 export class TemplateService implements ITemplateService {
     constructor() {
@@ -22,6 +24,23 @@ export class TemplateService implements ITemplateService {
             }
             resolve(names);
         });
+    }
+
+    public _sortTmpData(templates: Array<any>) {
+        let flavOrder: Array<string> = ['JavaScript', 'TypeScript', 'Angular & TypeScript'],
+            typeOrder: Array<string> = ['Blank', 'Drawer Navigation', 'Tab navigation', 'Master-Detail'],
+            sortedByFlav: Array<any>,
+            finalSort: Array<any>;
+
+        sortedByFlav = _sortby(templates, function (temp: any) {
+           return _indexof(flavOrder, temp.flavor);
+        });
+
+        finalSort = _sortby(sortedByFlav, function (temp: any) {
+            return _indexof(typeOrder, temp.displayName);
+        });
+
+        return finalSort;
     }
 
     public _getNsGitRepos(uri: string, repos: Array<any>) {
@@ -195,6 +214,7 @@ export class TemplateService implements ITemplateService {
                                 }
                                 Promise.all(promises)
                                     .then(function () {
+                                        console.log('===============Sorted=========', that._sortTmpData(tempDetails));
                                         tmpCache.set('tempDetails', tempDetails, Config.options.cacheTime);
                                         resolve(tempDetails);
 
