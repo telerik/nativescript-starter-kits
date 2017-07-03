@@ -112,7 +112,7 @@ export class TemplateService implements ITemplateService {
                 description: description,
                 version: version,
                 templateFlavor: flavor,
-                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts',
                 type: "App template",
                 resources: []
             };
@@ -154,7 +154,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Blank template',
                     description: 'Blank template for Vanilla NativeScript apps using JavaScript',
                     version: '1.0.0',
-                    gitUrl: 'https://github.com/NativeScript/template-blank.git',
+                    gitUrl: 'https://github.com/NativeScript/template-blank',
                     templateFlavor: 'JavaScript',
                     type: "App template",
                     resources: {
@@ -168,7 +168,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using JavaScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation.git',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation',
                     templateFlavor: 'JavaScript',
                     type: "App template",
                     resources: {
@@ -182,7 +182,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for Vanilla NativeScript apps using JavaScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation.git',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation',
                     templateFlavor: 'JavaScript',
                     type: "App template",
                     resources: {
@@ -196,7 +196,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for Vanilla NativeScript apps using JavaScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-master-detail.git',
+                    gitUrl: 'https://github.com/NativeScript/template-master-detail',
                     templateFlavor: 'JavaScript',
                     type: "App template",
                     resources: {
@@ -210,7 +210,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Blank template',
                     description: 'Blank template for NativeScript apps using TypeScript',
                     version: '1.0.0',
-                    gitUrl: 'https://github.com/NativeScript/template-blank-ts.git',
+                    gitUrl: 'https://github.com/NativeScript/template-blank-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
                     resources: {
@@ -223,7 +223,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using TypeScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
                     resources: {
@@ -237,7 +237,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for Vanilla NativeScript apps using TypeScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ts.git',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
                     resources: {
@@ -251,7 +251,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for Vanilla NativeScript apps using TypeScript',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-master-detail-ts.git',
+                    gitUrl: 'https://github.com/NativeScript/template-master-detail-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
                     resources: {
@@ -264,7 +264,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Blank template',
                     description: 'Blank template for NativeScript apps using Angular',
                     version: '1.0.0',
-                    gitUrl: 'https://github.com/NativeScript/template-blank-ng.git',
+                    gitUrl: 'https://github.com/NativeScript/template-blank-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
                     resources: {
@@ -277,7 +277,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for NativeScript apps using Angular',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ng.git',
+                    gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
                     resources: {
@@ -291,7 +291,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for NativeScript apps using Angular',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ng.git',
+                    gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
                     resources: {
@@ -305,7 +305,7 @@ export class TemplateService implements ITemplateService {
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for NativeScript apps with Firebase data using Angular',
                     version: '0.1.0',
-                    gitUrl: 'https://github.com/NativeScript/template-master-detail-ng.git',
+                    gitUrl: 'https://github.com/NativeScript/template-master-detail-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
                     resources: {
@@ -367,7 +367,7 @@ export class TemplateService implements ITemplateService {
                 description: description,
                 version: version,
                 templateFlavor: flavor,
-                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts.git',
+                gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts',
                 type: "Page template",
                 resources: []
             };
