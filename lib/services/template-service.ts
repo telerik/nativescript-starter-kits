@@ -223,7 +223,6 @@ export class TemplateService implements ITemplateService {
                             .catch(function (error: any) {
                                 console.error(error);
                             });
-
                     } else {
                         // Load data from cache
                         resolve(value);
