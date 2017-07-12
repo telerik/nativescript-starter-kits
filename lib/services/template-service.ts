@@ -29,18 +29,18 @@ export class TemplateService implements ITemplateService {
     public _sortTmpData(templates: Array<any>) {
         let flavOrder: Array<string> = ['JavaScript', 'TypeScript', 'Angular & TypeScript'],
             typeOrder: Array<string> = ['Blank', 'Drawer Navigation', 'Tab navigation', 'Master-Detail'],
-            sortedByFlav: Array<any>,
-            finalSort: Array<any>;
+            sortedByType: Array<any>,
+            sortByFlav: Array<any>;
 
-        sortedByFlav = _sortby(templates, function (temp: any) {
-           return _indexof(flavOrder, temp.flavor);
+        sortedByType = _sortby(templates, function (temp: any) {
+           return _indexof(typeOrder, temp.displayName);
         });
 
-        finalSort = _sortby(sortedByFlav, function (temp: any) {
-            return _indexof(typeOrder, temp.displayName);
+        sortByFlav = _sortby(sortedByType, function (temp: any) {
+            return _indexof(flavOrder, temp.flavor);
         });
 
-        return finalSort;
+        return sortByFlav;
     }
 
     public _getNsGitRepos(uri: string, repos: Array<any>) {
@@ -214,7 +214,7 @@ export class TemplateService implements ITemplateService {
                                 }
                                 Promise.all(promises)
                                     .then(function () {
-                                        console.log('===============Sorted=========', that._sortTmpData(tempDetails));
+                                        tempDetails = that._sortTmpData(tempDetails);
                                         tmpCache.set('tempDetails', tempDetails, Config.options.cacheTime);
                                         resolve(tempDetails);
 
