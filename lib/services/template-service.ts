@@ -33,7 +33,7 @@ export class TemplateService implements ITemplateService {
             sortByFlav: Array<any>;
 
         sortedByType = _sortby(templates, function (temp: any) {
-           return _indexof(typeOrder, temp.displayName);
+            return _indexof(typeOrder, temp.displayName);
         });
 
         sortByFlav = _sortby(sortedByType, function (temp: any) {
@@ -76,6 +76,31 @@ export class TemplateService implements ITemplateService {
             });
     }
 
+    public _getTmpAssetsContent(templateName: string) {
+        let that = this,
+            platforms: any = {};
+        return request({
+            method: "GET",
+            uri: 'https://api.github.com/repos/NativeScript/' + templateName + '/contents/tools/assets',
+            json: true,
+            resolveWithFullResponse: true,
+            headers: {
+                'user-agent': 'nativescript-starter-kits'
+            }
+        })
+            .then(function (res: any) {
+                for (let i = 0; i < res.body.length; i++) {
+                    let platform = res.body[i].name.split('-').pop().split('.').shift();
+                    platforms[platform] = res.body[i].name;
+                }
+                return that._tmpResourcesFromSrc(templateName, platforms);
+
+            })
+            .catch(function (err: any) {
+                return {message: 'Error retrieving assets from repository', err: err};
+            });
+    }
+
     // TODO make private
     public base64Decode(encoded: string) {
         let buf = Buffer.from(encoded, 'base64');
@@ -87,7 +112,7 @@ export class TemplateService implements ITemplateService {
         let content: any;
 
         return request({
-            method: "GET",
+            method: 'GET',
             uri: 'https://raw.githubusercontent.com/NativeScript/' + templateName + '/master/package.json',
             json: true,
             resolveWithFullResponse: true,
@@ -107,6 +132,44 @@ export class TemplateService implements ITemplateService {
                     err: err
                 };
             });
+    }
+
+    // TODO make private
+    public _tmpResourcesFromSrc(templateName: string, asset: any) {
+        let content: any = {},
+            promises: Array<any> = [];
+        return new Promise(function (resolve, reject) {
+            for (let key in asset) {
+                if (asset.hasOwnProperty(key)) {
+                    promises.push(
+                        request({
+                            method: 'GET',
+                            uri: 'https://raw.githubusercontent.com/NativeScript/' + templateName + '/master/tools/assets/' + asset[key],
+                            resolveWithFullResponse: true,
+                            headers: {
+                                'user-agent': 'nativescript-starter-kits'
+                            }
+                        })
+                            .then(function (res: any) {
+                                content[key] = new Buffer(res.body).toString('base64');
+                            })
+                            .catch(function (err: any) {
+                                return {
+                                    message: 'Error retrieving ' + templateName + ' assets from source',
+                                    err: err
+                                };
+                            }));
+
+                }
+            }
+            Promise.all(promises)
+                .then(function () {
+                    resolve(content);
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
+        });
     }
 
     public imageEncode(filePath: string) {
@@ -138,16 +201,16 @@ export class TemplateService implements ITemplateService {
         let meta: any = {};
 
         return new Promise(function (resolve, reject) {
-           if (typeof packageJson === 'undefined') {
-               reject({message: 'Missing package.json'});
-           } else {
-               meta.displayName = packageJson.displayName;
-               meta.version = packageJson.version;
-               meta.description = packageJson.description;
-               meta.gitUrl = packageJson.repository.url;
+            if (typeof packageJson === 'undefined') {
+                reject({message: 'Missing package.json'});
+            } else {
+                meta.displayName = packageJson.displayName;
+                meta.version = packageJson.version;
+                meta.description = packageJson.description;
+                meta.gitUrl = packageJson.repository.url;
 
-               resolve(meta);
-           }
+                resolve(meta);
+            }
         });
     }
 
@@ -170,6 +233,10 @@ export class TemplateService implements ITemplateService {
                         })
                         .then(function (flav) {
                             templateDetails.flavor = flav;
+                            return that._getTmpAssetsContent(templateName);
+                        })
+                        .then(function (resources) {
+                            templateDetails.resources = resources;
                             resolve(templateDetails);
                         })
                         .catch(function (error) {
