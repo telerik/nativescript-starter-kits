@@ -150,7 +150,7 @@ export class TemplateService implements ITemplateService {
 
         return new Promise(function (resolve, reject) {
             let tempDetails: any = [
-                {   name: 'template-blank',
+                {   name: 'tns-template-blank',
                     displayName: 'Blank template',
                     description: 'Blank template for Vanilla NativeScript apps using JavaScript',
                     version: '3.1.0',
@@ -164,10 +164,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-js-ui-kit-drawer',
+                    name: 'tns-template-drawer-navigation',
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using JavaScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-drawer-navigation',
                     templateFlavor: 'JavaScript',
                     type: "App template",
@@ -178,10 +178,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-js-ui-kit-tab',
+                    name: 'tns-template-tab-navigation',
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for Vanilla NativeScript apps using JavaScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-tab-navigation',
                     templateFlavor: 'JavaScript',
                     type: "App template",
@@ -192,10 +192,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-js-ui-kit-master-detail',
+                    name: 'tns-template-master-detail',
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for Vanilla NativeScript apps using JavaScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-master-detail',
                     templateFlavor: 'JavaScript',
                     type: "App template",
@@ -206,10 +206,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'template-blank-ts',
+                    name: 'tns-template-blank-ts',
                     displayName: 'Blank template',
                     description: 'Blank template for NativeScript apps using TypeScript',
-                    version: '1.0.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-blank-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
@@ -219,10 +219,10 @@ export class TemplateService implements ITemplateService {
                         thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAABQAgMAAADJr6VNAAAACVBMVEWpt7p+kpf///8plfXpAAAAAnRSTlOYZfLTWP0AAAAfSURBVDjLY3BgQAAWBq1VCLBglDfKG+WN8kjjoZYoAKjjd/fdnVz5AAAAAElFTkSuQmCC'
                     }
                 },
-                {   name: 'nativescript-ts-ui-kit-drawer',
+                {   name: 'tns-template-drawer-navigation-ts',
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using TypeScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
@@ -233,10 +233,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-ts-ui-kit-tab',
+                    name: 'tns-template-tab-navigation-ts',
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for Vanilla NativeScript apps using TypeScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
@@ -247,10 +247,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-ts-ui-kit-master-detail',
+                    name: 'tns-template-master-detail-ts',
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for Vanilla NativeScript apps using TypeScript',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-master-detail-ts',
                     templateFlavor: 'TypeScript',
                     type: "App template",
@@ -260,10 +260,10 @@ export class TemplateService implements ITemplateService {
                         thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAABQAgMAAADJr6VNAAAADFBMVEX///89Wf0wV/nM1NYPRMO5AAAAO0lEQVQ4y2P4jwT+MBxgQACeAeCJhoaGEs+jtu1aqyBgBWEeVNcI4RETLnRLIRAQQjxv1HZ65mLUEgUARTqr65Sh5+wAAAAASUVORK5CYII='
                     }
                 },
-                {   name: 'template-blank-ng',
+                {   name: 'tns-template-blank-ng',
                     displayName: 'Blank template',
                     description: 'Blank template for NativeScript apps using Angular',
-                    version: '1.0.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-blank-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
@@ -273,10 +273,10 @@ export class TemplateService implements ITemplateService {
                         thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAABQAgMAAADJr6VNAAAACVBMVEWpt7p+kpf///8plfXpAAAAAnRSTlOYZfLTWP0AAAAfSURBVDjLY3BgQAAWBq1VCLBglDfKG+WN8kjjoZYoAKjjd/fdnVz5AAAAAElFTkSuQmCC'
                     }
                 },
-                {   name: 'nativescript-ng-ui-kit-drawer',
+                {   name: 'tns-template-drawer-navigation-ng',
                     displayName: 'Drawer Navigation',
                     description: 'Simple template with Drawer navigation for NativeScript apps using Angular',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
@@ -287,10 +287,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-ng-ui-kit-tab',
+                    name: 'tns-template-tab-navigation-ng',
                     displayName: 'Tab Navigation',
                     description: 'Simple template with Tab navigation for NativeScript apps using Angular',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
@@ -301,10 +301,10 @@ export class TemplateService implements ITemplateService {
                     }
                 },
                 {
-                    name: 'nativescript-ng-ui-kit-master-detail',
+                    name: 'tns-template-master-detail-ng',
                     displayName: 'Master-Detail',
                     description: 'Simple Master-Detail template for NativeScript apps with Firebase data using Angular',
-                    version: '0.1.0',
+                    version: '3.1.0',
                     gitUrl: 'https://github.com/NativeScript/template-master-detail-ng',
                     templateFlavor: 'Angular & TypeScript',
                     type: "App template",
