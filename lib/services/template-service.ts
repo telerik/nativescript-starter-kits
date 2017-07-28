@@ -90,8 +90,15 @@ export class TemplateService implements ITemplateService {
         })
             .then(function (res: any) {
                 for (let i = 0; i < res.body.length; i++) {
-                    let platform = res.body[i].name.split('-').pop().split('.').shift();
-                    platforms[platform] = res.body[i].name;
+                    if (res.body[i].name.indexOf('phone') === -1) {
+                        let platform = res.body[i].name.split('-').pop().split('.').shift();
+                        if (platform !== 'android' || platform !== 'ios') {
+                            let rep = platform.match(/^(?!android|ios).*$/g);
+                            platform = platform.replace(rep, 'thumbnail');
+                        }
+
+                        platforms[platform] = res.body[i].name;
+                    }
                 }
                 return that._tmpResourcesFromSrc(templateName, platforms);
 
@@ -204,6 +211,7 @@ export class TemplateService implements ITemplateService {
             if (typeof packageJson === 'undefined') {
                 reject({message: 'Missing package.json'});
             } else {
+                meta.name = packageJson.name;
                 meta.displayName = packageJson.displayName;
                 meta.version = packageJson.version;
                 meta.description = packageJson.description;
@@ -224,6 +232,7 @@ export class TemplateService implements ITemplateService {
                     let packageJson = pj;
                     that.getTemplateMetaData(packageJson)
                         .then(function (data: any) {
+                            templateDetails.name = data.name;
                             templateDetails.displayName = data.displayName;
                             templateDetails.description = data.description;
                             templateDetails.version = data.version;
@@ -262,7 +271,6 @@ export class TemplateService implements ITemplateService {
             tmpCache.get("tempDetails", function (err: any, value: any) {
                 if (!err) {
                     if (value === undefined) {
-                        console.log('No cache ==== ');
                         that._getNsGitRepos(Config.options.orgBaseUrl, gitRepos)
                             .then(function (repos: any) {
                                 return that._filterRepoResults(repos);
