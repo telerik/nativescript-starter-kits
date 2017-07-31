@@ -1,7 +1,15 @@
 # nativescript-starter-kits
 A NativeScript CLI extension for managing templates
 
-## Installation and Development
+## Automatic Installation
+
+You can install this extension using the Nativescript CLI
+
+```bash
+$ tns extension install nativescript-starter-kits
+```
+
+## Manual Installation and Development
 
 Download the GIT repository in you favorite projects directory
 
@@ -19,11 +27,12 @@ $ npm i -g grunt-cli (only in case you do not have it installed globally)
 $ grunt
 $ grunt pack
 ```
+These commands will create a .tgz file in the extension folder
 
 Install the npm package 
 
 ```bash
-$ tns extension install <path to nativescript-ui-kits>.tgz
+$ tns extension install <path to nativescript-starter-kits>.tgz
 ```
 ## Public API
 ```JavaScript
