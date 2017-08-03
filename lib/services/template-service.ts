@@ -4,6 +4,7 @@ import * as childProcess from 'child_process';
 
 const request = require('request-promise');
 const Config = require('../../config.js');
+const Backup = require('../../consts/backup-data');
 const NodeCache = require("node-cache");
 const tmpCache = new NodeCache();
 const _indexof = require('lodash.indexof');
@@ -14,15 +15,33 @@ export class TemplateService implements ITemplateService {
     }
 
     public _filterRepoResults(repos: any) {
-        let names: Array<any> = [],
+        let that = this,
+            names: Array<any> = [],
+            promises: Array<any> = [],
             regEx = new RegExp(/^template-(?!hello).*/gm); // Match all templates
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             for (let i = 0; i < repos.length; i++) {
+
                 if (repos[i].name.match(regEx)) {
-                    names.push(repos[i].name);
+                    promises.push(
+                        that.tmpPackageJsonFromSrc(repos[i].name)
+                        .then(function (result: any) {
+                            if (typeof result !== 'undefined') {
+                                names.push(repos[i].name);
+                            }
+                        })
+                        .catch(function (error: any) {
+                            reject(error);
+                        }));
                 }
             }
-            resolve(names);
+            Promise.all(promises)
+                .then(function () {
+                    resolve(names);
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
         });
     }
 
@@ -37,7 +56,7 @@ export class TemplateService implements ITemplateService {
         });
 
         sortByFlav = _sortby(sortedByType, function (temp: any) {
-            return _indexof(flavOrder, temp.flavor);
+            return _indexof(flavOrder, temp.templateFlavor);
         });
 
         return sortByFlav;
@@ -60,7 +79,6 @@ export class TemplateService implements ITemplateService {
                 }
 
                 repos = repos.concat(response.body);
-
                 if (response.headers.link.split(",").filter(function (link: any) {
                         return link.match(/rel="next"/);
                     }).length > 0) {
@@ -117,7 +135,6 @@ export class TemplateService implements ITemplateService {
     // TODO make private
     public tmpPackageJsonFromSrc(templateName: string) {
         let content: any;
-
         return request({
             method: 'GET',
             uri: 'https://raw.githubusercontent.com/NativeScript/' + templateName + '/master/package.json',
@@ -158,7 +175,7 @@ export class TemplateService implements ITemplateService {
                             }
                         })
                             .then(function (res: any) {
-                                content[key] = new Buffer(res.body).toString('base64');
+                                content[key] = 'data:image/png;base64,' + new Buffer(res.body).toString('base64');
                             })
                             .catch(function (err: any) {
                                 return {
@@ -186,17 +203,10 @@ export class TemplateService implements ITemplateService {
     }
 
     public checkTemplateFlavor(packageJson: any) {
-        let dependencies: any,
-            devDependencies: any;
-
         return new Promise(function (resolve) {
-
-            dependencies = Object.keys(packageJson.dependencies);
-            devDependencies = Object.keys(packageJson.devDependencies);
-
-            if (dependencies.indexOf("nativescript-angular") > -1 || dependencies.indexOf("@angular") > -1) {
+            if (packageJson.name.indexOf("-ng") > -1) {
                 resolve("Angular & TypeScript");
-            } else if (devDependencies.indexOf("typescript") > -1 || devDependencies.indexOf("nativescript-dev-typescript") > -1) {
+            } else if (packageJson.name.indexOf("-ts") > -1) {
                 resolve("TypeScript");
             } else {
                 resolve("JavaScript");
@@ -216,6 +226,7 @@ export class TemplateService implements ITemplateService {
                 meta.version = packageJson.version;
                 meta.description = packageJson.description;
                 meta.gitUrl = packageJson.repository.url;
+                meta.type = packageJson.templateType;
 
                 resolve(meta);
             }
@@ -237,11 +248,12 @@ export class TemplateService implements ITemplateService {
                             templateDetails.description = data.description;
                             templateDetails.version = data.version;
                             templateDetails.gitUrl = data.gitUrl;
+                            templateDetails.type = data.type;
 
                             return that.checkTemplateFlavor(packageJson);
                         })
                         .then(function (flav) {
-                            templateDetails.flavor = flav;
+                            templateDetails.templateFlavor = flav;
                             return that._getTmpAssetsContent(templateName);
                         })
                         .then(function (resources) {
@@ -273,7 +285,11 @@ export class TemplateService implements ITemplateService {
                     if (value === undefined) {
                         that._getNsGitRepos(Config.options.orgBaseUrl, gitRepos)
                             .then(function (repos: any) {
-                                return that._filterRepoResults(repos);
+                                if (repos.err && repos.err.statusCode === 403) {
+                                    resolve(Backup.fallback);
+                                } else {
+                                    return that._filterRepoResults(repos);
+                                }
                             })
                             .then(function (names: any) {
                                 for (let i = 0; i < names.length; i++) {
@@ -293,6 +309,9 @@ export class TemplateService implements ITemplateService {
                                         tmpCache.set('tempDetails', tempDetails, Config.options.cacheTime);
                                         resolve(tempDetails);
 
+                                    })
+                                    .catch(function (error: any) {
+                                        reject(error);
                                     });
                             })
                             .catch(function (error: any) {
