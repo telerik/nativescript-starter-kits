@@ -170,12 +170,13 @@ export class TemplateService implements ITemplateService {
                             method: 'GET',
                             uri: 'https://raw.githubusercontent.com/NativeScript/' + templateName + '/master/tools/assets/' + asset[key],
                             resolveWithFullResponse: true,
+                            encoding: 'binary',
                             headers: {
                                 'user-agent': 'nativescript-starter-kits'
                             }
                         })
                             .then(function (res: any) {
-                                content[key] = 'data:image/png;base64,' + new Buffer(res.body).toString('base64');
+                                content[key] = 'data:image/png;base64,' + new Buffer(res.body.toString(), 'binary').toString('base64');
                             })
                             .catch(function (err: any) {
                                 return {
