@@ -25,6 +25,7 @@
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
     "chai-things": "^0.2.0",
+    "global-modules-path": "2.0.0",
     "grunt": "1.0.1",
     "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-copy": "1.0.0",
@@ -42,5 +43,11 @@
     "tslint": "4.3.1",
     "typescript": "2.1.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash.indexof": "^4.0.5",
+    "lodash.sortby": "^4.7.0",
+    "node-cache": "^4.1.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  }
 }
