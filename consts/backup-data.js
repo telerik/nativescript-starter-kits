@@ -4,7 +4,7 @@ const BackupData = {};
 
 BackupData.fallback = [
     {   name: 'template-blank',
-        displayName: 'Blank template',
+        displayName: 'Blank',
         description: 'Blank template for Vanilla NativeScript apps using JavaScript',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-blank',
@@ -18,8 +18,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-drawer-navigation',
-        displayName: 'Drawer Navigation',
-        description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using JavaScript',
+        displayName: 'Navigation Drawer',
+        description: 'Side navigation template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-drawer-navigation',
         templateFlavor: 'JavaScript',
@@ -32,8 +32,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-tab-navigation',
-        displayName: 'Tab Navigation',
-        description: 'Simple template with Tab navigation for Vanilla NativeScript apps using JavaScript',
+        displayName: 'Tabs',
+        description: 'Tabbed interface template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-tab-navigation',
         templateFlavor: 'JavaScript',
@@ -46,8 +46,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-master-detail',
-        displayName: 'Master-Detail',
-        description: 'Simple Master-Detail template for Vanilla NativeScript apps using JavaScript',
+        displayName: 'Master-Detail with Firebase',
+        description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-master-detail',
         templateFlavor: 'JavaScript',
@@ -73,8 +73,8 @@ BackupData.fallback = [
         }
     },
     {   name: 'template-drawer-navigation-ts',
-        displayName: 'Drawer Navigation',
-        description: 'Simple template with Drawer navigation for Vanilla NativeScript apps using TypeScript',
+        displayName: 'Navigation Drawer',
+        description: 'Side navigation template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ts',
         templateFlavor: 'TypeScript',
@@ -87,8 +87,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-tab-navigation-ts',
-        displayName: 'Tab Navigation',
-        description: 'Simple template with Tab navigation for Vanilla NativeScript apps using TypeScript',
+        displayName: 'Tabs',
+        description: 'Tabbed interface template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ts',
         templateFlavor: 'TypeScript',
@@ -101,8 +101,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-master-detail-ts',
-        displayName: 'Master-Detail',
-        description: 'Simple Master-Detail template for Vanilla NativeScript apps using TypeScript',
+        displayName: 'Master-Detail with Firebase',
+        description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-master-detail-ts',
         templateFlavor: 'TypeScript',
@@ -127,8 +127,8 @@ BackupData.fallback = [
         }
     },
     {   name: 'template-drawer-navigation-ng',
-        displayName: 'Drawer Navigation',
-        description: 'Simple template with Drawer navigation for NativeScript apps using Angular',
+        displayName: 'Navigation Drawer',
+        description: 'Side navigation template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-drawer-navigation-ng',
         templateFlavor: 'Angular & TypeScript',
@@ -141,8 +141,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-tab-navigation-ng',
-        displayName: 'Tab Navigation',
-        description: 'Simple template with Tab navigation for NativeScript apps using Angular',
+        displayName: 'Tabs',
+        description: 'Tabbed interface template',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-tab-navigation-ng',
         templateFlavor: 'Angular & TypeScript',
@@ -155,8 +155,8 @@ BackupData.fallback = [
     },
     {
         name: 'template-master-detail-ng',
-        displayName: 'Master-Detail',
-        description: 'Simple Master-Detail template for NativeScript apps with Firebase data using Angular',
+        displayName: 'Master-Detail with Firebase',
+        description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.0',
         gitUrl: 'https://github.com/NativeScript/template-master-detail-ng',
         templateFlavor: 'Angular & TypeScript',
