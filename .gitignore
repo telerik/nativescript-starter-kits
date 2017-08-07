@@ -71,6 +71,10 @@ references.d.ts
 *.map.js
 *.js.map
 
+# but don't ignoreimportant js files
+!config.js
+!/consts/backup-data.js
+
 #ignore templates folder
 lib/templates/
 
