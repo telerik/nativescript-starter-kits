@@ -1,6 +1,21 @@
 interface ITemplateService {
 
     /**
+     * @description Get template's package.json from the master branch in the template's github repo
+     * @param templateName <String> - The name of the template
+     * @returns {Promise<any>} - Template's package.json file
+     */
+    tmpPackageJsonFromSrc(templateName: string): any;
+
+    /**
+     * @description Get template's resources from the github repo
+     * @param templateName
+     * @param asset <Object> - asset name and platform
+     * @returns {Promise<any>} - Template's image recources in base64 encoding
+     */
+    tmpResourcesFromSrc(templateName: string, asset: any): any;
+
+    /**
      * @description The method returns various meta data from template package.json
      * @param packageJson - Valid package.json
      * @returns {Promise<any>} - Template description, version, displayName, gitUrl

@@ -14,40 +14,9 @@ export class TemplateService implements ITemplateService {
     constructor() {
     }
 
-    public _filterRepoResults(repos: any) {
-        let that = this,
-            names: Array<any> = [],
-            promises: Array<any> = [],
-            regEx = new RegExp(/^template-(?!hello).*/gm); // Match all templates
-        return new Promise(function (resolve, reject) {
-            for (let i = 0; i < repos.length; i++) {
-
-                if (repos[i].name.match(regEx)) {
-                    promises.push(
-                        that.tmpPackageJsonFromSrc(repos[i].name)
-                        .then(function (result: any) {
-                            if (typeof result !== 'undefined') {
-                                names.push(repos[i].name);
-                            }
-                        })
-                        .catch(function (error: any) {
-                            reject(error);
-                        }));
-                }
-            }
-            Promise.all(promises)
-                .then(function () {
-                    resolve(names);
-                })
-                .catch(function (err) {
-                    reject(err);
-                });
-        });
-    }
-
     public _sortTmpData(templates: Array<any>) {
         let flavOrder: Array<string> = ['JavaScript', 'TypeScript', 'Angular & TypeScript'],
-            typeOrder: Array<string> = ['Blank', 'Drawer Navigation', 'Tab navigation', 'Master-Detail'],
+            typeOrder: Array<string> = ['Blank', 'Navigation Drawer', 'Tabs', 'Master-Detail with Firebase'],
             sortedByType: Array<any>,
             sortByFlav: Array<any>;
 
@@ -62,36 +31,29 @@ export class TemplateService implements ITemplateService {
         return sortByFlav;
     }
 
-    public _getNsGitRepos(uri: string, repos: Array<any>) {
-        let that = this;
-        return request({
-            method: "GET",
-            uri: uri,
-            json: true,
-            resolveWithFullResponse: true,
-            headers: {
-                'user-agent': 'nativescript-starter-kits'
-            }
-        })
-            .then(function (response: any) {
-                if (!repos) {
-                    repos = [];
-                }
+    public _getTemplatesNames() {
+        let repos: Array<any> = [
+                'template-drawer-navigation',
+                'template-tab-navigation',
+                'template-master-detail',
+                'template-blank',
+                'template-drawer-navigation-ts',
+                'template-master-detail-ts',
+                'template-blank-ts',
+                'template-tab-navigation-ts',
+                'template-drawer-navigation-ng',
+                'template-tab-navigation-ng',
+                'template-master-detail-ng',
+                'template-blank-ng'
+            ];
 
-                repos = repos.concat(response.body);
-                if (response.headers.link.split(",").filter(function (link: any) {
-                        return link.match(/rel="next"/);
-                    }).length > 0) {
-                    let next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function (link: any) {
-                        return link.match(/rel="next"/);
-                    })[0])[1];
-                    return that._getNsGitRepos(next, repos);
-                }
-                return repos;
-            })
-            .catch(function (err: any) {
-                return {message: 'Error retrieving github repositories', err: err};
-            });
+        return new Promise(function (resolve, reject) {
+            if (!repos || typeof repos === 'undefined') {
+                reject('Error retrieving Template Name');
+            } else {
+                resolve(repos);
+            }
+        });
     }
 
     public _getTmpAssetsContent(templateName: string) {
@@ -118,7 +80,7 @@ export class TemplateService implements ITemplateService {
                         platforms[platform] = res.body[i].name;
                     }
                 }
-                return that._tmpResourcesFromSrc(templateName, platforms);
+                return that.tmpResourcesFromSrc(templateName, platforms);
 
             })
             .catch(function (err: any) {
@@ -126,13 +88,6 @@ export class TemplateService implements ITemplateService {
             });
     }
 
-    // TODO make private
-    public base64Decode(encoded: string) {
-        let buf = Buffer.from(encoded, 'base64');
-        return buf.toString('utf8');
-    }
-
-    // TODO make private
     public tmpPackageJsonFromSrc(templateName: string) {
         let content: any;
         return request({
@@ -158,8 +113,7 @@ export class TemplateService implements ITemplateService {
             });
     }
 
-    // TODO make private
-    public _tmpResourcesFromSrc(templateName: string, asset: any) {
+    public tmpResourcesFromSrc(templateName: string, asset: any) {
         let content: any = {},
             promises: Array<any> = [];
         return new Promise(function (resolve, reject) {
@@ -277,19 +231,18 @@ export class TemplateService implements ITemplateService {
     public getTemplates() {
         let that = this,
             tempDetails: Array<any> = [],
-            promises: Array<any> = [],
-            gitRepos: Array<any> = [];
+            promises: Array<any> = [];
 
         return new Promise(function (resolve, reject) {
             tmpCache.get("tempDetails", function (err: any, value: any) {
                 if (!err) {
                     if (value === undefined) {
-                        that._getNsGitRepos(Config.options.orgBaseUrl, gitRepos)
+                        that._getTemplatesNames()
                             .then(function (repos: any) {
                                 if (repos.err && repos.err.statusCode === 403) {
                                     resolve(Backup.fallback);
                                 } else {
-                                    return that._filterRepoResults(repos);
+                                    return repos;
                                 }
                             })
                             .then(function (names: any) {
