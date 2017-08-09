@@ -33,19 +33,19 @@ export class TemplateService implements ITemplateService {
 
     public _getTemplatesNames() {
         let repos: Array<any> = [
-                'template-drawer-navigation',
-                'template-tab-navigation',
-                'template-master-detail',
-                'template-blank',
-                'template-drawer-navigation-ts',
-                'template-master-detail-ts',
-                'template-blank-ts',
-                'template-tab-navigation-ts',
-                'template-drawer-navigation-ng',
-                'template-tab-navigation-ng',
-                'template-master-detail-ng',
-                'template-blank-ng'
-            ];
+            'template-drawer-navigation',
+            'template-tab-navigation',
+            'template-master-detail',
+            'template-blank',
+            'template-drawer-navigation-ts',
+            'template-master-detail-ts',
+            'template-blank-ts',
+            'template-tab-navigation-ts',
+            'template-drawer-navigation-ng',
+            'template-tab-navigation-ng',
+            'template-master-detail-ng',
+            'template-blank-ng'
+        ];
 
         return new Promise(function (resolve, reject) {
             if (!repos || typeof repos === 'undefined') {
@@ -239,11 +239,7 @@ export class TemplateService implements ITemplateService {
                     if (value === undefined) {
                         that._getTemplatesNames()
                             .then(function (repos: any) {
-                                if (repos.err && repos.err.statusCode === 403) {
-                                    resolve(Backup.fallback);
-                                } else {
-                                    return repos;
-                                }
+                                return repos;
                             })
                             .then(function (names: any) {
                                 for (let i = 0; i < names.length; i++) {
@@ -265,7 +261,8 @@ export class TemplateService implements ITemplateService {
 
                                     })
                                     .catch(function (error: any) {
-                                        reject(error);
+                                        // TODO Implement error logger
+                                        resolve(Backup.fallback);
                                     });
                             })
                             .catch(function (error: any) {
