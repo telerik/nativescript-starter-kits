@@ -16,7 +16,7 @@ export class TemplateService implements ITemplateService {
 
     public _sortTmpData(templates: Array<any>) {
         let flavOrder: Array<string> = ['JavaScript', 'TypeScript', 'Angular & TypeScript'],
-            typeOrder: Array<string> = ['Blank', 'Navigation Drawer', 'Tabs', 'Master-Detail with Firebase'],
+            typeOrder: Array<string> = ['Blank', 'Navigation Drawer', 'Tabs', 'Master-Detail with Firebase', 'Master-Detail with Kinvey'],
             sortedByType: Array<any>,
             sortByFlav: Array<any>;
 
@@ -44,7 +44,10 @@ export class TemplateService implements ITemplateService {
             'template-drawer-navigation-ng',
             'template-tab-navigation-ng',
             'template-master-detail-ng',
-            'template-blank-ng'
+            'template-blank-ng',
+            'template-master-detail-kinvey',
+            'template-master-detail-kinvey-ng',
+            'template-master-detail-kinvey-ts'
         ];
 
         return new Promise(function (resolve, reject) {
