@@ -35,8 +35,10 @@ Install the npm package
 $ tns extension install <path to nativescript-starter-kits>.tgz
 ```
 ## Public API
+Get proper `nativescript` reference
 ```JavaScript
-const tns = require("nativescript");
+const pathToPackage = require("global-modules-path").getPath("nativescript", "tns");
+const tns = require(pathToPackage);
 
 ```
 
