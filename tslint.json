@@ -1,62 +1,47 @@
 {
+  "extends": "tslint:latest",
   "rules": {
-    "class-name": true,
-    "curly": true,
-    "eofline": true,
-    "indent": [
+    "array-type": [
       true,
-      "spaces"
+      "generic"
     ],
-    "interface-name": true,
-    "jsdoc-format": true,
-    "max-line-length": [
-      false,
-      140
+    "arrow-return-shorthand": true,
+    "member-access": [
+      true,
+      "no-public"
     ],
-    "no-consecutive-blank-lines": true,
-    "no-construct": true,
-    "no-debugger": true,
-    "no-duplicate-variable": true,
-    "no-shadowed-variable": true,
-    "no-empty": false,
-    "no-eval": true,
-    "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": true,
-    "no-unused-expression": true,
-    "no-use-before-declare": true,
-    "no-var-keyword": true,
+    "newline-before-return": true,
+    "no-angle-bracket-type-assertion": false,
+    "no-consecutive-blank-lines": [
+      true,
+      1
+    ],
+    "no-console": [
+      false
+    ],
+    "no-irregular-whitespace": true,
+    "no-unnecessary-initializer": true,
     "no-var-requires": false,
-    "one-line": [
+    "object-literal-key-quotes": [
       true,
-      "check-catch",
-      "check-finally",
-      "check-else",
-      "check-open-brace",
-      "check-whitespace"
+      "as-needed"
     ],
-    "quotemark": [
-      false,
-      "double"
+    "object-literal-sort-keys": false,
+    "one-variable-per-declaration": [
+      true,
+      "ignore-for-loop"
     ],
-    "semicolon": true,
-    "space-before-function-paren": false,
-    "switch-default": false,
     "trailing-comma": [
-      false,
+      true,
       {
-        "multiline": "always",
-        "singleline": "always"
+        "multiline": "never",
+        "singleline": "never"
       }
     ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
-    "typeof-compare": true,
-    "use-isnan": true,
     "variable-name": [
       true,
       "ban-keywords",
+      "check-format",
       "allow-leading-underscore"
     ],
     "whitespace": [
@@ -65,7 +50,9 @@
       "check-decl",
       "check-operator",
       "check-module",
-      "check-separator"
+      "check-separator",
+      "check-type",
+      "check-preblock"
     ]
   }
 }

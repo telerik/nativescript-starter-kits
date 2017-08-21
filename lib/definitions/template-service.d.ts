@@ -9,7 +9,7 @@ interface ITemplateService {
 
     /**
      * @description Get template's resources from the github repo
-     * @param templateName
+     * @param templateName <String>
      * @param asset <Object> - asset name and platform
      * @returns {Promise<any>} - Template's image recources in base64 encoding
      */
@@ -17,14 +17,14 @@ interface ITemplateService {
 
     /**
      * @description The method returns various meta data from template package.json
-     * @param packageJson - Valid package.json
+     * @param packageJson <Object> - Valid package.json
      * @returns {Promise<any>} - Template description, version, displayName, gitUrl
      */
     getTemplateMetaData(packageJson: any): any;
 
     /**
      * @description Check templates flavors E.g [@angularTs, vanillaJs, Ts ]
-     * @param templateName
+     * @param packageJson <Object> - Valid package.json
      * @returns {Promise<string>}
      */
     checkTemplateFlavor(packageJson: any): any;
@@ -44,9 +44,9 @@ interface ITemplateService {
 
     /**
      * @description Download an app template in your local project folder
-     * @param templateName <String>
+     * @param url <String> - url to the app template repository
      */
-    downloadAppTemplate(templateName: string): void;
+    downloadAppTemplate(url: string): void;
 
     /**
      * @description The method returns details about a page template in JSON Format
@@ -57,15 +57,15 @@ interface ITemplateService {
 
     /**
      * @description Create App method
-     * @param appName
-     * @param location
+     * @param appName <String>
+     * @param location <String>
      * @returns Promise
      */
     createApp(appName: string, location: string): any;
 
     /**
      * @description Add page
-     * @param pageName
+     * @param pageName <String>
      * @returns Promise
      */
     addPage(pageName: string, location: string): any;
