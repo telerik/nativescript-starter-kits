@@ -35,14 +35,25 @@ Install the npm package
 $ tns extension install <path to nativescript-starter-kits>.tgz
 ```
 ## Public API
+Get proper `nativescript` reference
 ```JavaScript
-const tns = require("nativescript");
+const pathToPackage = require("global-modules-path").getPath("nativescript", "tns");
+const tns = require(pathToPackage);
 
 ```
 
 Load all available extensions
 ```JavaScript
-tns.extensibilityService.loadExtensions();
+/**
+     * @name loadExtensions
+     * @description Loads all currently installed extensions
+     * @return {Promise<any>[]} - On Success: Array of Promises, one for each installed extension
+*/
+Promise.all(tns.extensibilityService.loadExtensions()).then((loadedExtensions) => {
+    console.log("All extensions loaded successfully!");
+}).catch((error) => {
+    console.error(error);
+});
 ```
 
 ##### Get details for all installed templates
