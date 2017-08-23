@@ -6,7 +6,7 @@ const request = require("request-promise");
 const NodeCache = require("node-cache");
 
 // tslint:disable-next-line:variable-name
-const Backup = require("../../consts/backup-data");
+const Backup = require("../../consts/templates-backup-data");
 
 const tmpCache = new NodeCache();
 
