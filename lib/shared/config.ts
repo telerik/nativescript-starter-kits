@@ -1,6 +1,6 @@
 export class Config {
     static cacheTime = 3600;
-    static orgBaseUrl = "https://api.github.com/orgs/NativeScript/repos?per_page=100";
+    static orgBaseUrl = "https://api.github.com/orgs/NativeScript/%s";
 
     static availableTemplateRepos: Array<any> = [
         "template-drawer-navigation",
@@ -18,5 +18,11 @@ export class Config {
         "template-master-detail-kinvey",
         "template-master-detail-kinvey-ng",
         "template-master-detail-kinvey-ts"
+    ];
+
+    static availablePages: Array<any> = [
+        "blank",
+        "login",
+        "signup"
     ];
 }
