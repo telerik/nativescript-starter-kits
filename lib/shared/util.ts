@@ -1,4 +1,6 @@
 import * as nodeUtil from "util";
+import * as path from "path";
+import * as fs from "fs";
 
 const indexOf = require("lodash.indexof");
 const sortBy = require("lodash.sortby");
@@ -13,6 +15,8 @@ export default class Util {
     static sortBy = sortBy;
     static format = nodeUtil.format;
     static request = request;
+    static path = path;
+    static fs = fs;
 
     static getPackageJsonFromSource(url: string) {
         let content: any;
