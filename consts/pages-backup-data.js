@@ -10,12 +10,7 @@ BackupData.fallbackJs = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/blank",
         templateFlavor: "JavaScript",
-        type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        type: "Page template"
     },
     {
         name: "tns-page-login",
@@ -25,11 +20,8 @@ BackupData.fallbackJs = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/login",
         templateFlavor: "JavaScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "user-o"
+
     },
     {
         name: "tns-page-signup",
@@ -39,11 +31,7 @@ BackupData.fallbackJs = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "JavaScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "address-card-o"
     }
 ];
 
@@ -55,12 +43,7 @@ BackupData.fallbackTs = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ts/tree/master/blank",
         templateFlavor: "TypeScript",
-        type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        type: "Page template"
     },
     {
         name: "tns-page-login-ts",
@@ -70,11 +53,7 @@ BackupData.fallbackTs = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ts/tree/master/login",
         templateFlavor: "TypeScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "user-o"
     },
     {
         name: "tns-page-signup-ts",
@@ -84,11 +63,7 @@ BackupData.fallbackTs = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "TypeScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "address-card-o"
     }
 ];
 
@@ -100,12 +75,7 @@ BackupData.fallbackNg = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ng/tree/master/blank",
         templateFlavor: "Angular & TypeScript",
-        type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        type: "Page template"
     },
     {
         name: "tns-page-login-ng",
@@ -115,11 +85,7 @@ BackupData.fallbackNg = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ts/tree/master/login",
         templateFlavor: "Angular & TypeScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "user-o"
     },
     {
         name: "tns-page-signup-ng",
@@ -129,11 +95,7 @@ BackupData.fallbackNg = [
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "Angular & TypeScript",
         type: "Page template",
-        resources: {
-            android: "data:image/png;base64,",
-            ios: "data:image/png;base64,",
-            thumbnail: "data:image/png;base64,"
-        }
+        thumbnail: "address-card-o"
     }
 ];
 
