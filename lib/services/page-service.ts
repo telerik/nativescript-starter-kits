@@ -38,6 +38,7 @@ export class PageService implements IPageService {
                 .then((packageJson: string) => {
                     const ng = packageJson.indexOf("nativescript-angular") > -1;
                     const ts = packageJson.indexOf("nativescript-dev-typescript") > -1;
+
                     switch (true) {
                         case ng :
                             resolve("Angular & TypeScript");
@@ -87,9 +88,9 @@ export class PageService implements IPageService {
                 }
 
                 if (files.indexOf("package.json") > -1) {
-                   const packageJsonpath = util.path.join(appPath, "package.json");
+                   const packageJsonPath = util.path.join(appPath, "package.json");
 
-                   util.fs.readFile(packageJsonpath, "utf8", (fileErr, data) => {
+                   util.fs.readFile(packageJsonPath, "utf8", (fileErr, data) => {
                        if (fileErr) {
                            reject(readErr);
                        }
