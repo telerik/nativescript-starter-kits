@@ -2,7 +2,7 @@
 
 const BackupData = {};
 
-BackupData.fallbackJs = [
+BackupData.fallback = [
     {
         name: "tns-page-blank",
         displayName: "Blank",
@@ -32,10 +32,7 @@ BackupData.fallbackJs = [
         templateFlavor: "JavaScript",
         type: "Page template",
         thumbnail: "address-card-o"
-    }
-];
-
-BackupData.fallbackTs = [
+    },
     {
         name: "tns-page-blank-ts",
         displayName: "Blank",
@@ -64,10 +61,7 @@ BackupData.fallbackTs = [
         templateFlavor: "TypeScript",
         type: "Page template",
         thumbnail: "address-card-o"
-    }
-];
-
-BackupData.fallbackNg = [
+    },
     {
         name: "tns-page-blank-ng",
         displayName: "Blank",
