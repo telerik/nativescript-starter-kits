@@ -29,9 +29,9 @@ export class PageService implements IPageService {
         });
     }
 
-    checkFlavor(appPath: string) {
+    getFlavor(appPath: string) {
         return new Promise((resolve, reject) => {
-            this.checkAppPath(appPath)
+            this.getAppPath(appPath)
                 .then((validPath: string) => {
                     return this.readAppsPackageJson(validPath);
                 })
@@ -56,7 +56,7 @@ export class PageService implements IPageService {
         });
     }
 
-    private checkAppPath(appPath: string) {
+    private getAppPath(appPath: string) {
         return new Promise((resolve, reject) => {
             if (!util.path.isAbsolute(appPath)) {
                 reject("Path must be absolute");
