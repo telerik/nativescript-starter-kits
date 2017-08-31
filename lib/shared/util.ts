@@ -1,6 +1,7 @@
 import * as nodeUtil from "util";
 import * as path from "path";
 import * as fs from "fs";
+import * as childProcess from "child_process";
 
 const indexOf = require("lodash.indexof");
 const sortBy = require("lodash.sortby");
@@ -17,6 +18,7 @@ export default class Util {
     static request = request;
     static path = path;
     static fs = fs;
+    static childProcess = childProcess;
 
     static getPackageJsonFromSource(url: string) {
         let content: any;

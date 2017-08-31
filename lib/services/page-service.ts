@@ -38,9 +38,15 @@ export class PageService implements IPageService {
         });
     }
 
-    addPage(pageName:string, appPath:string, pageTemplate:any) {
+    addPage(pageName: string, appPath: string, pageTemplate: any) {
         return new Promise((resolve, reject) => {
-            resolve("success");
+            this.downloadPage(pageName)
+            .then((result: any) => {
+                resolve("success");
+            })
+            .catch((promiseError) => {
+                reject(promiseError);
+            });
         });
     }
 
@@ -92,6 +98,24 @@ export class PageService implements IPageService {
 
     }
 
+    private downloadPage(pageName: string) {
+        const command = "npm install " + pageName;
+        const templatesDir = "../../templates";
+
+        return new Promise((resolve, reject) => {
+            util.childProcess.exec(command, { cwd: templatesDir }, (error, stdout, stderr) => {
+                if (error) {
+                    reject(error.message);
+                }
+                else if (stderr) {
+                    reject(error.message);
+                }
+                else {
+                    resolve(stdout);
+                }
+            });
+        });
+    }
 }
 
 $injector.register("pageService", PageService);
