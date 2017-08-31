@@ -38,6 +38,12 @@ export class PageService implements IPageService {
         });
     }
 
+    addPage(pageName:string, appPath:string, pageTemplate:any) {
+        return new Promise((resolve, reject) => {
+            resolve("success");
+        });
+    }
+
     private getAppPath(appPath: string) {
         return new Promise((resolve, reject) => {
             if (!util.path.isAbsolute(appPath)) {
