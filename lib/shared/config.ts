@@ -1,6 +1,6 @@
 export class Config {
     static cacheTime = 3600;
-    static orgBaseUrl = "https://api.github.com/orgs/NativeScript/%s";
+    static orgBaseUrl = "https://github.com/NativeScript/%s";
 
     static availableTemplateRepos: Array<any> = [
         "template-drawer-navigation",
