@@ -40,11 +40,14 @@ export class PageService implements IPageService {
 
     addPage(pageName: string, appPath: string, pageTemplate: any) {
         return new Promise((resolve, reject) => {
-            this.downloadPage(pageName)
-            .then((result: any) => {
+            const displayName = pageTemplate.displayName.toLowerCase();
+
+            this.downloadPage(displayName, pageTemplate.flavor)
+            .then((downloadPath: any) => {
+                // TODO Add ejs template rendering here
                 resolve("success");
             })
-            .catch((promiseError) => {
+            .catch((promiseError: any) => {
                 reject(promiseError);
             });
         });
@@ -58,7 +61,7 @@ export class PageService implements IPageService {
 
             appPath = util.path.normalize(appPath);
 
-            util.fs.lstat(appPath, (statErr, stats) => {
+            util.fs.lstat(appPath, (statErr: any, stats: any) => {
                 if (statErr) {
                     reject(statErr);
                 }
@@ -75,7 +78,7 @@ export class PageService implements IPageService {
 
     private readAppsPackageJson(appPath: string) {
         return new Promise((resolve, reject) => {
-            util.fs.readdir(appPath, (readErr, files) => {
+            util.fs.readdir(appPath, (readErr: any, files: any) => {
                 if (readErr) {
                     reject(readErr);
                 }
@@ -83,7 +86,7 @@ export class PageService implements IPageService {
                 if (files.indexOf("package.json") > -1) {
                    const packageJsonPath = util.path.join(appPath, "package.json");
 
-                   util.fs.readFile(packageJsonPath, "utf8", (fileErr, data) => {
+                   util.fs.readFile(packageJsonPath, "utf8", (fileErr: any, data: any) => {
                        if (fileErr) {
                            reject(readErr);
                        }
@@ -98,22 +101,43 @@ export class PageService implements IPageService {
 
     }
 
-    private downloadPage(pageName: string) {
-        const command = "npm install " + pageName;
-        const templatesDir = "../../templates";
+    private downloadPage(pageName: string, flavor: string) {
+        const templatesDir = util.path.join(__dirname, "../templates");
+        const command = "git";
+        const commandArgs: Array<any> = ["clone"];
 
         return new Promise((resolve, reject) => {
-            util.childProcess.exec(command, { cwd: templatesDir }, (error, stdout, stderr) => {
-                if (error) {
-                    reject(error.message);
-                }
-                else if (stderr) {
-                    reject(error.message);
-                }
-                else {
-                    resolve(stdout);
-                }
-            });
+            util.fs.ensureDir(templatesDir)
+                .then(() => {
+                    return util.pageExists(templatesDir, pageName);
+                })
+                .then((pageExists: boolean) => {
+                    if (!pageExists) {
+                        return util.getPageTemplatesBaseUrl(flavor);
+                    } else {
+                        // TODO If the page template indeed still exists in the tmp folder
+                        // just copy the content to the app dir
+                        resolve("Page Already exists");
+                    }
+                })
+                .then((baseUrl: string) => {
+                    baseUrl = baseUrl + ".git";
+                    commandArgs.push(baseUrl);
+                    commandArgs.push(templatesDir);
+
+                    const process = util.childProcess.spawn(command, commandArgs);
+                    process.on("close", (code) => {
+                        if (code !== 0) {
+                            reject(`child process exited with code ${code}`);
+                        } else {
+                            const pagePath = util.path.join(templatesDir, pageName);
+                            resolve(pagePath);
+                        }
+                    });
+                })
+                .catch((downloadPageError: any) => {
+                    reject(downloadPageError);
+                });
         });
     }
 }
