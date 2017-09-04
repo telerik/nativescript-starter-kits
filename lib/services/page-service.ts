@@ -42,14 +42,21 @@ export class PageService implements IPageService {
         return new Promise((resolve, reject) => {
             const displayName = pageTemplate.displayName.toLowerCase();
 
-            this.downloadPage(displayName, pageTemplate.flavor)
-            .then((downloadPath: any) => {
-                // TODO Add ejs template rendering here
-                resolve("success");
-            })
-            .catch((promiseError: any) => {
-                reject(promiseError);
-            });
+            util.pageExists(appPath, pageName)
+                .then((pageExists: boolean) => {
+                    if (!pageExists) {
+                        this.downloadPage(displayName, pageTemplate.flavor)
+                            .then((downloadPath: any) => {
+                                // TODO Add ejs template rendering here
+                                resolve("success");
+                            })
+                            .catch((promiseError: any) => {
+                                reject(promiseError);
+                            });
+                    } else {
+                        resolve(`Page with the name: ${pageName} already exists`);
+                    }
+                });
         });
     }
 
