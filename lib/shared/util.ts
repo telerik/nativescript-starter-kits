@@ -1,6 +1,6 @@
 import * as childProcess from "child_process";
-import * as nodeUtil from "util";
 import * as path from "path";
+import * as nodeUtil from "util";
 import { Config } from "./config";
 
 const indexOf = require("lodash.indexof");

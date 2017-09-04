@@ -45,17 +45,17 @@ export class PageService implements IPageService {
             util.pageExists(appPath, pageName)
                 .then((pageExists: boolean) => {
                     if (!pageExists) {
-                        this.downloadPage(displayName, pageTemplate.flavor)
-                            .then((downloadPath: any) => {
-                                // TODO Add ejs template rendering here
-                                resolve("success");
-                            })
-                            .catch((promiseError: any) => {
-                                reject(promiseError);
-                            });
+                        return this.downloadPage(displayName, pageTemplate.flavor);
                     } else {
                         resolve(`Page with the name: ${pageName} already exists`);
                     }
+                })
+                .then((downloadPath: any) => {
+                // TODO Add ejs template rendering here
+                resolve("success");
+                })
+                .catch((promiseError) => {
+                    reject(promiseError);
                 });
         });
     }
@@ -98,7 +98,7 @@ export class PageService implements IPageService {
                            reject(readErr);
                        }
                        resolve(data);
-                   })
+                   });
                 } else {
                     reject("Missing package.json file in path " + appPath);
                 }
