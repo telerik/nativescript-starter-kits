@@ -14,7 +14,7 @@ export class PageService implements IPageService {
         return new Promise((resolve, reject) => {
             this.getAppPath(appPath)
                 .then((validPath: string) => {
-                    return this.readAppsPackageJson(validPath);
+                    return this.readAppPackageJson(validPath);
                 })
                 .then((packageJson: string) => {
                     const ng = packageJson.indexOf("nativescript-angular") > -1;
@@ -63,31 +63,36 @@ export class PageService implements IPageService {
     private getAppPath(appPath: string) {
         return new Promise((resolve, reject) => {
             if (!util.path.isAbsolute(appPath)) {
-                reject("Path must be absolute");
+                reject(new Error("Path must be absolute"));
+
+                return;
             }
 
-            appPath = util.path.normalize(appPath);
+            const normalizedAppPath = util.path.normalize(appPath);
 
-            util.fs.lstat(appPath, (statErr: any, stats: any) => {
+            util.fs.lstat(normalizedAppPath, (statErr: any, stats: any) => {
                 if (statErr) {
                     reject(statErr);
+
+                    return;
                 }
 
                 if (!stats.isDirectory()) {
-                    reject("Not a valid app folder!");
+                    reject(new Error("Not a valid app folder!"));
                 } else {
-                    resolve(appPath);
+                    resolve(normalizedAppPath);
                 }
             });
-
         });
     }
 
-    private readAppsPackageJson(appPath: string) {
+    private readAppPackageJson(appPath: string) {
         return new Promise((resolve, reject) => {
             util.fs.readdir(appPath, (readErr: any, files: any) => {
                 if (readErr) {
                     reject(readErr);
+
+                    return;
                 }
 
                 if (files.indexOf("package.json") > -1) {
@@ -95,12 +100,14 @@ export class PageService implements IPageService {
 
                    util.fs.readFile(packageJsonPath, "utf8", (fileErr: any, data: any) => {
                        if (fileErr) {
-                           reject(readErr);
+                           reject(fileErr);
+
+                           return;
                        }
                        resolve(data);
                    });
                 } else {
-                    reject("Missing package.json file in path " + appPath);
+                    reject(new Error("Missing package.json file in path " + appPath));
                 }
 
             });
@@ -135,7 +142,7 @@ export class PageService implements IPageService {
                     const process = util.childProcess.spawn(command, commandArgs);
                     process.on("close", (code) => {
                         if (code !== 0) {
-                            reject(`child process exited with code ${code}`);
+                            reject(new Error(`child process exited with code ${code}`));
                         } else {
                             const pagePath = util.path.join(templatesDir, pageName);
                             resolve(pagePath);

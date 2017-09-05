@@ -1,7 +1,6 @@
 import { Config } from "../shared/config";
 import util from "../shared/util";
 
-const request = require("request-promise");
 // tslint:disable-next-line:variable-name
 const NodeCache = require("node-cache");
 
@@ -14,7 +13,7 @@ export class TemplateService implements ITemplateService {
     tmpPackageJsonFromSrc(templateName: string) {
         let content: any;
 
-        return request({
+        return util.request({
             method: "GET",
             uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/package.json", templateName),
             json: true,
@@ -43,7 +42,7 @@ export class TemplateService implements ITemplateService {
             for (const key in asset) {
                 if (asset.hasOwnProperty(key)) {
                     promises.push(
-                        request({
+                        util.request({
                             method: "GET",
                             // tslint:disable-next-line:max-line-length
                             uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/tools/assets/%s", templateName, asset[key]),
@@ -227,7 +226,7 @@ export class TemplateService implements ITemplateService {
     private getTmpAssetsContent(templateName: string) {
         const platforms: any = {};
 
-        return request({
+        return util.request({
             method: "GET",
             uri: util.format("https://api.github.com/repos/NativeScript/%s/contents/tools/assets", templateName),
             json: true,

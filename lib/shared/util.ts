@@ -21,35 +21,13 @@ export default class Util {
     static fs = fs;
     static childProcess = childProcess;
 
-    static getPackageJsonFromSource(url: string) {
-        let content: any;
-
-        return this.request({
-            method: "GET",
-            uri: url,
-            json: true,
-            resolveWithFullResponse: true,
-            headers: this.defaultHeaders
-        })
-            .then((response: any) => {
-                content = response.body;
-                if (content.hasOwnProperty("templateType")) {
-                    return content;
-                }
-            })
-            .catch((error: any) => {
-                return {
-                    message: "Error retrieving package.json from src " + url,
-                    err: error
-                };
-            });
-    }
-
     static pageExists(location: string, pageName: string) {
         return new Promise((resolve, reject) => {
             this.fs.readdir(location, (err: any, content: any) => {
                 if (err) {
                     reject(err);
+
+                    return;
                 }
 
                 if (content.indexOf(pageName) > -1) {
@@ -61,8 +39,8 @@ export default class Util {
         });
     }
 
-    static getPageTemplatesBaseUrl(flavor: string)  {
-        let baseUrl: string ;
+    static getPageTemplatesBaseUrl(flavor: string) {
+        let baseUrl: string;
 
         return new Promise((resolve, reject) => {
             switch (flavor) {
@@ -80,7 +58,7 @@ export default class Util {
                     resolve(baseUrl);
                     break;
                 default:
-                    reject("Bad Flavor");
+                    reject(new Error("Bad Flavor"));
             }
         });
     }
