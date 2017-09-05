@@ -4,7 +4,7 @@ const BackupData = {};
 
 BackupData.fallback = [
     {
-        name: 'template-blank',
+        name: 'tns-template-blank',
         displayName: 'Blank',
         description: 'Blank template for Vanilla NativeScript apps using JavaScript',
         version: '3.1.4',
@@ -18,7 +18,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-drawer-navigation',
+        name: 'tns-template-drawer-navigation',
         displayName: 'Navigation Drawer',
         description: 'Side navigation template',
         version: '3.1.4',
@@ -32,7 +32,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-tab-navigation',
+        name: 'tns-template-tab-navigation',
         displayName: 'Tabs',
         description: 'Tabbed interface template',
         version: '3.1.4',
@@ -46,7 +46,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-master-detail',
+        name: 'tns-template-master-detail',
         displayName: 'Master-Detail with Firebase',
         description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.4',
@@ -74,7 +74,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-blank-ts',
+        name: 'tns-template-blank-ts',
         displayName: 'Blank template',
         description: 'Blank template for NativeScript apps using TypeScript',
         version: '3.1.4',
@@ -88,7 +88,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-drawer-navigation-ts',
+        name: 'tns-template-drawer-navigation-ts',
         displayName: 'Navigation Drawer',
         description: 'Side navigation template',
         version: '3.1.4',
@@ -102,7 +102,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-tab-navigation-ts',
+        name: 'tns-template-tab-navigation-ts',
         displayName: 'Tabs',
         description: 'Tabbed interface template',
         version: '3.1.4',
@@ -116,7 +116,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-master-detail-ts',
+        name: 'tns-template-master-detail-ts',
         displayName: 'Master-Detail with Firebase',
         description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.4',
@@ -145,7 +145,7 @@ BackupData.fallback = [
     },
 
     {
-        name: 'template-blank-ng',
+        name: 'tns-template-blank-ng',
         displayName: 'Blank template',
         description: 'Blank template for NativeScript apps using Angular',
         version: '3.1.4',
@@ -159,7 +159,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-drawer-navigation-ng',
+        name: 'tns-template-drawer-navigation-ng',
         displayName: 'Navigation Drawer',
         description: 'Side navigation template',
         version: '3.1.4',
@@ -173,7 +173,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-tab-navigation-ng',
+        name: 'tns-template-tab-navigation-ng',
         displayName: 'Tabs',
         description: 'Tabbed interface template',
         version: '3.1.4',
@@ -187,7 +187,7 @@ BackupData.fallback = [
         }
     },
     {
-        name: 'template-master-detail-ng',
+        name: 'tns-template-master-detail-ng',
         displayName: 'Master-Detail with Firebase',
         description: 'Master-detail interface to display collection of items from Firebase and inspect and edit selected item properties.',
         version: '3.1.4',
