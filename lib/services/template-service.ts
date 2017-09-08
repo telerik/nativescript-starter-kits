@@ -1,13 +1,13 @@
-import { Config } from "../shared/config";
+// import { Config } from "../shared/config";
 import util from "../shared/util";
 
 // tslint:disable-next-line:variable-name
-const NodeCache = require("node-cache");
+// const NodeCache = require("node-cache");
 
 // tslint:disable-next-line:variable-name
 const Backup = require("../../consts/templates-backup-data");
 
-const tmpCache = new NodeCache();
+// const tmpCache = new NodeCache();
 
 export class TemplateService implements ITemplateService {
     tmpPackageJsonFromSrc(templateName: string) {
@@ -74,8 +74,10 @@ export class TemplateService implements ITemplateService {
     }
 
     checkTemplateFlavor(packageJson: any) {
-        return new Promise((resolve) => {
-            if (packageJson.name.indexOf("-ng") > -1) {
+        return new Promise((resolve, reject) => {
+            if (typeof packageJson === "undefined" || typeof packageJson.name !== "string") {
+                reject(new Error("Cannot read template details!"));
+            } else if (packageJson.name.indexOf("-ng") > -1) {
                 resolve("Angular & TypeScript");
             } else if (packageJson.name.indexOf("-ts") > -1) {
                 resolve("TypeScript");
@@ -145,83 +147,90 @@ export class TemplateService implements ITemplateService {
     }
 
     getTemplates() {
-        let tempDetails: Array<any> = [];
-        const promises: Array<any> = [];
+        // let tempDetails: Array<any> = [];
+        // const promises: Array<any> = [];
 
         return new Promise((resolve, reject) => {
-            tmpCache.get("tempDetails", (error: any, value: any) => {
-                if (!error) {
-                    if (value === undefined) {
-                        this.getTemplatesNames()
-                            .then((templateNames: any) => {
-                                return templateNames;
-                            })
-                            .then((names: any) => {
-                                names.forEach((name: string) => {
-                                    promises.push(
-                                        this.getAppTemplateDetails(name)
-                                            .then((details) => {
-                                                tempDetails.push(details);
-                                            })
-                                            .catch((errorDetails) => {
-                                                reject(errorDetails);
-                                            })
-                                    );
-                                });
+            resolve(Backup.fallback);
+            // tmpCache.get("tempDetails", (error: any, value: any) => {
+            //     if (!error) {
+            //         if (value === undefined) {
+            //             this.getTemplatesNames()
+            //                 .then((templateNames: any) => {
+            //                     return templateNames;
+            //                 })
+            //                 .then((names: any) => {
+            //                     names.forEach((name: string) => {
+            //                         promises.push(
+            //                             this.getAppTemplateDetails(name)
+            //                                 .then((details) => {
+            //                                     tempDetails.push(details);
+            //                                 })
+            //                                 .catch((errorDetails) => {
+            //                                     reject(errorDetails);
+            //                                 })
+            //                         );
+            //                     });
 
-                                Promise.all(promises)
-                                    .then(() => {
-                                        tempDetails = this.sortTmpData(tempDetails);
-                                        tmpCache.set("tempDetails", tempDetails, Config.cacheTime);
-                                        resolve(tempDetails);
+            //                     Promise.all(promises)
+            //                         .then(() => {
+            //                             tempDetails = this.sortTmpData(tempDetails);
+            //                             tmpCache.set("tempDetails", tempDetails, Config.cacheTime);
+            //                             resolve(tempDetails);
 
-                                    })
-                                    .catch((errorPromises: any) => {
-                                        // TODO Implement error logger
-                                        resolve(Backup.fallback);
-                                    });
-                            })
-                            .catch((errorTemplates: any) => {
-                                console.error(errorTemplates);
-                            });
-                    } else {
-                        // Load data from cache
-                        resolve(value);
-                    }
-                }
-            });
+            //                         })
+            //                         .catch((errorPromises: any) => {
+            //                             // TODO Implement error logger
+            //                             resolve(Backup.fallback);
+            //                         });
+            //                 })
+            //                 .catch((errorTemplates: any) => {
+            //                     console.error(errorTemplates);
+            //                 });
+            //         } else {
+            //             // Load data from cache
+            //             resolve(value);
+            //         }
+            //     }
+            // });
         });
     }
 
-    private sortTmpData(templates: Array<any>) {
-        const flavOrder: Array<string> = ["JavaScript", "TypeScript", "Angular & TypeScript"];
+    // private sortTmpData(templates: Array<any>) {
+    //     const flavOrder: Array<string> = ["JavaScript", "TypeScript", "Angular & TypeScript"];
 
-        // tslint:disable-next-line:max-line-length
-        const typeOrder: Array<string> = ["Blank", "Navigation Drawer", "Tabs", "Master-Detail with Firebase", "Master-Detail with Kinvey"];
-        let sortedByType: Array<any>;
-        let sortByFlav: Array<any>;
+    //     // tslint:disable-next-line:max-line-length
+    //     const typeOrder: Array<string> = [
+    //         "Blank",
+    //         "Navigation Drawer",
+    //         "Tabs",
+    //         "Master-Detail with Firebase",
+    //         "Master-Detail with Kinvey"
+    //     ];
+    //     let sortedByType: Array<any>;
+    //     let sortByFlav: Array<any>;
 
-        sortedByType = util.sortBy(templates, (temp: any) => {
-            return util.indexOf(typeOrder, temp.displayName);
-        });
+    //     sortedByType = util.sortBy(templates, (temp: any) => {
+    //         return util.indexOf(typeOrder, temp.displayName);
+    //     });
 
-        sortByFlav = util.sortBy(sortedByType, (temp: any) => {
-            return util.indexOf(flavOrder, temp.templateFlavor);
-        });
+    //     sortByFlav = util.sortBy(sortedByType, (temp: any) => {
+    //         return util.indexOf(flavOrder, temp.templateFlavor);
+    //     });
 
-        return sortByFlav;
-    }
+    //     return sortByFlav;
+    // }
 
-    private getTemplatesNames() {
+    // private getTemplatesNames() {
 
-        return new Promise((resolve, reject) => {
-            if (!Config.availableTemplateRepos || !Config.availableTemplateRepos.length) {
-                reject("No available repositories found");
-            } else {
-                resolve(Config.availableTemplateRepos);
-            }
-        });
-    }
+    //     return new Promise((resolve, reject) => {
+    //         if (!Config.availableTemplateRepos || !Config.availableTemplateRepos.length) {
+    //             reject("No available repositories found");
+    //         } else {
+    //             resolve(Config.availableTemplateRepos);
+    //         }
+    //     });
+    // }
 
     private getTmpAssetsContent(templateName: string) {
         const platforms: any = {};
