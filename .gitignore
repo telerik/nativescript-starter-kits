@@ -82,3 +82,4 @@ lib/templates/
 xunit.xml
 test-reports.xml
 
+/.project

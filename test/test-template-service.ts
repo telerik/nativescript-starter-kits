@@ -17,21 +17,20 @@ describe("TemplateService Api", () => {
     describe("Check template flavor", () => {
         const templateService = new TemplateService();
         it("Returns a template flavor", () => {
-            const flavor = templateService.checkTemplateFlavor({});
-
-            flavor.should.be.a("string");
-            flavor.should.not.be.an("object");
-            flavor.should.not.be.a("number");
-            flavor.should.not.be.instanceOf(Error);
+            templateService.checkTemplateFlavor({name: "template-hello-world-ng"}).then((flavor) => {
+                flavor.should.be.a("string");
+                flavor.should.not.be.an("object");
+                flavor.should.not.be.a("number");
+                flavor.should.not.be.instanceOf(Error);
+            });
         });
 
         it("handles errors gracefully ", () => {
-            const flavor = templateService.checkTemplateFlavor({});
-
-            flavor.should.be.instanceOf(Error);
-            flavor.should.not.be.a("string");
-            flavor.should.not.be.an("object");
-            flavor.should.not.be.a("number");
+            templateService.checkTemplateFlavor({}).then((flavor) => {
+                should.fail(flavor, null, "flavor should not be returned");
+            }, (errorFlavor) => {
+                errorFlavor.should.be.instanceOf(Error);
+            });
         });
 
     });
@@ -66,15 +65,18 @@ describe("TemplateService Api", () => {
     describe("Get Available templates", () => {
         const templateService = new TemplateService();
         it("Returns a Template Details array for all available templates", () => {
-            templateService.getTemplates().then((templates) => {
+            templateService.getTemplates().then((templates: any) => {
                 should.exist(templates);
                 templates.should.be.an("array");
-
-                /*templates.should.contain.a.thing.with.property("name");
-                templates.should.contain.a.thing.with.property("version");
-                templates.should.contain.a.thing.with.property("description");
-                templates.should.contain.a.thing.with.property("templateFlavor");*/
-
+                if (templates.length) {
+                    for (let ti = templates.length - 1; ti >= 0; ti--) {
+                        templates[ti].should.have.property("name");
+                        templates[ti].name.should.contain("tns-template-");
+                        templates[ti].should.have.property("version");
+                        templates[ti].should.have.property("description");
+                        templates[ti].should.have.property("templateFlavor");
+                    }
+                }
             }).catch((err) => {
                 should.not.exist(err);
             });
