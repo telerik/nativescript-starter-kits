@@ -74,10 +74,10 @@ export class PageService implements IPageService {
                     process.on("close", (code) => {
                         if (code !== 0) {
                             return Promise.reject(new Error(`child process exited with code ${code}`));
-                        } else {
-                            const pagePath = util.path.join(templatesDir, pageName);
-                            resolve(pagePath);
                         }
+
+                        const pagePath = util.path.join(templatesDir, pageName);
+                        resolve(pagePath);
                     });
                 })
                 .catch((downloadPageError: any) => {
@@ -99,20 +99,25 @@ export class PageService implements IPageService {
         return new Promise((resolve, reject) => {
             this.prepareRenderedFiles(srcDir, newPageName)
                 .then((renderedPageFiles) => {
-                    util.fs.ensureDir(pageDirPath)
-                        .then(() => {
-                            renderedPageFiles.forEach((page: any) => {
-                                const filePath = util.path.join(pageDirPath, page.filename);
+                    util.fs.ensureDir(pageDirPath, (error: any) => {
+                        if (error) {
+                            reject(error);
 
-                                try {
-                                    util.fs.writeFileSync(filePath, page.content, "utf8");
-                                } catch (error) {
-                                    return Promise.reject(error);
-                                }
-                            });
+                            return;
+                        }
 
-                            return resolve();
+                        renderedPageFiles.forEach((page: any) => {
+                            const filePath = util.path.join(pageDirPath, page.filename);
+
+                            try {
+                                util.fs.writeFileSync(filePath, page.content, "utf8");
+                            } catch (error) {
+                                return Promise.reject(error);
+                            }
                         });
+
+                        return resolve();
+                    });
                 }).catch((error) => {
                     reject(error);
                 });
@@ -134,12 +139,12 @@ export class PageService implements IPageService {
             ejs.renderFile(filePath, data, (error: any, renderedContent: any) => {
                 if (error) {
                     return Promise.reject(new Error("Fail to render file with: " + error));
-                } else {
-                    resolve({
-                        filename: newFileName,
-                        content: renderedContent
-                    });
                 }
+
+                resolve({
+                    filename: newFileName,
+                    content: renderedContent
+                });
             });
         });
     }
@@ -148,7 +153,9 @@ export class PageService implements IPageService {
         return new Promise((resolve, reject) => {
             util.fs.readdir(srcDir, (error: any, files: any) => {
                 if (error) {
-                    return Promise.reject(error);
+                    reject(error);
+
+                    return;
                 }
 
                 const promises: Array<any> = [];
