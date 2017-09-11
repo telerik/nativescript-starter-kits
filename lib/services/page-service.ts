@@ -10,34 +10,6 @@ export class PageService implements IPageService {
         });
     }
 
-    getFlavor(appPath: string) {
-        return new Promise((resolve, reject) => {
-            this.getAppPath(appPath)
-                .then((validPath: string) => {
-                    return this.readAppPackageJson(validPath);
-                })
-                .then((packageJson: string) => {
-                    const ng = packageJson.indexOf("nativescript-angular") > -1;
-                    const ts = packageJson.indexOf("nativescript-dev-typescript") > -1;
-
-                    switch (true) {
-                        case ng :
-                            resolve("Angular & TypeScript");
-                            break;
-                        case ts :
-                            resolve("TypeScript");
-                            break;
-                        default:
-                            resolve("JavaScript");
-
-                    }
-                })
-                .catch((promiseError: any) => {
-                   reject(promiseError);
-                });
-        });
-    }
-
     addPage(pageName: string, appPath: string, pageTemplate: any) {
         return new Promise((resolve, reject) => {
             const displayName = pageTemplate.displayName.toLowerCase();
@@ -58,61 +30,6 @@ export class PageService implements IPageService {
                     reject(promiseError);
                 });
         });
-    }
-
-    private getAppPath(appPath: string) {
-        return new Promise((resolve, reject) => {
-            if (!util.path.isAbsolute(appPath)) {
-                reject(new Error("Path must be absolute"));
-
-                return;
-            }
-
-            const normalizedAppPath = util.path.normalize(appPath);
-
-            util.fs.lstat(normalizedAppPath, (statErr: any, stats: any) => {
-                if (statErr) {
-                    reject(statErr);
-
-                    return;
-                }
-
-                if (!stats.isDirectory()) {
-                    reject(new Error("Not a valid app folder!"));
-                } else {
-                    resolve(normalizedAppPath);
-                }
-            });
-        });
-    }
-
-    private readAppPackageJson(appPath: string) {
-        return new Promise((resolve, reject) => {
-            util.fs.readdir(appPath, (readErr: any, files: any) => {
-                if (readErr) {
-                    reject(readErr);
-
-                    return;
-                }
-
-                if (files.indexOf("package.json") > -1) {
-                   const packageJsonPath = util.path.join(appPath, "package.json");
-
-                   util.fs.readFile(packageJsonPath, "utf8", (fileErr: any, data: any) => {
-                       if (fileErr) {
-                           reject(fileErr);
-
-                           return;
-                       }
-                       resolve(data);
-                   });
-                } else {
-                    reject(new Error("Missing package.json file in path " + appPath));
-                }
-
-            });
-        });
-
     }
 
     private downloadPage(pageName: string, flavor: string) {
