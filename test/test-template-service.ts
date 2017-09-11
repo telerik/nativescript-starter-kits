@@ -1,4 +1,5 @@
 import { Yok } from "mobile-cli-lib/yok";
+import { GitService } from "../lib/services/git-service";
 import { TemplateService } from "../lib/services/template-service";
 
 const chai = require("chai");
@@ -15,7 +16,8 @@ describe("TemplateService Api", () => {
     });
 
     describe("Check template flavor", () => {
-        const templateService = new TemplateService();
+        const gitService = new GitService();
+        const templateService = new TemplateService(gitService);
         it("Returns a template flavor", () => {
             templateService.checkTemplateFlavor({name: "template-hello-world-ng"}).then((flavor) => {
                 flavor.should.be.a("string");
@@ -36,7 +38,8 @@ describe("TemplateService Api", () => {
     });
 
     describe("Get App template Details", () => {
-        const templateService = new TemplateService();
+        const gitService = new GitService();
+        const templateService = new TemplateService(gitService);
         it("Returns a Template Details object via a Promise", () => {
             templateService.getAppTemplateDetails("template-hello-world-ng").then((details) => {
                 should.exist(details);
@@ -63,7 +66,8 @@ describe("TemplateService Api", () => {
     });
 
     describe("Get Available templates", () => {
-        const templateService = new TemplateService();
+        const gitService = new GitService();
+        const templateService = new TemplateService(gitService);
         it("Returns a Template Details array for all available templates", () => {
             templateService.getTemplates().then((templates: any) => {
                 should.exist(templates);

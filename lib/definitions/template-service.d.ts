@@ -2,13 +2,13 @@ interface ITemplateService {
     /**
      * @description The method returns details about a single app template.
      * @param templateName <String>
-     * @returns Promise
+     * @returns {Promise<any>}
      */
-    getAppTemplateDetails(templateName: string): any;
+    getAppTemplateDetails(templateName: string): Promise<any>;
 
     /**
      * @description The method returns details about all app templates.
-     * @return Promise
+     * @return {Promise<Array<any>>}
      */
-    getTemplates(): any;
+    getTemplates(): Promise<Array<any>>;
 }

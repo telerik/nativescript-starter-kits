@@ -1,6 +1,3 @@
-// import { Config } from "../shared/config";
-import util from "../shared/util";
-
 // tslint:disable-next-line:variable-name
 // const NodeCache = require("node-cache");
 
@@ -10,68 +7,7 @@ const Backup = require("../../consts/templates-backup-data");
 // const tmpCache = new NodeCache();
 
 export class TemplateService implements ITemplateService {
-    tmpPackageJsonFromSrc(templateName: string) {
-        let content: any;
-
-        return util.request({
-            method: "GET",
-            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/package.json", templateName),
-            json: true,
-            resolveWithFullResponse: true,
-            headers: util.defaultHeaders
-        })
-            .then((response: any) => {
-                content = response.body;
-                if (content.hasOwnProperty("templateType")) {
-                    return content;
-                }
-            })
-            .catch((error: any) => {
-                return {
-                    message: "Error retrieving " + templateName + " package.json from src",
-                    err: error
-                };
-            });
-    }
-
-    tmpResourcesFromSrc(templateName: string, asset: any) {
-        const content: any = {};
-        const promises: Array<any> = [];
-
-        return new Promise((resolve, reject) => {
-            for (const key in asset) {
-                if (asset.hasOwnProperty(key)) {
-                    promises.push(
-                        util.request({
-                            method: "GET",
-                            // tslint:disable-next-line:max-line-length
-                            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/tools/assets/%s", templateName, asset[key]),
-                            resolveWithFullResponse: true,
-                            encoding: "binary",
-                            headers: util.defaultHeaders
-                        })
-                            .then((response: any) => {
-                                // tslint:disable-next-line:max-line-length
-                                content[key] = "data:image/png;base64," + new Buffer(response.body.toString(), "binary").toString("base64");
-                            })
-                            .catch((error: any) => {
-                                return {
-                                    message: "Error retrieving " + templateName + " assets from source",
-                                    err: error
-                                };
-                            }));
-
-                }
-            }
-            Promise.all(promises)
-                .then(() => {
-                    resolve(content);
-                })
-                .catch((error) => {
-                    reject(error);
-                });
-        });
-    }
+    constructor(private $gitService: IGitService) { }
 
     checkTemplateFlavor(packageJson: any) {
         return new Promise((resolve, reject) => {
@@ -106,11 +42,11 @@ export class TemplateService implements ITemplateService {
         });
     }
 
-    getAppTemplateDetails(templateName: string) {
+    getAppTemplateDetails(templateName: string): Promise<any> {
         const templateDetails: any = {};
 
         return new Promise((resolve, reject) => {
-            this.tmpPackageJsonFromSrc(templateName)
+            this.$gitService.getPackageJsonFromSource(templateName)
                 .then((packageJsonData: any) => {
                     const packageJson = packageJsonData;
                     this.getTemplateMetaData(packageJson)
@@ -127,7 +63,7 @@ export class TemplateService implements ITemplateService {
                         .then((flavor) => {
                             templateDetails.templateFlavor = flavor;
 
-                            return this.getTmpAssetsContent(templateName);
+                            return this.$gitService.getAssetsContent(templateName);
                         })
                         .then((resources) => {
                             templateDetails.resources = resources;
@@ -146,7 +82,7 @@ export class TemplateService implements ITemplateService {
         });
     }
 
-    getTemplates() {
+    getTemplates(): Promise<Array<any>> {
         // let tempDetails: Array<any> = [];
         // const promises: Array<any> = [];
 
@@ -231,36 +167,6 @@ export class TemplateService implements ITemplateService {
     //         }
     //     });
     // }
-
-    private getTmpAssetsContent(templateName: string) {
-        const platforms: any = {};
-
-        return util.request({
-            method: "GET",
-            uri: util.format("https://api.github.com/repos/NativeScript/%s/contents/tools/assets", templateName),
-            json: true,
-            resolveWithFullResponse: true,
-            headers: util.defaultHeaders
-        })
-            .then((response: any) => {
-                response.body.forEach((element: any) => {
-                    if (element.name.indexOf("phone") === -1) {
-                        let platform = element.name.split("-").pop().split(".").shift();
-                        if (platform !== "android" || platform !== "ios") {
-                            const rep = platform.match(/^(?!android|ios).*$/g);
-                            platform = platform.replace(rep, "thumbnail");
-                        }
-
-                        platforms[platform] = element.name;
-                    }
-                });
-
-                return this.tmpResourcesFromSrc(templateName, platforms);
-            })
-            .catch((error: any) => {
-                return { message: "Error retrieving assets from repository", error };
-            });
-    }
 
     // Temporary unused method
     // private imageEncode(filePath: string) {
