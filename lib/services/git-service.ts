@@ -48,25 +48,25 @@ export class GitService implements IGitService {
                     }
                 });
 
-                return this.getResourcesFromSrc(templateName, platforms);
+                return this.getResourcesFromSource(templateName, platforms);
             })
             .catch((error: any) => {
                 return { message: "Error retrieving assets from repository", error };
             });
     }
 
-    private getResourcesFromSrc(templateName: string, asset: any) {
+    private getResourcesFromSource(templateName: string, assetDictionary: any) {
         const content: any = {};
         const promises: Array<any> = [];
 
         return new Promise((resolve, reject) => {
-            for (const key in asset) {
-                if (asset.hasOwnProperty(key)) {
+            for (const key in assetDictionary) {
+                if (assetDictionary.hasOwnProperty(key)) {
                     promises.push(
                         util.request({
                             method: "GET",
                             // tslint:disable-next-line:max-line-length
-                            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/tools/assets/%s", templateName, asset[key]),
+                            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/tools/assets/%s", templateName, assetDictionary[key]),
                             resolveWithFullResponse: true,
                             encoding: "binary",
                             headers: util.defaultHeaders

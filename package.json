@@ -45,6 +45,7 @@
     "typescript": "2.1.5"
   },
   "dependencies": {
+    "ejs": "^2.5.7",
     "fs-extra": "^4.0.1",
     "lodash.indexof": "^4.0.5",
     "lodash.sortby": "^4.7.0",
