@@ -13,6 +13,7 @@ describe("TemplateService Api", () => {
     beforeEach(() => {
         testInjector = new Yok();
         testInjector.register("templateService", TemplateService);
+        testInjector.register("gitService", GitService);
     });
 
     describe("Check template flavor", () => {
