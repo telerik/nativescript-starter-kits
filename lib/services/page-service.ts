@@ -1,5 +1,7 @@
 import util from "../shared/util";
 
+const _ = require("lodash");
+
 // Pages backup data
 const BACKUP = require("../../consts/pages-backup-data");
 const ejs = require("ejs");

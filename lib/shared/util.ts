@@ -3,8 +3,6 @@ import * as path from "path";
 import * as nodeUtil from "util";
 import { Config } from "./config";
 
-const indexOf = require("lodash.indexof");
-const sortBy = require("lodash.sortby");
 const request = require("request-promise");
 const fs = require("fs-extra");
 
@@ -13,8 +11,6 @@ export default class Util {
         "user-agent": "nativescript-starter-kits"
     };
 
-    static indexOf = indexOf;
-    static sortBy = sortBy;
     static format = nodeUtil.format;
     static request = request;
     static path = path;
