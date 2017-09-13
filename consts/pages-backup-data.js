@@ -25,8 +25,8 @@ BackupData.fallback = [
     },
     {
         name: "tns-page-signup",
-        displayName: "Sign up",
-        description: "Sign up Page for Vanilla NativeScript apps using JavaScript",
+        displayName: "Signup",
+        description: "Signup Page for Vanilla NativeScript apps using JavaScript",
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "JavaScript",
@@ -54,8 +54,8 @@ BackupData.fallback = [
     },
     {
         name: "tns-page-signup-ts",
-        displayName: "Sign up",
-        description: "Sign up Page for Vanilla NativeScript apps using TypeScript",
+        displayName: "Signup",
+        description: "Signup Page for Vanilla NativeScript apps using TypeScript",
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "TypeScript",
@@ -83,8 +83,8 @@ BackupData.fallback = [
     },
     {
         name: "tns-page-signup-ng",
-        displayName: "Sign up",
-        description: "Sign up Page for Vanilla NativeScript apps using Angular & TypeScript",
+        displayName: "Signup",
+        description: "Signup Page for Vanilla NativeScript apps using Angular & TypeScript",
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/signup",
         templateFlavor: "Angular & TypeScript",
