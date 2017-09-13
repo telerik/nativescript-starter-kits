@@ -1,13 +1,13 @@
-// tslint:disable-next-line:variable-name
-// const NodeCache = require("node-cache");
+import { Config } from "../shared/config";
+import util from "../shared/util";
 
-// tslint:disable-next-line:variable-name
-const Backup = require("../../consts/templates-backup-data");
-
-// const tmpCache = new NodeCache();
+const BACKUP = require("../../consts/templates-backup-data");
+const nodeCache = require("node-cache");
+const templateCache = new nodeCache();
 
 export class TemplateService implements ITemplateService {
-    constructor(private $gitService: IGitService) { }
+    constructor(private $gitService: IGitService) {
+    }
 
     checkTemplateFlavor(packageJson: any) {
         return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export class TemplateService implements ITemplateService {
 
         return new Promise((resolve, reject) => {
             if (typeof packageJson === "undefined") {
-                reject({ message: "Missing package.json" });
+                reject({message: "Missing package.json"});
             } else {
                 meta.name = packageJson.name;
                 meta.displayName = packageJson.displayName;
@@ -83,97 +83,70 @@ export class TemplateService implements ITemplateService {
     }
 
     getTemplates(): Promise<Array<any>> {
-        // let tempDetails: Array<any> = [];
-        // const promises: Array<any> = [];
+        let templateDetails: Array<any> = [];
+        const promises: Array<any> = [];
 
         return new Promise((resolve, reject) => {
-            resolve(Backup.fallback);
-            // tmpCache.get("tempDetails", (error: any, value: any) => {
-            //     if (!error) {
-            //         if (value === undefined) {
-            //             this.getTemplatesNames()
-            //                 .then((templateNames: any) => {
-            //                     return templateNames;
-            //                 })
-            //                 .then((names: any) => {
-            //                     names.forEach((name: string) => {
-            //                         promises.push(
-            //                             this.getAppTemplateDetails(name)
-            //                                 .then((details) => {
-            //                                     tempDetails.push(details);
-            //                                 })
-            //                                 .catch((errorDetails) => {
-            //                                     reject(errorDetails);
-            //                                 })
-            //                         );
-            //                     });
+            templateCache.get("templateDetails", (error: any, value: any) => {
+                if (!error) {
+                    if (value === undefined) {
+                        Config.availableTemplateRepos.forEach((name: string) => {
+                            promises.push(
+                                this.getAppTemplateDetails(name)
+                                    .then((details) => {
+                                        templateDetails.push(details);
+                                    })
+                                    .catch((errorDetails) => {
+                                        reject(errorDetails);
+                                    })
+                            );
+                        });
 
-            //                     Promise.all(promises)
-            //                         .then(() => {
-            //                             tempDetails = this.sortTmpData(tempDetails);
-            //                             tmpCache.set("tempDetails", tempDetails, Config.cacheTime);
-            //                             resolve(tempDetails);
+                        Promise.all(promises)
+                            .then(() => {
+                                templateDetails = this.sortTemplateData(templateDetails);
+                                templateCache.set("templateDetails", templateDetails, Config.cacheTime);
+                                resolve(templateDetails);
 
-            //                         })
-            //                         .catch((errorPromises: any) => {
-            //                             // TODO Implement error logger
-            //                             resolve(Backup.fallback);
-            //                         });
-            //                 })
-            //                 .catch((errorTemplates: any) => {
-            //                     console.error(errorTemplates);
-            //                 });
-            //         } else {
-            //             // Load data from cache
-            //             resolve(value);
-            //         }
-            //     }
-            // });
+                            })
+                            .catch((errorPromises: any) => {
+                                // TODO Implement error logger
+                                resolve(BACKUP.fallback);
+                            });
+
+                    } else {
+                        // Load data from cache
+                        resolve(value);
+                    }
+                }
+            });
         });
     }
 
-    // private sortTmpData(templates: Array<any>) {
-    //     const flavOrder: Array<string> = ["JavaScript", "TypeScript", "Angular & TypeScript"];
+    private sortTemplateData(templates: Array<any>) {
+        const flavorOrder: Array<string> = ["JavaScript", "TypeScript", "Angular & TypeScript"];
 
-    //     // tslint:disable-next-line:max-line-length
-    //     const typeOrder: Array<string> = [
-    //         "Blank",
-    //         "Navigation Drawer",
-    //         "Tabs",
-    //         "Master-Detail with Firebase",
-    //         "Master-Detail with Kinvey"
-    //     ];
-    //     let sortedByType: Array<any>;
-    //     let sortByFlav: Array<any>;
+        // tslint:disable-next-line:max-line-length
+        const typeOrder: Array<string> = [
+            "Blank",
+            "Navigation Drawer",
+            "Tabs",
+            "Master-Detail with Firebase",
+            "Master-Detail with Kinvey"
+        ];
+        let sortedByType: Array<any>;
+        let sortByFlavor: Array<any>;
 
-    //     sortedByType = util.sortBy(templates, (temp: any) => {
-    //         return util.indexOf(typeOrder, temp.displayName);
-    //     });
+        sortedByType = util.sortBy(templates, (template: any) => {
+            return util.indexOf(typeOrder, template.displayName);
+        });
 
-    //     sortByFlav = util.sortBy(sortedByType, (temp: any) => {
-    //         return util.indexOf(flavOrder, temp.templateFlavor);
-    //     });
+        sortByFlavor = util.sortBy(sortedByType, (temp: any) => {
+            return util.indexOf(flavorOrder, temp.templateFlavor);
+        });
 
-    //     return sortByFlav;
-    // }
-
-    // private getTemplatesNames() {
-
-    //     return new Promise((resolve, reject) => {
-    //         if (!Config.availableTemplateRepos || !Config.availableTemplateRepos.length) {
-    //             reject("No available repositories found");
-    //         } else {
-    //             resolve(Config.availableTemplateRepos);
-    //         }
-    //     });
-    // }
-
-    // Temporary unused method
-    // private imageEncode(filePath: string) {
-    //     let bitmap = fs.readFileSync(filePath);
-
-    //     return new Buffer(bitmap).toString('base64');
-    // }
+        return sortByFlavor;
+    }
 }
 
 $injector.register("templateService", TemplateService);
