@@ -62,6 +62,7 @@ typings/
 # ignore ide dir
 .idea
 .tscache
+.vscode
 
 #igonre references.d.ts file
 references.d.ts
@@ -74,6 +75,8 @@ references.d.ts
 # but don't ignoreimportant js files
 !/consts/templates-backup-data.js
 !/consts/pages-backup-data.js
+!Gruntfile.js
+
 
 #ignore templates folder
 lib/templates/
