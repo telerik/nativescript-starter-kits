@@ -6,7 +6,8 @@ const nodeCache = require("node-cache");
 const templateCache = new nodeCache();
 
 export class TemplateService implements ITemplateService {
-    constructor(private $gitService: IGitService) { }
+    constructor(private $gitService: IGitService) {
+    }
 
     checkTemplateFlavor(packageJson: any) {
         return new Promise((resolve, reject) => {
@@ -27,7 +28,7 @@ export class TemplateService implements ITemplateService {
 
         return new Promise((resolve, reject) => {
             if (typeof packageJson === "undefined") {
-                reject({ message: "Missing package.json" });
+                reject({message: "Missing package.json"});
             } else {
                 meta.name = packageJson.name;
                 meta.displayName = packageJson.displayName;
@@ -89,38 +90,30 @@ export class TemplateService implements ITemplateService {
             templateCache.get("templateDetails", (error: any, value: any) => {
                 if (!error) {
                     if (value === undefined) {
-                        this.getTemplatesNames()
-                            .then((templateNames: any) => {
-                                return templateNames;
-                            })
-                            .then((names: any) => {
-                                names.forEach((name: string) => {
-                                    promises.push(
-                                        this.getAppTemplateDetails(name)
-                                            .then((details) => {
-                                                templateDetails.push(details);
-                                            })
-                                            .catch((errorDetails) => {
-                                                reject(errorDetails);
-                                            })
-                                    );
-                                });
-
-                                Promise.all(promises)
-                                    .then(() => {
-                                        templateDetails = this.sortTemplateData(templateDetails);
-                                        templateCache.set("templateDetails", templateDetails, Config.cacheTime);
-                                        resolve(templateDetails);
-
+                        Config.availableTemplateRepos.forEach((name: string) => {
+                            promises.push(
+                                this.getAppTemplateDetails(name)
+                                    .then((details) => {
+                                        templateDetails.push(details);
                                     })
-                                    .catch((errorPromises: any) => {
-                                        // TODO Implement error logger
-                                        resolve(BACKUP.fallback);
-                                    });
+                                    .catch((errorDetails) => {
+                                        reject(errorDetails);
+                                    })
+                            );
+                        });
+
+                        Promise.all(promises)
+                            .then(() => {
+                                templateDetails = this.sortTemplateData(templateDetails);
+                                templateCache.set("templateDetails", templateDetails, Config.cacheTime);
+                                resolve(templateDetails);
+
                             })
-                            .catch((errorTemplates: any) => {
-                                console.error(errorTemplates);
+                            .catch((errorPromises: any) => {
+                                // TODO Implement error logger
+                                resolve(BACKUP.fallback);
                             });
+
                     } else {
                         // Load data from cache
                         resolve(value);
@@ -153,17 +146,6 @@ export class TemplateService implements ITemplateService {
         });
 
         return sortByFlavor;
-    }
-
-    private getTemplatesNames() {
-
-        return new Promise((resolve, reject) => {
-            if (!Config.availableTemplateRepos || !Config.availableTemplateRepos.length) {
-                reject("No available repositories found");
-            } else {
-                resolve(Config.availableTemplateRepos);
-            }
-        });
     }
 }
 
