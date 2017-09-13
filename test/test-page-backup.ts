@@ -4,7 +4,7 @@ const templateBackup = require("../consts/pages-backup-data").fallback;
 
 chai.use(require("chai-things"));
 
-describe("Template backup data", () => {
+describe("Page backup data", () => {
 
     describe("Check page backup data integrity", () => {
         it("Should be an Array of Objects", () => {

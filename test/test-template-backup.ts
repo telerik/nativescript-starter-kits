@@ -20,6 +20,18 @@ describe("Template backup data", () => {
             templateBackup.should.all.have.property("type");
             templateBackup.should.all.have.property("resources");
         });
+
+        it("Should have platform specific, base64 encoded resource images", () => {
+           for (const template of templateBackup) {
+               expect(template.resources).to.have.property("android");
+               expect(template.resources).to.have.property("ios");
+               expect(template.resources).to.have.property("thumbnail");
+
+               expect(template.resources.android).to.match(/data:image\/png;base64/);
+               expect(template.resources.ios).to.match(/data:image\/png;base64/);
+               expect(template.resources.thumbnail).to.match(/data:image\/png;base64/);
+           }
+        });
     });
 
     describe("Check template backup data name property", () => {
