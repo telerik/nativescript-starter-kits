@@ -28,7 +28,7 @@ export class PageService implements IPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.ensurePageTemplate(displayName, pageTemplate.templateFlavor);
+                    return this.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
@@ -38,21 +38,6 @@ export class PageService implements IPageService {
                 })
                 .catch((promiseError: any) => {
                     reject(promiseError);
-                });
-        });
-    }
-
-    private ensurePageTemplate(pageName: string, flavor: string): Promise<string> {
-        const pagesDirectory = util.path.join(__dirname, "../pages");
-        const pagePath = util.path.join(pagesDirectory, pageName);
-
-        return new Promise((resolve, reject) => {
-                this.clonePageTemplate(pageName, flavor, pagesDirectory)
-                .then(() => {
-                    resolve(pagePath);
-                })
-                .catch((ensurePageError: any) => {
-                    reject(ensurePageError);
                 });
         });
     }
