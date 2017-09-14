@@ -19,9 +19,9 @@ export default class Util {
 
     static pageExists(location: string, pageName: string) {
         return new Promise((resolve, reject) => {
-            this.fs.readdir(location, (err: any, content: any) => {
-                if (err) {
-                    reject(err);
+            this.fs.readdir(location, (readError: any, content: any) => {
+                if (readError) {
+                    reject(readError);
 
                     return;
                 }

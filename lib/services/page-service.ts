@@ -17,8 +17,12 @@ export class PageService implements IPageService {
         return new Promise((resolve, reject) => {
             const displayName = pageTemplate.displayName.toLowerCase();
             const newPageDirectory = util.path.join(appPath, "app");
+            const pagesDirectory = util.path.join(__dirname, "../pages");
 
-            util.pageExists(newPageDirectory, pageName)
+            util.fs.emptyDir(pagesDirectory)
+                .then(() => {
+                    return util.pageExists(newPageDirectory, pageName);
+                })
                 .then((pageExists: boolean) => {
                     if (pageExists) {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
@@ -39,19 +43,11 @@ export class PageService implements IPageService {
     }
 
     private ensurePageTemplate(pageName: string, flavor: string): Promise<string> {
-        const templatesDir = util.path.join(__dirname, "../templates");
-        const pagePath = util.path.join(templatesDir, pageName);
+        const pagesDirectory = util.path.join(__dirname, "../pages");
+        const pagePath = util.path.join(pagesDirectory, pageName);
 
         return new Promise((resolve, reject) => {
-            util.fs.ensureDir(templatesDir)
-                .then(() => {
-                    return util.pageExists(templatesDir, pageName);
-                })
-                .then((pageExists: boolean) => {
-                    if (!pageExists) {
-                        return this.clonePageTemplate(pageName, flavor, templatesDir);
-                    }
-                })
+                this.clonePageTemplate(pageName, flavor, pagesDirectory)
                 .then(() => {
                     resolve(pagePath);
                 })
@@ -61,24 +57,24 @@ export class PageService implements IPageService {
         });
     }
 
-    private clonePageTemplate(pageName: string, flavor: string, templatesDir: string): Promise<string> {
+    private clonePageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<string> {
         const command = "git";
-        const commandArgs: Array<any> = ["clone"];
+        const commandArguments: Array<any> = ["clone"];
 
         return new Promise((resolve, reject) => {
             util.getPageTemplatesBaseUrl(flavor)
                 .then((baseUrl: string) => {
                     baseUrl = baseUrl + ".git";
-                    commandArgs.push(baseUrl);
-                    commandArgs.push(templatesDir);
+                    commandArguments.push(baseUrl);
+                    commandArguments.push(templatesDirectory);
 
-                    const process = util.childProcess.spawn(command, commandArgs);
+                    const process = util.childProcess.spawn(command, commandArguments);
                     process.on("close", (code) => {
                         if (code !== 0) {
                             return Promise.reject(new Error(`child process exited with code ${code}`));
                         }
 
-                        const pagePath = util.path.join(templatesDir, pageName);
+                        const pagePath = util.path.join(templatesDirectory, pageName);
                         resolve(pagePath);
                     });
                 })
@@ -88,9 +84,9 @@ export class PageService implements IPageService {
         });
     }
 
-    private createPage(srcDir: string, destDir: string, pageName: string): Promise<string> {
+    private createPage(sourceDirectory: string, destinationDirectory: string, pageName: string): Promise<string> {
         const camelCaseNameString = _.camelCase(pageName);
-        const pageDirPath = util.path.join(destDir, pageName);
+        const pageDirectoryPath = util.path.join(destinationDirectory, pageName);
 
         const newPageName = {
             originalName: pageName,
@@ -99,9 +95,9 @@ export class PageService implements IPageService {
         };
 
         return new Promise((resolve, reject) => {
-            this.prepareRenderedFiles(srcDir, newPageName)
+            this.prepareRenderedFiles(sourceDirectory, newPageName)
                 .then((renderedPageFiles) => {
-                    util.fs.ensureDir(pageDirPath, (error: any) => {
+                    util.fs.ensureDir(pageDirectoryPath, (error: any) => {
                         if (error) {
                             reject(error);
 
@@ -109,7 +105,7 @@ export class PageService implements IPageService {
                         }
 
                         renderedPageFiles.forEach((page: any) => {
-                            const filePath = util.path.join(pageDirPath, page.filename);
+                            const filePath = util.path.join(pageDirectoryPath, page.filename);
 
                             try {
                                 util.fs.writeFileSync(filePath, page.content, "utf8");
@@ -151,9 +147,9 @@ export class PageService implements IPageService {
         });
     }
 
-    private prepareRenderedFiles(srcDir: string, pageName: any): Promise<Array<any>> {
+    private prepareRenderedFiles(sourceDirectory: string, pageName: any): Promise<Array<any>> {
         return new Promise((resolve, reject) => {
-            util.fs.readdir(srcDir, (error: any, files: any) => {
+            util.fs.readdir(sourceDirectory, (error: any, files: any) => {
                 if (error) {
                     reject(error);
 
@@ -163,7 +159,7 @@ export class PageService implements IPageService {
                 const promises: Array<any> = [];
 
                 files.forEach((file: any) => {
-                    const filePath = util.path.join(srcDir, file);
+                    const filePath = util.path.join(sourceDirectory, file);
                     const stat = util.fs.statSync(filePath);
 
                     if (stat.isFile()) {
