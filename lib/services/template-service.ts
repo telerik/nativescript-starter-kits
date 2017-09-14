@@ -1,6 +1,6 @@
 import { Config } from "../shared/config";
-import util from "../shared/util";
 
+const _ = require("lodash");
 const BACKUP = require("../../consts/templates-backup-data");
 const nodeCache = require("node-cache");
 const templateCache = new nodeCache();
@@ -137,12 +137,12 @@ export class TemplateService implements ITemplateService {
         let sortedByType: Array<any>;
         let sortByFlavor: Array<any>;
 
-        sortedByType = util.sortBy(templates, (template: any) => {
-            return util.indexOf(typeOrder, template.displayName);
+        sortedByType = _.sortBy(templates, (template: any) => {
+            return _.indexOf(typeOrder, template.displayName);
         });
 
-        sortByFlavor = util.sortBy(sortedByType, (temp: any) => {
-            return util.indexOf(flavorOrder, temp.templateFlavor);
+        sortByFlavor = _.sortBy(sortedByType, (temp: any) => {
+            return _.indexOf(flavorOrder, temp.templateFlavor);
         });
 
         return sortByFlavor;

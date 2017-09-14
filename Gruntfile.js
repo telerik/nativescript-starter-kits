@@ -141,19 +141,19 @@ module.exports = function (grunt) {
             // also for transpilation we need typescript locally.
             const searchedNames = ["grunt", "typescript"];
             const dependenciesToInstall = _.map(packageJsonContent.devDependencies, (version, name) => {
-                    for (let searchedName of searchedNames) {
-                if (name.indexOf(searchedName) !== -1 && !fs.existsSync(path.join(pathToModule, "node_modules", name))) {
-                    return `${name}@${version}`
+                for (let searchedName of searchedNames) {
+                    if (name.indexOf(searchedName) !== -1 && !fs.existsSync(path.join(pathToModule, "node_modules", name))) {
+                        return `${name}@${version}`
+                    }
                 }
-            }
-        }).filter(a => !!a);
+            }).filter(a => !!a);
 
             _.each(dependenciesToInstall, name => {
                 try {
                     childProcess.execSync(`npm i --ignore-scripts --production ${name}`, { cwd: pathToModule, stdio: "ignore" });
-        } catch (err) {
-            }
-        })
+                } catch (err) {
+                }
+            })
 
 
         } catch (err) { }
@@ -202,16 +202,24 @@ module.exports = function (grunt) {
     grunt.registerTask("generate_references", () => {
         const referencesPath = path.join(__dirname, "references.d.ts");
 
-    // get all .d.ts files from nativescript-cli and mobile-cli-lib
-    const nodeModulesDirPath = path.join(__dirname, "node_modules");
-    const pathsOfDtsFiles = getReferencesFromDir(path.join(nodeModulesDirPath, "nativescript"))
-        .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "mobile-cli-lib")))
-        .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "ios-device-lib")));
+        // get all .d.ts files from nativescript-cli and mobile-cli-lib
+        const nodeModulesDirPath = path.join(__dirname, "node_modules");
 
-    const lines = pathsOfDtsFiles.map(file => `/// <reference path="${fromWindowsRelativePathToUnix(path.relative(__dirname, file))}" />`);
+        const specialFiles = [
+            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "analytics-type.ts"),
+            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "google-analytics-data-type.ts")
+        ];
 
-    fs.writeFileSync(referencesPath, lines.join(os.EOL));
-});
+        let pathsOfDtsFiles = getReferencesFromDir(path.join(nodeModulesDirPath, "nativescript"))
+            .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "mobile-cli-lib")))
+            .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "ios-device-lib")));
+
+        pathsOfDtsFiles = pathsOfDtsFiles.concat(...specialFiles);
+
+        const lines = pathsOfDtsFiles.map(file => `/// <reference path="${fromWindowsRelativePathToUnix(path.relative(__dirname, file))}" />`);
+
+        fs.writeFileSync(referencesPath, lines.join(os.EOL));
+    });
 
     const fromWindowsRelativePathToUnix = (windowsRelativePath) => {
         return windowsRelativePath.replace(/\\/g, "/");
@@ -223,13 +231,13 @@ module.exports = function (grunt) {
         let pathsToDtsFiles = [];
         _.each(currentDirContent, d => {
             const stat = fs.statSync(d);
-        if (stat.isDirectory() && path.basename(d) !== "node_modules") {
-            // recursively check all dirs for .d.ts files.
-            pathsToDtsFiles = pathsToDtsFiles.concat(getReferencesFromDir(d));
-        } else if (stat.isFile() && d.endsWith(".d.ts") && path.basename(d) !== ".d.ts") {
-            pathsToDtsFiles.push(d);
-        }
-    });
+            if (stat.isDirectory() && path.basename(d) !== "node_modules") {
+                // recursively check all dirs for .d.ts files.
+                pathsToDtsFiles = pathsToDtsFiles.concat(getReferencesFromDir(d));
+            } else if (stat.isFile() && d.endsWith(".d.ts") && path.basename(d) !== ".d.ts") {
+                pathsToDtsFiles.push(d);
+            }
+        });
 
         return pathsToDtsFiles;
     };
