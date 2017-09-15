@@ -79,7 +79,7 @@ references.d.ts
 
 
 #ignore templates folder
-lib/templates/
+lib/pages/
 
 #ignore xunit.xml
 xunit.xml
