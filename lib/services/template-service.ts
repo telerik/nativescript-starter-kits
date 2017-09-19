@@ -57,6 +57,7 @@ export class TemplateService implements ITemplateService {
                             templateDetails.displayName = data.displayName;
                             templateDetails.description = data.description;
                             templateDetails.version = data.version;
+                            templateDetails.tag = "v" + data.version;
                             templateDetails.gitUrl = data.gitUrl;
                             templateDetails.type = data.type;
 
@@ -65,7 +66,7 @@ export class TemplateService implements ITemplateService {
                         .then((flavor) => {
                             templateDetails.templateFlavor = flavor;
 
-                            return this.$gitService.getAssetsContent(templateName);
+                            return this.$gitService.getAssetsContent(templateName, templateDetails.tag);
                         })
                         .then((resources) => {
                             templateDetails.resources = resources;
