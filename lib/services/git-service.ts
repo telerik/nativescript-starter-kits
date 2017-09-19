@@ -1,61 +1,49 @@
 import util from "../shared/util";
 
 export class GitService implements IGitService {
+
     getPackageJsonFromSource(templateName: string): Promise<any> {
         let content: any;
 
-        return util.request({
-            method: "GET",
-            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/package.json", templateName),
-            json: true,
-            resolveWithFullResponse: true,
-            headers: util.defaultHeaders
-        })
-            .then((response: any) => {
-                content = response.body;
-                if (content.hasOwnProperty("templateType")) {
-                    return content;
-                }
+        return this.getNpmPackageVersion(templateName).then((packageVersion) => {
+            return util.request({
+                method: "GET",
+                uri: util.format(
+                    "https://raw.githubusercontent.com/NativeScript/%s/%s/package.json",
+                    templateName,
+                    packageVersion
+                ),
+                json: true,
+                resolveWithFullResponse: true,
+                headers: util.defaultHeaders
             })
-            .catch((error: any) => {
-                return {
-                    message: "Error retrieving " + templateName + " package.json from src",
-                    err: error
-                };
-            });
-    }
-
-    getAssetsContent(templateName: string): Promise<any> {
-        const platforms: any = {};
-
-        return util.request({
-            method: "GET",
-            uri: util.format("https://api.github.com/repos/NativeScript/%s/contents/tools/assets", templateName),
-            json: true,
-            resolveWithFullResponse: true,
-            headers: util.defaultHeaders
-        })
-            .then((response: any) => {
-                response.body.forEach((element: any) => {
-                    if (element.name.indexOf("phone") === -1) {
-                        let platform = element.name.split("-").pop().split(".").shift();
-                        if (platform !== "android" || platform !== "ios") {
-                            const rep = platform.match(/^(?!android|ios).*$/g);
-                            platform = platform.replace(rep, "thumbnail");
-                        }
-
-                        platforms[platform] = element.name;
+                .then((response: any) => {
+                    content = response.body;
+                    if (content.hasOwnProperty("templateType")) {
+                        return content;
                     }
+                })
+                .catch((error: any) => {
+                    return {
+                        message: "Error retrieving " + templateName + " package.json from src",
+                        err: error
+                    };
                 });
-
-                return this.getResourcesFromSource(templateName, platforms);
-            })
-            .catch((error: any) => {
-                return { message: "Error retrieving assets from repository", error };
-            });
+        });
     }
 
-    private getResourcesFromSource(templateName: string, assetDictionary: any) {
+    getAssetsContent(templateName: string, versionTag: string): Promise<any> {
+        const platforms: any = {
+            ios: "appTemplate-ios.png",
+            android: "appTemplate-android.png",
+            thumbnail: "thumbnail.png"
+        };
+        const version = versionTag ? versionTag : "master";
+
+        return this.getResourcesFromSource(templateName, platforms, version);
+    }
+
+    private getResourcesFromSource(templateName: string, assetDictionary: any, versionTag: string) {
         const content: any = {};
         const promises: Array<any> = [];
 
@@ -66,7 +54,7 @@ export class GitService implements IGitService {
                         util.request({
                             method: "GET",
                             // tslint:disable-next-line:max-line-length
-                            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/master/tools/assets/%s", templateName, assetDictionary[key]),
+                            uri: util.format("https://raw.githubusercontent.com/NativeScript/%s/%s/tools/assets/%s", templateName, versionTag, assetDictionary[key]),
                             resolveWithFullResponse: true,
                             encoding: "binary",
                             headers: util.defaultHeaders
@@ -90,6 +78,34 @@ export class GitService implements IGitService {
                 })
                 .catch((error) => {
                     reject(error);
+                });
+        });
+    }
+
+    private getNpmPackageVersion(templateName: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (templateName.indexOf("tns-") !== 0) {
+                templateName = "tns-" + templateName;
+            }
+
+            util.request({
+                method: "GET",
+                uri: util.format("https://registry.npmjs.org/%s/", templateName),
+                json: true,
+                resolveWithFullResponse: true,
+                headers: util.defaultHeaders
+            })
+                .then((response: any) => {
+                    let version = "master";
+                    if (response.body && response.body["dist-tags"] && response.body["dist-tags"].latest) {
+                        version = "v" + response.body["dist-tags"].latest;
+                    }
+
+                    resolve(version);
+                })
+                .catch((error: any) => {
+                    // fallback to using the master (latest version)
+                    resolve("master");
                 });
         });
     }

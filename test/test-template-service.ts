@@ -73,6 +73,7 @@ describe("TemplateService Api", () => {
             templateService.getTemplates().then((templates: any) => {
                 should.exist(templates);
                 templates.should.be.an("array");
+                templates.length.should.be.above(0);
                 if (templates.length) {
                     for (let ti = templates.length - 1; ti >= 0; ti--) {
                         templates[ti].should.have.property("name");
@@ -80,6 +81,10 @@ describe("TemplateService Api", () => {
                         templates[ti].should.have.property("version");
                         templates[ti].should.have.property("description");
                         templates[ti].should.have.property("templateFlavor");
+                        templates[ti].should.have.property("resources");
+                        templates[ti].resources.should.have.property("ios");
+                        templates[ti].resources.should.have.property("android");
+                        templates[ti].resources.should.have.property("thumbnail");
                     }
                 }
             }).catch((err) => {
