@@ -1,7 +1,6 @@
 import * as childProcess from "child_process";
 import * as path from "path";
 import * as nodeUtil from "util";
-import { Config } from "./config";
 
 const request = require("request-promise");
 const fs = require("fs-extra");
@@ -32,30 +31,6 @@ export default class Util {
                     resolve(false);
                 }
             });
-        });
-    }
-
-    static getPageTemplatesBaseUrl(flavor: string) {
-        let baseUrl: string;
-
-        return new Promise((resolve, reject) => {
-            switch (flavor) {
-                case "JavaScript":
-                    baseUrl = this.format(Config.orgBaseUrl, "nativescript-page-templates");
-                    resolve(baseUrl);
-                    break;
-
-                case "TypeScript":
-                    baseUrl = this.format(Config.orgBaseUrl, "nativescript-page-templates-ts");
-                    resolve(baseUrl);
-                    break;
-                case "Angular & TypeScript":
-                    baseUrl = this.format(Config.orgBaseUrl, "nativescript-page-templates-ng");
-                    resolve(baseUrl);
-                    break;
-                default:
-                    reject(new Error("Bad Flavor"));
-            }
         });
     }
 }

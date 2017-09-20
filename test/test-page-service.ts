@@ -1,10 +1,8 @@
 import { Yok } from "mobile-cli-lib/yok";
-import { PageService } from "../lib/services/page-service";
 import { GitService } from "../lib/services/git-service";
-// import { Config } from "../lib/shared/config";
+import { PageService } from "../lib/services/page-service";
 import util from "../lib/shared/util";
 
-// const pagesBackup = require("../consts/pages-backup-data").fallback;
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const expect = chai.expect;

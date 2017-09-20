@@ -211,5 +211,17 @@ describe("TemplateService Api", () => {
                     expect(templates).to.deep.equal(templateBackup);
                 });
         });
+
+        it("Should be rejected if cache template data fails", () => {
+            const templatesCount = templateBackup.length;
+
+            sandbox.stub(templateService.templateCache, "get").yields(new Error("Error"));
+
+            return expect(templateService.getTemplates())
+                .to.eventually.be.an("array")
+                .to.have.length(templatesCount).then((templates: Array<any>) => {
+                    expect(templates).to.deep.equal(templateBackup);
+                });
+        });
     });
 });

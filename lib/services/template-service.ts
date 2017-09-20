@@ -106,6 +106,8 @@ export class TemplateService implements ITemplateService {
                         // Load data from cache
                         resolve(value);
                     }
+                } else {
+                    resolve(BACKUP.fallback);
                 }
             });
         });

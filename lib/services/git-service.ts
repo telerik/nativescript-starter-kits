@@ -1,3 +1,4 @@
+import { Config } from "../shared/config";
 import util from "../shared/util";
 
 export class GitService implements IGitService {
@@ -60,7 +61,7 @@ export class GitService implements IGitService {
         const commandArguments: Array<any> = ["clone"];
 
         return new Promise((resolve, reject) => {
-            util.getPageTemplatesBaseUrl(flavor)
+            this.getPageTemplatesBaseUrl(flavor)
                 .then((baseUrl: string) => {
                     baseUrl = baseUrl + ".git";
                     commandArguments.push(baseUrl);
@@ -79,6 +80,30 @@ export class GitService implements IGitService {
                 .catch((downloadPageError: any) => {
                     reject(downloadPageError);
                 });
+        });
+    }
+
+    private getPageTemplatesBaseUrl(flavor: string) {
+        let baseUrl: string;
+
+        return new Promise((resolve, reject) => {
+            switch (flavor) {
+                case "JavaScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates");
+                    resolve(baseUrl);
+                    break;
+
+                case "TypeScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ts");
+                    resolve(baseUrl);
+                    break;
+                case "Angular & TypeScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ng");
+                    resolve(baseUrl);
+                    break;
+                default:
+                    reject(new Error("Bad Flavor"));
+            }
         });
     }
 
