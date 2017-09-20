@@ -55,6 +55,33 @@ export class GitService implements IGitService {
             });
     }
 
+    clonePageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<string> {
+        const command = "git";
+        const commandArguments: Array<any> = ["clone"];
+
+        return new Promise((resolve, reject) => {
+            util.getPageTemplatesBaseUrl(flavor)
+                .then((baseUrl: string) => {
+                    baseUrl = baseUrl + ".git";
+                    commandArguments.push(baseUrl);
+                    commandArguments.push(templatesDirectory);
+
+                    const process = util.childProcess.spawn(command, commandArguments);
+                    process.on("close", (code) => {
+                        if (code !== 0) {
+                            return Promise.reject(new Error(`child process exited with code ${code}`));
+                        }
+
+                        const pagePath = util.path.join(templatesDirectory, pageName);
+                        resolve(pagePath);
+                    });
+                })
+                .catch((downloadPageError: any) => {
+                    reject(downloadPageError);
+                });
+        });
+    }
+
     private getResourcesFromSource(templateName: string, assetDictionary: any) {
         const content: any = {};
         const promises: Array<any> = [];
