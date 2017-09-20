@@ -1,3 +1,4 @@
+import { Config } from "../shared/config";
 import util from "../shared/util";
 
 export class GitService implements IGitService {
@@ -53,6 +54,57 @@ export class GitService implements IGitService {
             .catch((error: any) => {
                 return { message: "Error retrieving assets from repository", error };
             });
+    }
+
+    clonePageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<string> {
+        const command = "git";
+        const commandArguments: Array<any> = ["clone"];
+
+        return new Promise((resolve, reject) => {
+            this.getPageTemplatesBaseUrl(flavor)
+                .then((baseUrl: string) => {
+                    baseUrl = baseUrl + ".git";
+                    commandArguments.push(baseUrl);
+                    commandArguments.push(templatesDirectory);
+
+                    const process = util.childProcess.spawn(command, commandArguments);
+                    process.on("close", (code) => {
+                        if (code !== 0) {
+                            return Promise.reject(new Error(`child process exited with code ${code}`));
+                        }
+
+                        const pagePath = util.path.join(templatesDirectory, pageName);
+                        resolve(pagePath);
+                    });
+                })
+                .catch((downloadPageError: any) => {
+                    reject(downloadPageError);
+                });
+        });
+    }
+
+    private getPageTemplatesBaseUrl(flavor: string) {
+        let baseUrl: string;
+
+        return new Promise((resolve, reject) => {
+            switch (flavor) {
+                case "JavaScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates");
+                    resolve(baseUrl);
+                    break;
+
+                case "TypeScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ts");
+                    resolve(baseUrl);
+                    break;
+                case "Angular & TypeScript":
+                    baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ng");
+                    resolve(baseUrl);
+                    break;
+                default:
+                    reject(new Error("Bad Flavor"));
+            }
+        });
     }
 
     private getResourcesFromSource(templateName: string, assetDictionary: any) {

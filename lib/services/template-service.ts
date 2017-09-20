@@ -3,10 +3,12 @@ import { Config } from "../shared/config";
 const _ = require("lodash");
 const BACKUP = require("../../consts/templates-backup-data");
 const nodeCache = require("node-cache");
-const templateCache = new nodeCache();
 
 export class TemplateService implements ITemplateService {
+    templateCache: any;
+
     constructor(private $gitService: IGitService) {
+        this.templateCache = new nodeCache();
     }
 
     checkTemplateFlavor(packageJson: any) {
@@ -27,8 +29,8 @@ export class TemplateService implements ITemplateService {
         const meta: any = {};
 
         return new Promise((resolve, reject) => {
-            if (typeof packageJson === "undefined") {
-                reject({message: "Missing package.json"});
+            if (_.isEmpty(packageJson)) {
+                reject(new Error("Missing or invalid package.json provided"));
             } else {
                 meta.name = packageJson.name;
                 meta.displayName = packageJson.displayName;
@@ -70,10 +72,7 @@ export class TemplateService implements ITemplateService {
                             resolve(templateDetails);
                         })
                         .catch((error) => {
-                            reject({
-                                message: "Error retrieving data for " + templateName,
-                                error
-                            });
+                            reject(error);
                         });
                 })
                 .catch((error: any) => {
@@ -83,41 +82,32 @@ export class TemplateService implements ITemplateService {
     }
 
     getTemplates(): Promise<Array<any>> {
-        let templateDetails: Array<any> = [];
         const promises: Array<any> = [];
 
         return new Promise((resolve, reject) => {
-            templateCache.get("templateDetails", (error: any, value: any) => {
+            this.templateCache.get("templateDetails", (error: any, value: any) => {
                 if (!error) {
                     if (value === undefined) {
                         Config.availableTemplateRepos.forEach((name: string) => {
-                            promises.push(
-                                this.getAppTemplateDetails(name)
-                                    .then((details) => {
-                                        templateDetails.push(details);
-                                    })
-                                    .catch((errorDetails) => {
-                                        reject(errorDetails);
-                                    })
-                            );
+                            promises.push(this.getAppTemplateDetails(name));
                         });
 
                         Promise.all(promises)
-                            .then(() => {
-                                templateDetails = this.sortTemplateData(templateDetails);
-                                templateCache.set("templateDetails", templateDetails, Config.cacheTime);
-                                resolve(templateDetails);
-
+                            .then((resultTemplateDetails: Array<any>) => {
+                                resultTemplateDetails = this.sortTemplateData(resultTemplateDetails);
+                                this.templateCache.set("templateDetails", resultTemplateDetails, Config.cacheTime);
+                                resolve(resultTemplateDetails);
                             })
                             .catch((errorPromises: any) => {
                                 // TODO Implement error logger
                                 resolve(BACKUP.fallback);
                             });
-
                     } else {
                         // Load data from cache
                         resolve(value);
                     }
+                } else {
+                    resolve(BACKUP.fallback);
                 }
             });
         });

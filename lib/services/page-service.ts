@@ -7,6 +7,10 @@ const BACKUP = require("../../consts/pages-backup-data");
 const ejs = require("ejs");
 
 export class PageService implements IPageService {
+
+    constructor(private $gitService: IGitService) {
+    }
+
     getPages() {
         return new Promise((resolve, reject) => {
             resolve(BACKUP.fallback);
@@ -28,7 +32,7 @@ export class PageService implements IPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
+                    return this.$gitService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
@@ -38,33 +42,6 @@ export class PageService implements IPageService {
                 })
                 .catch((promiseError: any) => {
                     reject(promiseError);
-                });
-        });
-    }
-
-    private clonePageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<string> {
-        const command = "git";
-        const commandArguments: Array<any> = ["clone"];
-
-        return new Promise((resolve, reject) => {
-            util.getPageTemplatesBaseUrl(flavor)
-                .then((baseUrl: string) => {
-                    baseUrl = baseUrl + ".git";
-                    commandArguments.push(baseUrl);
-                    commandArguments.push(templatesDirectory);
-
-                    const process = util.childProcess.spawn(command, commandArguments);
-                    process.on("close", (code) => {
-                        if (code !== 0) {
-                            return Promise.reject(new Error(`child process exited with code ${code}`));
-                        }
-
-                        const pagePath = util.path.join(templatesDirectory, pageName);
-                        resolve(pagePath);
-                    });
-                })
-                .catch((downloadPageError: any) => {
-                    reject(downloadPageError);
                 });
         });
     }
