@@ -63,9 +63,10 @@ export class TemplateService implements ITemplateService {
                             return this.checkTemplateFlavor(packageJson);
                         })
                         .then((flavor) => {
+                            const templateTag = "v" + templateDetails.version;
                             templateDetails.templateFlavor = flavor;
 
-                            return this.$gitService.getAssetsContent(templateName);
+                            return this.$gitService.getAssetsContent(templateName, templateTag);
                         })
                         .then((resources) => {
                             templateDetails.resources = resources;
