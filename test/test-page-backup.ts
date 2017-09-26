@@ -21,6 +21,7 @@ describe("Page backup data", () => {
                         expect(item).to.have.property("version");
                         expect(item).to.have.property("templateFlavor");
                         expect(item).to.have.property("type");
+                        expect(item).to.have.property("thumbnail");
                     });
                 });
         });

@@ -10,7 +10,8 @@ BackupData.fallback = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates/tree/master/blank",
         templateFlavor: "JavaScript",
-        type: "Page template"
+        type: "Page template",
+        thumbnail: "file-o"
     },
     {
         name: "tns-page-login",
@@ -40,7 +41,8 @@ BackupData.fallback = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ts/tree/master/blank",
         templateFlavor: "TypeScript",
-        type: "Page template"
+        type: "Page template",
+        thumbnail: "file-o"
     },
     {
         name: "tns-page-login-ts",
@@ -69,7 +71,8 @@ BackupData.fallback = [
         version: "3.1.4",
         gitUrl: "https://github.com/NativeScript/nativescript-page-templates-ng/tree/master/blank",
         templateFlavor: "Angular & TypeScript",
-        type: "Page template"
+        type: "Page template",
+        thumbnail: "file-o"
     },
     {
         name: "tns-page-login-ng",
