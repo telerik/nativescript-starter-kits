@@ -184,6 +184,19 @@ module.exports = function (grunt) {
         fs.renameSync(oldFileName + fileExtension, newFileName + fileExtension);
     });
 
+    grunt.registerTask("delete_coverage_dir", function () {
+        const done = this.async();
+        const rimraf = require("rimraf");
+        rimraf("coverage", function (err) {
+            if (err) {
+                console.log("Error while deleting coverage directory from the package.");
+                done(false);
+            }
+
+            done();
+        });
+    });
+
     grunt.registerTask("test", ["transpile_additional_project", "generate_references", "ts:devlib"]);
 
     grunt.registerTask("generate_references", () => {
@@ -191,17 +204,9 @@ module.exports = function (grunt) {
 
         // get all .d.ts files from nativescript-cli and mobile-cli-lib
         const nodeModulesDirPath = path.join(__dirname, "node_modules");
-
-        const specialFiles = [
-            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "analytics-type.ts"),
-            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "google-analytics-data-type.ts")
-        ];
-
         let pathsOfDtsFiles = getReferencesFromDir(path.join(nodeModulesDirPath, "nativescript"))
             .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "mobile-cli-lib")))
             .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "ios-device-lib")));
-
-        pathsOfDtsFiles = pathsOfDtsFiles.concat(...specialFiles);
 
         const lines = pathsOfDtsFiles.map(file => `/// <reference path="${fromWindowsRelativePathToUnix(path.relative(__dirname, file))}" />`);
 
@@ -236,11 +241,12 @@ module.exports = function (grunt) {
         "transpile_additional_project",
         "tslint:build",
         "set_package_version",
+        "delete_coverage_dir",
         "shell:build_package",
         "setPackageName"
     ]);
     grunt.registerTask("lint", ["tslint:build"]);
     grunt.registerTask("all", ["clean", "test", "lint"]);
     grunt.registerTask("rebuild", ["clean", "ts:devlib"]);
-    grunt.registerTask("default", ["generate_references", "ts:devlib"]);
+    grunt.registerTask("default", ["generate_references", "transpile_additional_project", "ts:devlib"]);
 };
