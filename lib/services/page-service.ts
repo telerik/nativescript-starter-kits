@@ -8,7 +8,7 @@ const ejs = require("ejs");
 
 export class PageService implements IPageService {
 
-    constructor(private $gitApiService: IGitService) {
+    constructor(private $githubService: IGitService) {
     }
 
     getPages() {
@@ -32,7 +32,7 @@ export class PageService implements IPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.$gitApiService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
+                    return this.$githubService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
