@@ -1,6 +1,6 @@
 {
   "name": "nativescript-starter-kits",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI extension for the NatvieScript CLI",
   "main": "lib/bootstrap.js",
   "scripts": {
