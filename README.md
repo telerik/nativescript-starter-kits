@@ -89,6 +89,15 @@ tns.templateService.getAppTemplateDetails("templateName").then((details) => {
 });
 ```
 
+## Run tests 
+Before running the test you need to transpile all files and dependencies.
+
+```bash
+$ grunt pack
+$ npm run test
+```
+## Issues
+If you have found an issue with this extension, please report the problem in the   [Issues](https://github.com/NativeScript/nativescript-starter-kits/issues) section.
 
 
 

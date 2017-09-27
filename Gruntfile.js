@@ -13,7 +13,7 @@ const getBuildVersion = (version) => {
     }
 
     return buildVersion;
-}
+};
 
 module.exports = function (grunt) {
 
@@ -79,7 +79,7 @@ module.exports = function (grunt) {
                 options: {
                     execOptions: {
                         env: (function () {
-                            var env = _.cloneDeep(process.env);
+                            let env = _.cloneDeep(process.env);
                             env["XUNIT_FILE"] = "test-reports.xml";
                             env["LOG_XUNIT"] = "true";
                             return env;
@@ -97,7 +97,7 @@ module.exports = function (grunt) {
                 options: {
                     execOptions: {
                         env: (function () {
-                            var env = _.cloneDeep(process.env);
+                            let env = _.cloneDeep(process.env);
                             env["APPBUILDER_SKIP_POSTINSTALL_TASKS"] = "1";
                             return env;
                         })()
@@ -204,17 +204,9 @@ module.exports = function (grunt) {
 
         // get all .d.ts files from nativescript-cli and mobile-cli-lib
         const nodeModulesDirPath = path.join(__dirname, "node_modules");
-
-        const specialFiles = [
-            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "analytics-type.ts"),
-            path.join(nodeModulesDirPath, "mobile-cli-lib", "services", "google-analytics-data-type.ts")
-        ];
-
         let pathsOfDtsFiles = getReferencesFromDir(path.join(nodeModulesDirPath, "nativescript"))
             .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "mobile-cli-lib")))
             .concat(getReferencesFromDir(path.join(nodeModulesDirPath, "ios-device-lib")));
-
-        pathsOfDtsFiles = pathsOfDtsFiles.concat(...specialFiles);
 
         const lines = pathsOfDtsFiles.map(file => `/// <reference path="${fromWindowsRelativePathToUnix(path.relative(__dirname, file))}" />`);
 
@@ -248,7 +240,6 @@ module.exports = function (grunt) {
         "ts:release_build",
         "transpile_additional_project",
         "tslint:build",
-
         "set_package_version",
         "delete_coverage_dir",
         "shell:build_package",

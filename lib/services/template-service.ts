@@ -7,7 +7,7 @@ const nodeCache = require("node-cache");
 export class TemplateService implements ITemplateService {
     templateCache: any;
 
-    constructor(private $gitService: IGitService) {
+    constructor(private $githubService: IGitService) {
         this.templateCache = new nodeCache();
     }
 
@@ -48,7 +48,7 @@ export class TemplateService implements ITemplateService {
         const templateDetails: any = {};
 
         return new Promise((resolve, reject) => {
-            this.$gitService.getPackageJsonFromSource(templateName)
+            this.$githubService.getPackageJsonFromSource(templateName)
                 .then((packageJsonData: any) => {
                     const packageJson = packageJsonData;
                     this.getTemplateMetaData(packageJson)
@@ -66,7 +66,7 @@ export class TemplateService implements ITemplateService {
                             const templateTag = "v" + templateDetails.version;
                             templateDetails.templateFlavor = flavor;
 
-                            return this.$gitService.getAssetsContent(templateName, templateTag);
+                            return this.$githubService.getAssetsContent(templateName, templateTag);
                         })
                         .then((resources) => {
                             templateDetails.resources = resources;
