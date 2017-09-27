@@ -162,4 +162,4 @@ export class GitService implements IGitService {
     }
 }
 
-$injector.register("gitService", GitService);
+$injector.register("gitApiService", GitService);
