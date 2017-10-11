@@ -1,6 +1,6 @@
 import * as path from "path";
 
-$injector.require("githubService", path.join(__dirname, "services", "git-service"));
-$injector.require("pageService", path.join(__dirname, "services", "page-service"));
-$injector.requirePublicClass("templateService", path.join(__dirname, "services", "template-service"));
-$injector.requirePublicClass("applicationService", path.join(__dirname, "services", "application-service"));
+$injector.require("nsStarterKitsGitService", path.join(__dirname, "services", "nsStarterKitsGitService"));
+$injector.require("nsStarterKitsPageService", path.join(__dirname, "services", "nsStarterKitsPageService"));
+$injector.requirePublicClass("nsStarterKitsTemplateService", path.join(__dirname, "services", "nsStarterKitsTemplateService"));
+$injector.requirePublicClass("nsStarterKitsApplicationService", path.join(__dirname, "services", "nsStarterKitsApplicationService"));

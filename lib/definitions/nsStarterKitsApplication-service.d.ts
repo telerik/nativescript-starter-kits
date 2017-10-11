@@ -1,4 +1,4 @@
-interface IApplicationService {
+interface INsStarterKitsApplicationService {
     /**
      * @description The method returns details about all pages.
      * @returns {Promise<Array<any>>}

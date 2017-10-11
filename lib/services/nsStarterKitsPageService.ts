@@ -6,9 +6,9 @@ const _ = require("lodash");
 const BACKUP = require("../../consts/pages-backup-data");
 const ejs = require("ejs");
 
-export class PageService implements IPageService {
+export class NsStarterKitsPageService implements INsStarterKitsPageService {
 
-    constructor(private $githubService: IGitService) {
+    constructor(private $nsStarterKitsGitService: INsStarterKitsGitService) {
     }
 
     getPages() {
@@ -32,7 +32,7 @@ export class PageService implements IPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.$githubService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
+                    return this.$nsStarterKitsGitService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
@@ -141,4 +141,4 @@ export class PageService implements IPageService {
     }
 }
 
-$injector.register("pageService", PageService);
+$injector.register("nsStarterKitsPageService", NsStarterKitsPageService);
