@@ -1,6 +1,6 @@
 import { Yok } from "mobile-cli-lib/yok";
-import { GitService } from "../lib/services/git-service";
-import { TemplateService } from "../lib/services/template-service";
+import { NsStarterKitsGitService } from "../lib/services/nsStarterKitsGitService";
+import { NsStarterKitsTemplateService } from "../lib/services/nsStarterKitsTemplateService";
 import { Config } from "../lib/shared/config";
 
 const templateBackup = require("../consts/templates-backup-data").fallback;
@@ -14,8 +14,8 @@ chai.use(chaiAsPromised);
 let testInjector: any;
 
 describe("TemplateService Api", () => {
-    let gitService: GitService;
-    let templateService: TemplateService;
+    let gitService: NsStarterKitsGitService;
+    let templateService: NsStarterKitsTemplateService;
 
     const packageJson = {
         name: "dummyName",
@@ -44,12 +44,12 @@ describe("TemplateService Api", () => {
     };
 
     beforeEach(() => {
-        gitService = new GitService();
-        templateService = new TemplateService(gitService);
+        gitService = new NsStarterKitsGitService();
+        templateService = new NsStarterKitsTemplateService(gitService);
 
         testInjector = new Yok();
-        testInjector.register("templateService", TemplateService);
-        testInjector.register("gitService", GitService);
+        testInjector.register("nsStarterKitsTemplateService", NsStarterKitsTemplateService);
+        testInjector.register("nsStarterKitsGitService", NsStarterKitsGitService);
     });
 
     describe("Check template flavor", () => {
