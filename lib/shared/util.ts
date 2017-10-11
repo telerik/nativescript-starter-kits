@@ -2,14 +2,10 @@ import * as childProcess from "child_process";
 import * as path from "path";
 import * as nodeUtil from "util";
 
-const request = require("request-promise");
+const request = require("request-promise-native");
 const fs = require("fs-extra");
 
 export default class Util {
-    static defaultHeaders = {
-        "user-agent": "nativescript-starter-kits"
-    };
-
     static format = nodeUtil.format;
     static request = request;
     static path = path;
@@ -32,5 +28,17 @@ export default class Util {
                 }
             });
         });
+    }
+
+    static promiseAllMap(map: Map<string, Promise<any>>) {
+        return Promise.all(Array.from(map, ([key, promise]) => Promise.resolve(promise).then((value) => [key, value])))
+            .then((results: Array<Array<string>>) => {
+                const resultsAsObj: any = {};
+                results.forEach((result) => {
+                    resultsAsObj[result[0]] = result[1];
+                });
+
+                return resultsAsObj;
+            });
     }
 }
