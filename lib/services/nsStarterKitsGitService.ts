@@ -5,7 +5,7 @@ const defaultHeaders = {
     "user-agent": "nativescript-starter-kits"
 };
 
-export class GitService implements IGitService {
+export class NsStarterKitsGitService implements INsStarterKitsGitService {
     getPackageJsonFromSource(templateName: string): Promise<any> {
         return this.getNpmPackageVersion(templateName)
             .then((packageVersion: string) => {
@@ -144,4 +144,4 @@ export class GitService implements IGitService {
     }
 }
 
-$injector.register("githubService", GitService);
+$injector.register("nsStarterKitsGitService", NsStarterKitsGitService);

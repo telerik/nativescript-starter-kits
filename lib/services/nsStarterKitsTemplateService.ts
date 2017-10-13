@@ -4,10 +4,10 @@ const _ = require("lodash");
 const BACKUP = require("../../consts/templates-backup-data");
 const nodeCache = require("node-cache");
 
-export class TemplateService implements ITemplateService {
+export class NsStarterKitsTemplateService implements INsStarterKitsTemplateService {
     templateCache: any;
 
-    constructor(private $githubService: IGitService) {
+    constructor(private $nsStarterKitsGitService: INsStarterKitsGitService) {
         this.templateCache = new nodeCache();
     }
 
@@ -48,7 +48,7 @@ export class TemplateService implements ITemplateService {
         const templateDetails: any = {};
 
         return new Promise((resolve, reject) => {
-            this.$githubService.getPackageJsonFromSource(templateName)
+            this.$nsStarterKitsGitService.getPackageJsonFromSource(templateName)
                 .then((packageJsonData: any) => {
                     const packageJson = packageJsonData;
                     this.getTemplateMetaData(packageJson)
@@ -66,7 +66,7 @@ export class TemplateService implements ITemplateService {
                             const templateTag = "v" + templateDetails.version;
                             templateDetails.templateFlavor = flavor;
 
-                            return this.$githubService.getAssetsContent(templateName, templateTag);
+                            return this.$nsStarterKitsGitService.getAssetsContent(templateName, templateTag);
                         })
                         .then((resources) => {
                             templateDetails.resources = resources;
@@ -140,4 +140,4 @@ export class TemplateService implements ITemplateService {
     }
 }
 
-$injector.register("templateService", TemplateService);
+$injector.register("nsStarterKitsTemplateService", NsStarterKitsTemplateService);

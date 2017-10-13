@@ -1,10 +1,10 @@
 import util from "../shared/util";
 
-export class ApplicationService implements IApplicationService {
-    constructor(private $pageService: IPageService) { }
+export class NsStarterKitsApplicationService implements INsStarterKitsApplicationService {
+    constructor(private $nsStarterKitsPageService: INsStarterKitsPageService) { }
 
     getPages(): Promise<Array<any>> {
-        return this.$pageService.getPages();
+        return this.$nsStarterKitsPageService.getPages();
     }
 
     getFlavor(appPath: string): Promise<string> {
@@ -33,7 +33,7 @@ export class ApplicationService implements IApplicationService {
     }
 
     addPage(pageName: string, pageTemplate: any, appPath: string): Promise<string> {
-        return this.$pageService.addPage(pageName, pageTemplate, appPath);
+        return this.$nsStarterKitsPageService.addPage(pageName, pageTemplate, appPath);
     }
 
     private getNormalizedAppPath(appPath: string) {
@@ -92,4 +92,4 @@ export class ApplicationService implements IApplicationService {
     }
 }
 
-$injector.register("applicationService", ApplicationService);
+$injector.register("nsStarterKitsApplicationService", NsStarterKitsApplicationService);

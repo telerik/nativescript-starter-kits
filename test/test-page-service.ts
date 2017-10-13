@@ -1,6 +1,6 @@
 import { Yok } from "mobile-cli-lib/yok";
-import { GitService } from "../lib/services/git-service";
-import { PageService } from "../lib/services/page-service";
+import { NsStarterKitsGitService } from "../lib/services/nsStarterKitsGitService";
+import { NsStarterKitsPageService } from "../lib/services/nsStarterKitsPageService";
 import util from "../lib/shared/util";
 
 const chai = require("chai");
@@ -13,8 +13,8 @@ chai.use(chaiAsPromised);
 let testInjector: any;
 
 describe("PageService Api", () => {
-    let gitService: GitService;
-    let pageService: PageService;
+    let gitService: NsStarterKitsGitService;
+    let pageService: NsStarterKitsPageService;
 
     const pageName = "dummyPageName";
     const appPath = "dummyPath";
@@ -30,11 +30,11 @@ describe("PageService Api", () => {
     };
 
     beforeEach(() => {
-        gitService = new GitService();
-        pageService = new PageService(gitService);
+        gitService = new NsStarterKitsGitService();
+        pageService = new NsStarterKitsPageService(gitService);
         testInjector = new Yok();
 
-        testInjector.register("pageService", PageService);
+        testInjector.register("nsStarterKitsPageService", NsStarterKitsPageService);
     });
 
     describe("Add page", () => {

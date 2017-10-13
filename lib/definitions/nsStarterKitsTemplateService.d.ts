@@ -1,4 +1,4 @@
-interface ITemplateService {
+interface INsStarterKitsTemplateService {
     /**
      * @description The method returns details about a single app template.
      * @param templateName <String>
