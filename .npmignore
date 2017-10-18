@@ -5,6 +5,7 @@ coverage
 test-reports.xml
 *.tgz
 .vscode
+.idea
 .npmignore
 test/**/*
 tscommand-*.tmp.txt
@@ -12,3 +13,6 @@ tscommand-*.tmp.txt
 tsconfig.json
 tslint.json
 Gruntfile.js
+addPage.js
+getTemplates.js
+xunit.xml
