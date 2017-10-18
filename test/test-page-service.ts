@@ -1,5 +1,6 @@
 import { Yok } from "mobile-cli-lib/yok";
 import { NsStarterKitsGitService } from "../lib/services/nsStarterKitsGitService";
+import { NsStarterKitsNpmService } from "../lib/services/nsStarterKitsNpmService";
 import { NsStarterKitsPageService } from "../lib/services/nsStarterKitsPageService";
 import util from "../lib/shared/util";
 
@@ -14,6 +15,7 @@ let testInjector: any;
 
 describe("PageService Api", () => {
     let gitService: NsStarterKitsGitService;
+    let npmService: NsStarterKitsNpmService;
     let pageService: NsStarterKitsPageService;
 
     const pageName = "dummyPageName";
@@ -30,7 +32,8 @@ describe("PageService Api", () => {
     };
 
     beforeEach(() => {
-        gitService = new NsStarterKitsGitService();
+        npmService = new NsStarterKitsNpmService();
+        gitService = new NsStarterKitsGitService(npmService);
         pageService = new NsStarterKitsPageService(gitService);
         testInjector = new Yok();
 
@@ -69,7 +72,7 @@ describe("PageService Api", () => {
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(false));
 
-            sandbox.stub(gitService, "clonePageTemplate")
+            sandbox.stub(gitService, "getPageTemplate")
                 .returns(Promise.reject(pageCloneError));
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath))
@@ -87,7 +90,7 @@ describe("PageService Api", () => {
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(false));
 
-            sandbox.stub(gitService, "clonePageTemplate")
+            sandbox.stub(gitService, "getPageTemplate")
                 .returns(Promise.resolve(clonedPagesDirectory));
 
             sandbox.stub(pageService, "createPage")

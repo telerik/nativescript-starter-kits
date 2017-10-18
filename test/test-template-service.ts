@@ -1,5 +1,6 @@
 import { Yok } from "mobile-cli-lib/yok";
 import { NsStarterKitsGitService } from "../lib/services/nsStarterKitsGitService";
+import { NsStarterKitsNpmService } from "../lib/services/nsStarterKitsNpmService";
 import { NsStarterKitsTemplateService } from "../lib/services/nsStarterKitsTemplateService";
 import { Config } from "../lib/shared/config";
 
@@ -14,6 +15,7 @@ chai.use(chaiAsPromised);
 let testInjector: any;
 
 describe("TemplateService Api", () => {
+    let npmService: NsStarterKitsNpmService;
     let gitService: NsStarterKitsGitService;
     let templateService: NsStarterKitsTemplateService;
 
@@ -44,7 +46,8 @@ describe("TemplateService Api", () => {
     };
 
     beforeEach(() => {
-        gitService = new NsStarterKitsGitService();
+        npmService = new NsStarterKitsNpmService();
+        gitService = new NsStarterKitsGitService(npmService);
         templateService = new NsStarterKitsTemplateService(gitService);
 
         testInjector = new Yok();
