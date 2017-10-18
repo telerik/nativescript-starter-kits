@@ -44,11 +44,7 @@ export class NsStarterKitsGitService implements INsStarterKitsGitService {
 
         return this.getResourcesFromSource(templateName, assets, version);
     }
-
-    getPageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<any> {
-        return this.$nsStarterKitsNpmService.installPageTemplateFromNpm(pageName, flavor, templatesDirectory);
-    }
-
+    
     private getResourcesFromSource(templateName: string, assetDictionary: any, versionTag: string): Promise<any> {
         const promisesMap: Map<string, Promise<any>> = new Map();
 
