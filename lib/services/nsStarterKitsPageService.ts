@@ -8,7 +8,7 @@ const ejs = require("ejs");
 
 export class NsStarterKitsPageService implements INsStarterKitsPageService {
 
-    constructor(private $nsStarterKitsGitService: INsStarterKitsGitService) {
+    constructor(private $nsStarterKitsNpmService: INsStarterKitsNpmService) {
     }
 
     getPages() {
@@ -22,8 +22,12 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
             const displayName = pageTemplate.displayName.toLowerCase();
             const newPageDirectory = util.path.join(appPath, "app");
             const pagesDirectory = util.path.join(__dirname, "../pages");
+            const emptyPackageJson: any = { name: "pageTemplate" };
 
             util.fs.emptyDir(pagesDirectory)
+                .then(() => {
+                    return util.fs.outputJson(util.path.join(pagesDirectory, "package.json"), emptyPackageJson);
+                })
                 .then(() => {
                     return util.pageExists(newPageDirectory, pageName);
                 })
@@ -32,7 +36,7 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.$nsStarterKitsGitService.clonePageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
+                    return this.$nsStarterKitsNpmService.installPageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);

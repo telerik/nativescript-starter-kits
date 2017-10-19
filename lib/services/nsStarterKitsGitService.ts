@@ -1,4 +1,3 @@
-import { Config } from "../shared/config";
 import util from "../shared/util";
 
 const defaultHeaders = {
@@ -6,8 +5,11 @@ const defaultHeaders = {
 };
 
 export class NsStarterKitsGitService implements INsStarterKitsGitService {
+    constructor(private $nsStarterKitsNpmService: INsStarterKitsNpmService) {
+    }
+
     getPackageJsonFromSource(templateName: string): Promise<any> {
-        return this.getNpmPackageVersion(templateName)
+        return this.$nsStarterKitsNpmService.getNpmPackageVersion(templateName)
             .then((packageVersion: string) => {
                 return util.request({
                     method: "GET",
@@ -43,47 +45,6 @@ export class NsStarterKitsGitService implements INsStarterKitsGitService {
         return this.getResourcesFromSource(templateName, assets, version);
     }
 
-    clonePageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const command = "git";
-            const commandArguments: Array<any> = ["clone"];
-            const baseUrl = this.getPageTemplatesBaseUrl(flavor);
-
-            commandArguments.push(`${baseUrl}.git`);
-            commandArguments.push(templatesDirectory);
-
-            const process = util.childProcess.spawn(command, commandArguments);
-            process.on("close", (code) => {
-                if (code !== 0) {
-                    return reject(new Error(`child process exited with code ${code}`));
-                }
-
-                const pagePath = util.path.join(templatesDirectory, pageName);
-                resolve(pagePath);
-            });
-        });
-    }
-
-    private getPageTemplatesBaseUrl(flavor: string): string {
-        let baseUrl: string;
-
-        switch (flavor) {
-            case "JavaScript":
-                baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates");
-                break;
-            case "TypeScript":
-                baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ts");
-                break;
-            case "Angular & TypeScript":
-                baseUrl = util.format(Config.orgBaseUrl, "nativescript-page-templates-ng");
-                break;
-            default:
-                throw new Error("Bad Flavor");
-        }
-
-        return baseUrl;
-    }
-
     private getResourcesFromSource(templateName: string, assetDictionary: any, versionTag: string): Promise<any> {
         const promisesMap: Map<string, Promise<any>> = new Map();
 
@@ -114,32 +75,6 @@ export class NsStarterKitsGitService implements INsStarterKitsGitService {
                     message: "Error retrieving " + templateName + " assets from source",
                     err: error
                 });
-            });
-    }
-
-    private getNpmPackageVersion(templateName: string): Promise<any> {
-        if (templateName.indexOf("tns-") !== 0) {
-            templateName = "tns-" + templateName;
-        }
-
-        return util.request({
-            method: "GET",
-            uri: util.format("https://registry.npmjs.org/%s/", templateName),
-            json: true,
-            resolveWithFullResponse: true,
-            headers: defaultHeaders
-        })
-            .then((response: any) => {
-                let version = "master";
-                if (response.body && response.body["dist-tags"] && response.body["dist-tags"].latest) {
-                    version = "v" + response.body["dist-tags"].latest;
-                }
-
-                return version;
-            })
-            .catch((error: any) => {
-                // fallback to using the master (latest version)
-                return "master";
             });
     }
 }
