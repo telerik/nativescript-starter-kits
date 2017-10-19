@@ -69,7 +69,7 @@ describe("PageService Api", () => {
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(false));
 
-            sandbox.stub(npmService, "installPageTemplateFromNpm")
+            sandbox.stub(npmService, "installPageTemplate")
                 .returns(Promise.reject(pageCloneError));
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath))
@@ -87,7 +87,7 @@ describe("PageService Api", () => {
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(false));
 
-            sandbox.stub(npmService, "installPageTemplateFromNpm")
+            sandbox.stub(npmService, "installPageTemplate")
                 .returns(Promise.resolve(clonedPagesDirectory));
 
             sandbox.stub(pageService, "createPage")

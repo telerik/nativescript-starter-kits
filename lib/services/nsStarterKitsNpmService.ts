@@ -5,11 +5,11 @@ const defaultHeaders = {
 };
 
 export class NsStarterKitsNpmService implements INsStarterKitsNpmService {
-    installPageTemplateFromNpm(pageName: string, flavor: string, templatesDirectory: string): Promise<any> {
+    installPageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            const command = "npm";
+            const command: string = (process.platform.indexOf("win") > -1) ? "npm.cmd" : "npm";
             const commandArguments: Array<any> = ["install"];
-            const options = {cwd: templatesDirectory};
+            const options = { cwd: templatesDirectory };
             let packageName: string;
 
             try {
@@ -19,9 +19,9 @@ export class NsStarterKitsNpmService implements INsStarterKitsNpmService {
             }
 
             commandArguments.push(packageName);
-           
-            const process = util.childProcess.spawn(command, commandArguments, options);
-            process.on("close", (code) => {
+
+            const childProcess = util.childProcess.spawn(command, commandArguments, options);
+            childProcess.on("close", (code) => {
                 if (code !== 0) {
                     return reject(new Error(`child process exited with code ${code}`));
                 }

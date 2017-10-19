@@ -44,7 +44,7 @@ export class NsStarterKitsGitService implements INsStarterKitsGitService {
 
         return this.getResourcesFromSource(templateName, assets, version);
     }
-    
+
     private getResourcesFromSource(templateName: string, assetDictionary: any, versionTag: string): Promise<any> {
         const promisesMap: Map<string, Promise<any>> = new Map();
 
