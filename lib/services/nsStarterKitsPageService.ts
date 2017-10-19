@@ -36,7 +36,7 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.$nsStarterKitsNpmService.installPageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory);
+                    return this.$nsStarterKitsNpmService.installPageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory); // tslint:disable-line:max-line-length
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
