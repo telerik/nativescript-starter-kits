@@ -6,8 +6,9 @@ test-reports.xml
 *.tgz
 .vscode
 .idea
+.project
 .npmignore
-test/**/*
+test/
 tscommand-*.tmp.txt
 .travis.yml
 tsconfig.json
