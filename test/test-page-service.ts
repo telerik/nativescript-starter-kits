@@ -25,7 +25,7 @@ describe("PageService Api", () => {
         description: "dummyDescription",
         version: "1.0",
         gitUrl: "dummyUrl",
-        templateFlavor: "dummyFlavor",
+        templateFlavor: "JavaScript",
         type: "Page template"
     };
 
@@ -94,6 +94,61 @@ describe("PageService Api", () => {
                 .returns(Promise.resolve(newPageDirectory));
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath))
+                .to.eventually.be.an("string", newPageDirectory);
+        });
+
+        it("Should run OK with empty version string", () => {
+            const newPageDirectory = "dummyDirectory";
+
+            sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util, "pageExists")
+                .returns(Promise.resolve(false));
+
+            sandbox.stub(util.childProcess, "spawn")
+                .callsFake((command: string, commandArguments: Array<string>, options: any) => {
+                    expect(commandArguments.join(" ")).not.to.include("@");
+
+                    return {
+                        on: (method: string, callback: any) => {
+                            return callback(0);
+                        }
+                    };
+                });
+
+            sandbox.stub(pageService, "createPage")
+                .returns(Promise.resolve(newPageDirectory));
+
+            return expect(pageService.addPage(pageName, pageTemplate, appPath, ""))
+                .to.eventually.be.an("string", newPageDirectory);
+        });
+
+        it("Should run OK with non-empty version string", () => {
+            const newPageDirectory = "dummyDirectory";
+            const templateVersion = "next";
+
+            sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util, "pageExists")
+                .returns(Promise.resolve(false));
+
+            sandbox.stub(util.childProcess, "spawn")
+                .callsFake((command: string, commandArguments: Array<string>, options: any) => {
+                    expect(commandArguments.join(" ")).to.include("@" + templateVersion);
+                    
+                    return {
+                        on: (method: string, callback: any) => {
+                            return callback(0);
+                        }
+                    };
+                });
+
+            sandbox.stub(pageService, "createPage")
+                .returns(Promise.resolve(newPageDirectory));
+
+            return expect(pageService.addPage(pageName, pageTemplate, appPath, templateVersion))
                 .to.eventually.be.an("string", newPageDirectory);
         });
     });

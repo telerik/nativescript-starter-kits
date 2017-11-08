@@ -5,7 +5,7 @@ const defaultHeaders = {
 };
 
 export class NsStarterKitsNpmService implements INsStarterKitsNpmService {
-    installPageTemplate(pageName: string, flavor: string, templatesDirectory: string): Promise<any> {
+    installPageTemplate(pageName: string, flavor: string, templatesDirectory: string, version?: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const command: string = (process.platform === "win32") ? "npm.cmd" : "npm";
             const commandArguments: Array<any> = ["install"];
@@ -14,6 +14,9 @@ export class NsStarterKitsNpmService implements INsStarterKitsNpmService {
 
             try {
                 packageName = this.getPageTemplateNpmName(flavor);
+                if (version !== null && version.length > 0) {
+                    packageName += "@" + version;
+                }
             } catch (error) {
                 Promise.reject(error);
             }

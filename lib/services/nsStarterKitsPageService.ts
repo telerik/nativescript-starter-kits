@@ -17,7 +17,7 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
         });
     }
 
-    addPage(pageName: string, pageTemplate: any, appPath: string): Promise<string> {
+    addPage(pageName: string, pageTemplate: any, appPath: string, version?: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const displayName = pageTemplate.displayName.toLowerCase();
             const newPageDirectory = util.path.join(appPath, "app");
@@ -36,7 +36,7 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
                         return Promise.reject(new Error(`Page with the name "${pageName}" already exists`));
                     }
 
-                    return this.$nsStarterKitsNpmService.installPageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory); // tslint:disable-line:max-line-length
+                    return this.$nsStarterKitsNpmService.installPageTemplate(displayName, pageTemplate.templateFlavor, pagesDirectory, version); // tslint:disable-line:max-line-length
                 })
                 .then((downloadPath: any) => {
                     return this.createPage(downloadPath, newPageDirectory, pageName);
