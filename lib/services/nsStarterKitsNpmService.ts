@@ -14,7 +14,7 @@ export class NsStarterKitsNpmService implements INsStarterKitsNpmService {
 
             try {
                 packageName = this.getPageTemplateNpmName(flavor);
-                if (version !== null && version.length > 0) {
+                if (version != null && version.length > 0) {
                     packageName += "@" + version;
                 }
             } catch (error) {
