@@ -52,6 +52,9 @@ describe("PageService Api", () => {
             sandbox.stub(util.fs, "emptyDir")
                 .returns(Promise.resolve());
 
+            sandbox.stub(util.fs, "outputJson")
+                .returns(Promise.resolve());
+
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(true));
 
@@ -64,6 +67,9 @@ describe("PageService Api", () => {
             const pageCloneError = new Error("Error");
 
             sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util.fs, "outputJson")
                 .returns(Promise.resolve());
 
             sandbox.stub(util, "pageExists")
@@ -84,6 +90,9 @@ describe("PageService Api", () => {
             sandbox.stub(util.fs, "emptyDir")
                 .returns(Promise.resolve());
 
+            sandbox.stub(util.fs, "outputJson")
+                .returns(Promise.resolve());
+
             sandbox.stub(util, "pageExists")
                 .returns(Promise.resolve(false));
 
@@ -101,6 +110,9 @@ describe("PageService Api", () => {
             const newPageDirectory = "dummyDirectory";
 
             sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util.fs, "outputJson")
                 .returns(Promise.resolve());
 
             sandbox.stub(util, "pageExists")
@@ -129,6 +141,9 @@ describe("PageService Api", () => {
             const templateVersion = "next";
 
             sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util.fs, "outputJson")
                 .returns(Promise.resolve());
 
             sandbox.stub(util, "pageExists")
