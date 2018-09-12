@@ -84,8 +84,7 @@ describe("PageService Api", () => {
         });
 
         it("Should return the newly created page directory path", () => {
-            const newPageDirectory = "dummyDirectory";
-            const clonedPagesDirectory = "dummyClonedPagesDirecotyr";
+            const clonedPagesDirectory = "dummyClonedPagesDirectory";
 
             sandbox.stub(util.fs, "emptyDir")
                 .returns(Promise.resolve());
@@ -100,10 +99,10 @@ describe("PageService Api", () => {
                 .returns(Promise.resolve(clonedPagesDirectory));
 
             sandbox.stub(pageService, "createPage")
-                .returns(Promise.resolve(newPageDirectory));
+                .returns(Promise.resolve());
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath))
-                .to.eventually.be.an("string", newPageDirectory);
+                .to.eventually.equal(util.path.join(appPath, "app"));
         });
 
         it("Should run OK with empty version string", () => {
@@ -130,7 +129,7 @@ describe("PageService Api", () => {
                 });
 
             sandbox.stub(pageService, "createPage")
-                .returns(Promise.resolve(newPageDirectory));
+                .returns(Promise.resolve());
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath, ""))
                 .to.eventually.be.an("string", newPageDirectory);
@@ -152,7 +151,7 @@ describe("PageService Api", () => {
             sandbox.stub(util.childProcess, "spawn")
                 .callsFake((command: string, commandArguments: Array<string>, options: any) => {
                     expect(commandArguments.join(" ")).to.include("@" + templateVersion);
-                    
+
                     return {
                         on: (method: string, callback: any) => {
                             return callback(0);
@@ -161,10 +160,39 @@ describe("PageService Api", () => {
                 });
 
             sandbox.stub(pageService, "createPage")
-                .returns(Promise.resolve(newPageDirectory));
+                .returns(Promise.resolve());
 
             return expect(pageService.addPage(pageName, pageTemplate, appPath, templateVersion))
                 .to.eventually.be.an("string", newPageDirectory);
+        });
+
+        it("Should run OK with different app path", () => {
+            const appDir = "src";
+            const clonedPagesDirectory = "dummyClonedPagesDirectory";
+
+            sandbox.stub(util.fs, "emptyDir")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util.fs, "outputJson")
+                .returns(Promise.resolve());
+
+            sandbox.stub(util.fs, "statSync")
+                .returns({ isFile: () => true });
+
+            sandbox.stub(util.fs, "readJsonSync")
+                .returns({ appPath: appDir });
+
+            sandbox.stub(util, "pageExists")
+                .returns(Promise.resolve(false));
+
+            sandbox.stub(npmService, "installPageTemplate")
+                .returns(Promise.resolve(clonedPagesDirectory));
+
+            sandbox.stub(pageService, "createPage")
+                .returns(Promise.resolve());
+
+            return expect(pageService.addPage(pageName, pageTemplate, appPath))
+                .to.eventually.equal(util.path.join(appPath, appDir));
         });
     });
 });

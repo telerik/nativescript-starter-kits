@@ -20,7 +20,7 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
     addPage(pageName: string, pageTemplate: any, appPath: string, version?: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const displayName = pageTemplate.displayName.toLowerCase();
-            const newPageDirectory = util.path.join(appPath, "app");
+            const newPageDirectory = util.path.join(appPath, this.getAppDir(appPath));
             const pagesDirectory = util.path.join(__dirname, "../pages");
             const emptyPackageJson: any = { name: "pageTemplate" };
 
@@ -48,6 +48,23 @@ export class NsStarterKitsPageService implements INsStarterKitsPageService {
                     reject(promiseError);
                 });
         });
+    }
+
+    private getAppDir(appPath: string): string {
+        try {
+            const nsConfigPath = util.path.join(appPath, "nsconfig.json");
+            const stat = util.fs.statSync(nsConfigPath);
+            if (stat.isFile()) {
+                const nsConfig = util.fs.readJsonSync(nsConfigPath);
+                if (nsConfig && nsConfig.appPath) {
+                    return nsConfig.appPath;
+                }
+            }
+        } catch (e) {
+            // return default path
+        }
+
+        return "app";
     }
 
     private createPage(sourceDirectory: string, destinationDirectory: string, pageName: string): Promise<string> {
